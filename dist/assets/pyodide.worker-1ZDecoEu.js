@@ -1,0 +1,8 @@
+(function(){"use strict";importScripts("https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js");let s=null;async function l(){return s||(s=await self.loadPyodide(),await s.runPythonAsync(`
+import sys
+import io
+`),s)}function p(u){const a=[],c=u.split(`
+`);for(const i of c){const t=i.trim();(t.startsWith("assert ")||t.startsWith("assert("))&&a.push(t)}return a}self.onmessage=async u=>{const{type:a,code:c,testAssertions:i}=u.data;if(a==="init"){try{await l(),self.postMessage({type:"init-ready",success:!0})}catch(t){self.postMessage({type:"init-ready",success:!1,error:t.message})}return}if(a==="run")try{const t=await l();await t.runPythonAsync(`
+sys.stdout = io.StringIO()
+sys.stderr = io.StringIO()
+`),await t.runPythonAsync(c);let e,n,o,r;if(i){const f=p(i);e=f.length,n=0,o=0;for(const y of f)try{await t.runPythonAsync(y),n++}catch(d){o++,r||(r=d.message);break}if(o>0&&r){const y=await t.runPythonAsync("sys.stdout.getvalue()"),d=await t.runPythonAsync("sys.stderr.getvalue()");self.postMessage({type:"run-result",success:!1,output:y,error:r,stderr:d||void 0,testsTotal:e,testsPassed:n,testsFailed:o,firstFailedMessage:r});return}}const g=await t.runPythonAsync("sys.stdout.getvalue()"),h=await t.runPythonAsync("sys.stderr.getvalue()");self.postMessage({type:"run-result",success:!0,output:g,error:h||void 0,testsTotal:e,testsPassed:n,testsFailed:o,firstFailedMessage:r})}catch(t){let e="";try{s&&(e=await s.runPythonAsync("sys.stdout.getvalue()"))}catch{}self.postMessage({type:"run-result",success:!1,output:e,error:t.message,testsTotal:void 0,testsPassed:void 0,testsFailed:void 0,firstFailedMessage:void 0})}}})();
