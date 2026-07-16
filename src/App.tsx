@@ -6,6 +6,9 @@ import { LearningTree } from './components/LearningTree';
 import { SandboxFree } from './components/SandboxFree';
 import { Shop } from './components/Shop';
 import { ActiveLessonView } from './components/ActiveLessonView';
+import { OnboardingOverlay } from './components/OnboardingOverlay';
+import { LessonCompleteModal } from './components/LessonCompleteModal';
+import { LevelUpModal } from './components/LevelUpModal';
 
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useAudio } from './hooks/useAudio';
@@ -14,6 +17,7 @@ import { usePyodide } from './hooks/usePyodide';
 import { HeartsCount, MascotMood, ActiveTab, ILesson } from './core/types';
 import { LESSONS_DATABASE } from './core/lessonsData';
 import { addXp, deductHeart, addHeart, deductCoins, unlockNextLesson } from './core/progression';
+import { calculateLevel } from './core/leveling';
 
 export default function App() {
   // --- ESTADO PERSISTENTE (Casca Imperativa: LocalStorage) ---
@@ -24,6 +28,7 @@ export default function App() {
   const [unlockedLessons, setUnlockedLessons] = useLocalStorage<string[]>('pylingo_unlocked_v1', ['f1_l1']);
   const [completedLessons, setCompletedLessons] = useLocalStorage<string[]>('pylingo_completed_v1', []);
   const [soundEnabled, setSoundEnabled] = useLocalStorage<boolean>('pylingo_sound_v1', true);
+  const [onboardingDone, setOnboardingDone] = useLocalStorage<boolean>('pylingo_onboarding_v1', false);
 
   // --- ENGINE PYODIDE (WASM em Web Worker) ---
   const { ready: pyodideReady, error: pyodideError, runCode } = usePyodide();
@@ -36,6 +41,11 @@ export default function App() {
   const [sandboxCode, setSandboxCode] = useState<string>('# Escreva qualquer código aqui!\n\nfor i in range(5):\n    print(f"Olá, PyLingo número {i}!")\n');
   const [sandboxOutput, setSandboxOutput] = useState<string>('');
   const [sandboxLoading, setSandboxLoading] = useState<boolean>(false);
+
+  // --- ESTADO DE FLUXO DE CONCLUSÃO / LEVEL UP ---
+  const [showLessonComplete, setShowLessonComplete] = useState(false);
+  const [showLevelUp, setShowLevelUp] = useState(false);
+  const [newLevel, setNewLevel] = useState<number | null>(null);
 
   // --- EFEITOS SONOROS (Audio hook) ---
   const { playSound } = useAudio(soundEnabled);
@@ -92,6 +102,9 @@ export default function App() {
   const handleLessonSuccess = () => {
     if (!currentLesson) return;
 
+    // Captura nível antes da atualização de XP
+    const previousLevel = calculateLevel(xp);
+
     // Regras de negócio puras aplicadas no core
     const updatedXp = addXp(xp, 25);
     const updatedCoins = coins + 5;
@@ -113,7 +126,31 @@ export default function App() {
       setUnlockedLessons(updatedUnlocked);
     }
 
+    // Detecta level up comparando nível antes/depois
+    const newLevelVal = calculateLevel(updatedXp);
+    if (newLevelVal > previousLevel) {
+      setNewLevel(newLevelVal);
+    }
+
     setMascotMood('happy');
+    setShowLessonComplete(true);
+  };
+
+  // --- FECHAR MODAL DE CONCLUSÃO DE LIÇÃO ---
+  const handleCloseLessonComplete = () => {
+    setShowLessonComplete(false);
+    if (newLevel !== null) {
+      setShowLevelUp(true);
+    } else {
+      setCurrentLesson(null);
+    }
+  };
+
+  // --- FECHAR MODAL DE LEVEL UP ---
+  const handleCloseLevelUp = () => {
+    setShowLevelUp(false);
+    setNewLevel(null);
+    setCurrentLesson(null);
   };
 
   // --- FALHA DE LIÇÃO (PERDA DE VIDA) ---
@@ -169,8 +206,13 @@ export default function App() {
         }}
       />
 
+      {/* Onboarding Overlay — exibido apenas para novos utilizadores */}
+      {!onboardingDone && xp === 0 && completedLessons.length === 0 && (
+        <OnboardingOverlay onComplete={() => setOnboardingDone(true)} />
+      )}
+
       {/* Conteúdo Principal */}
-      <main className="flex-1 flex flex-col max-w-6xl w-full mx-auto p-4 md:py-8">
+      <main className="flex-1 flex flex-col max-w-6xl w-full mx-auto p-4 md:py-8 pb-20 lg:pb-4">
         
         {/* Banner de erro de inicialização do Pyodide */}
         {pyodideError && (
@@ -212,8 +254,8 @@ export default function App() {
               transition={{ duration: 0.25, ease: 'easeInOut' }}
               className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
             >
-              {/* Sidebar Lateral Esquerda (4 colunas) */}
-              <div className="lg:col-span-4">
+              {/* Sidebar Lateral Esquerda (4 colunas — oculta em mobile, a tab bar fica fixa no bottom) */}
+              <div className="hidden lg:block lg:col-span-4">
                 <Sidebar
                   activeTab={activeTab}
                   onTabChange={(tab) => {
@@ -263,10 +305,44 @@ export default function App() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* --- MODAIS DE CONCLUSÃO E LEVEL UP --- */}
+        {showLessonComplete && currentLesson && (
+          <LessonCompleteModal
+            xpEarned={25}
+            coinsEarned={5}
+            totalXp={xp}
+            onContinue={handleCloseLessonComplete}
+            playSound={playSound}
+          />
+        )}
+        {showLevelUp && newLevel !== null && (
+          <LevelUpModal
+            newLevel={newLevel}
+            onContinue={handleCloseLevelUp}
+            playSound={playSound}
+          />
+        )}
       </main>
 
+      {/* Tab Bar Mobile — renderizada fora do grid para não ser ocultada pelo hidden lg:block */}
+      <div className="lg:hidden">
+        <Sidebar
+          activeTab={activeTab}
+          onTabChange={(tab) => {
+            playSound('click');
+            setActiveTab(tab);
+            setCurrentLesson(null);
+          }}
+          mascotMood={mascotMood}
+          completedLessonsCount={completedLessons.length}
+          totalLessonsCount={LESSONS_DATABASE.length}
+          xp={xp}
+        />
+      </div>
+
       {/* Footer Tecnológico */}
-      <footer className="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs text-slate-400 select-none">
+      <footer className="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs text-slate-400 select-none mb-16 lg:mb-0">
         <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
           <span>© 2026 PyLingo Inc. Projetado para capacitação real em Computação e Python.</span>
           <div className="flex items-center space-x-2">

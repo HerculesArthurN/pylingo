@@ -66,10 +66,10 @@ export const LearningTree: React.FC<LearningTreeProps> = ({
                     const isCompleted = completedLessons.includes(lesson.id);
                     const isActive = isUnlocked && !isCompleted;
 
-                    // Zigue-zague estilo Duolingo
+                    // Zigue-zague estilo Duolingo — offsets responsivos
                     let xOffsetClass = 'translate-x-0';
-                    if (idx % 3 === 1) xOffsetClass = 'translate-x-6 sm:translate-x-8';
-                    if (idx % 3 === 2) xOffsetClass = '-translate-x-6 sm:-translate-x-8';
+                    if (idx % 3 === 1) xOffsetClass = 'translate-x-3 sm:translate-x-6 md:translate-x-8';
+                    if (idx % 3 === 2) xOffsetClass = '-translate-x-3 sm:-translate-x-6 md:-translate-x-8';
 
                     return (
                       /* Animação de entrada escalonada por índice */
@@ -99,7 +99,7 @@ export const LearningTree: React.FC<LearningTreeProps> = ({
                           /* ── Micro-interações para nós desbloqueados ── */
                           whileHover={isUnlocked ? { scale: 1.12 } : {}}
                           whileTap={isUnlocked ? { scale: 0.95 } : {}}
-                          className={`w-20 h-20 rounded-full flex items-center justify-center border-b-8 active:border-b-0 active:translate-y-1 shadow-md focus:outline-none ${
+                          className={`w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center border-b-8 active:border-b-0 active:translate-y-1 shadow-md focus:outline-none ${
                             isCompleted
                               ? 'bg-emerald-500 border-emerald-700 text-white shadow-emerald-100 hover:bg-emerald-600'
                               : isActive
