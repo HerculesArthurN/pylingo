@@ -9,15 +9,17 @@ import { ActiveLessonView } from './components/ActiveLessonView';
 import { OnboardingOverlay } from './components/OnboardingOverlay';
 import { LessonCompleteModal } from './components/LessonCompleteModal';
 import { LevelUpModal } from './components/LevelUpModal';
+import { AchievementUnlockedModal } from './components/AchievementUnlockedModal';
 
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useAudio } from './hooks/useAudio';
 import { usePyodide } from './hooks/usePyodide';
 
-import { HeartsCount, MascotMood, ActiveTab, ILesson } from './core/types';
+import { HeartsCount, MascotMood, ActiveTab, ILesson, IAchievement, IGameState } from './core/types';
 import { LESSONS_DATABASE } from './core/lessonsData';
 import { addXp, deductHeart, addHeart, deductCoins, unlockNextLesson } from './core/progression';
 import { calculateLevel } from './core/leveling';
+import { ACHIEVEMENTS_LIST, checkNewAchievements } from './core/achievements';
 
 export default function App() {
   // --- ESTADO PERSISTENTE (Casca Imperativa: LocalStorage) ---
@@ -27,6 +29,7 @@ export default function App() {
   const [coins, setCoins] = useLocalStorage<number>('pylingo_coins_v1', 10);
   const [unlockedLessons, setUnlockedLessons] = useLocalStorage<string[]>('pylingo_unlocked_v1', ['f1_l1']);
   const [completedLessons, setCompletedLessons] = useLocalStorage<string[]>('pylingo_completed_v1', []);
+  const [achievements, setAchievements] = useLocalStorage<string[]>('pylingo_achievements_v1', []);
   const [soundEnabled, setSoundEnabled] = useLocalStorage<boolean>('pylingo_sound_v1', true);
   const [onboardingDone, setOnboardingDone] = useLocalStorage<boolean>('pylingo_onboarding_v1', false);
 
@@ -42,26 +45,134 @@ export default function App() {
   const [sandboxOutput, setSandboxOutput] = useState<string>('');
   const [sandboxLoading, setSandboxLoading] = useState<boolean>(false);
 
-  // --- ESTADO DE FLUXO DE CONCLUSÃO / LEVEL UP ---
-  const [showLessonComplete, setShowLessonComplete] = useState(false);
-  const [showLevelUp, setShowLevelUp] = useState(false);
-  const [newLevel, setNewLevel] = useState<number | null>(null);
+  // --- FILA DE MODAIS SEQUENCIAL (FIFO) ---
+  interface ModalItem {
+    type: 'complete' | 'level_up' | 'achievement';
+    data: any;
+  }
+
+  const [modalQueue, setModalQueue] = useState<ModalItem[]>([]);
+  const [activeModal, setActiveModal] = useState<ModalItem | null>(null);
 
   // --- EFEITOS SONOROS (Audio hook) ---
   const { playSound } = useAudio(soundEnabled);
+
+  // --- ENFILEIRAR E GERENCIAR MODAIS ---
+  const enqueueModals = (items: ModalItem[]) => {
+    if (items.length === 0) return;
+
+    setModalQueue(prev => {
+      const fullQueue = [...prev, ...items];
+      setActiveModal(currentActive => {
+        if (currentActive === null) {
+          const next = fullQueue.shift();
+          return next || null;
+        }
+        return currentActive;
+      });
+      return fullQueue;
+    });
+  };
+
+  // --- FECHAR MODAL E PROCESSAR PRÓXIMO DA FILA ---
+  const handleCloseModal = () => {
+    playSound('click');
+    setModalQueue(prevQueue => {
+      if (prevQueue.length > 0) {
+        const next = prevQueue[0];
+        setActiveModal(next);
+        return prevQueue.slice(1);
+      } else {
+        setActiveModal(null);
+        if (currentLesson) {
+          setCurrentLesson(null);
+        }
+        return [];
+      }
+    });
+  };
+
+  // --- SISTEMA DE CONQUISTAS ---
+  const checkAndTriggerAchievements = (
+    updatedXp: number,
+    updatedCoins: number,
+    updatedCompleted: string[],
+    actionFlags?: { sandboxExecuted?: boolean; shopBought?: boolean }
+  ) => {
+    let currentPendingCoins = updatedCoins;
+    let currentPendingAchievements = [...achievements];
+    const newUnlockedAchievements: IAchievement[] = [];
+
+    let sandboxFlag = actionFlags?.sandboxExecuted;
+    let shopFlag = actionFlags?.shopBought;
+
+    let searchForAchievements = true;
+    while (searchForAchievements) {
+      const mockState: IGameState = {
+        xp: updatedXp,
+        coins: currentPendingCoins,
+        streak: streak,
+        completedLessons: updatedCompleted,
+        achievements: currentPendingAchievements,
+        hearts: hearts,
+        unlockedLessons: unlockedLessons,
+        activeTab: activeTab,
+        currentLessonId: currentLesson ? currentLesson.id : null,
+        soundEnabled: soundEnabled,
+      };
+
+      const newDetections = checkNewAchievements(mockState, [...LESSONS_DATABASE]);
+
+      // Conquistas manuais acionadas por eventos de UI
+      if (sandboxFlag && !currentPendingAchievements.includes('sandbox_god')) {
+        const sandboxAch = ACHIEVEMENTS_LIST.find(a => a.id === 'sandbox_god');
+        if (sandboxAch) newDetections.push(sandboxAch);
+      }
+      if (shopFlag && !currentPendingAchievements.includes('shop_buyer')) {
+        const shopAch = ACHIEVEMENTS_LIST.find(a => a.id === 'shop_buyer');
+        if (shopAch) newDetections.push(shopAch);
+      }
+
+      if (newDetections.length > 0) {
+        for (const ach of newDetections) {
+          if (!currentPendingAchievements.includes(ach.id)) {
+            currentPendingAchievements.push(ach.id);
+            currentPendingCoins += ach.coinReward;
+            newUnlockedAchievements.push(ach);
+          }
+        }
+        sandboxFlag = false;
+        shopFlag = false;
+      } else {
+        searchForAchievements = false;
+      }
+    }
+
+    if (newUnlockedAchievements.length > 0) {
+      setAchievements(currentPendingAchievements);
+      setCoins(currentPendingCoins);
+
+      const newModals = newUnlockedAchievements.map(ach => ({
+        type: 'achievement' as const,
+        data: ach
+      }));
+      enqueueModals(newModals);
+    }
+  };
 
   // --- COMPRA DE VIDA (LOJA) ---
   const handleBuyHeart = () => {
     try {
       const nextCoins = deductCoins(coins, 20);
       const nextHearts = addHeart(hearts);
-      
+
       setCoins(nextCoins);
       setHearts(nextHearts);
       setMascotMood('happy');
       playSound('success');
-      
+
       setTimeout(() => setMascotMood('thinking'), 2000);
+      checkAndTriggerAchievements(xp, nextCoins, completedLessons, { shopBought: true });
     } catch (error: any) {
       playSound('error');
       console.warn(error.message);
@@ -84,10 +195,13 @@ export default function App() {
       setCoins(10);
       setUnlockedLessons(['f1_l1']);
       setCompletedLessons([]);
+      setAchievements([]);
       setMascotMood('thinking');
       setCurrentLesson(null);
       setSandboxOutput('');
       setActiveTab('tree');
+      setModalQueue([]);
+      setActiveModal(null);
     }
   };
 
@@ -108,7 +222,7 @@ export default function App() {
     // Regras de negócio puras aplicadas no core
     const updatedXp = addXp(xp, 25);
     const updatedCoins = coins + 5;
-    
+
     let updatedCompleted = [...completedLessons];
     if (!completedLessons.includes(currentLesson.id)) {
       updatedCompleted.push(currentLesson.id);
@@ -126,31 +240,30 @@ export default function App() {
       setUnlockedLessons(updatedUnlocked);
     }
 
-    // Detecta level up comparando nível antes/depois
+    setMascotMood('happy');
+
+    // Prepara a sequência de modais da lição
+    const newModals: ModalItem[] = [];
+
+    // 1. Modal de Conclusão da Lição
+    newModals.push({
+      type: 'complete',
+      data: { xp: 25, coins: 5, totalXp: updatedXp }
+    });
+
+    // 2. Modal de Level Up (se houver)
     const newLevelVal = calculateLevel(updatedXp);
     if (newLevelVal > previousLevel) {
-      setNewLevel(newLevelVal);
+      newModals.push({
+        type: 'level_up',
+        data: { level: newLevelVal }
+      });
     }
 
-    setMascotMood('happy');
-    setShowLessonComplete(true);
-  };
+    enqueueModals(newModals);
 
-  // --- FECHAR MODAL DE CONCLUSÃO DE LIÇÃO ---
-  const handleCloseLessonComplete = () => {
-    setShowLessonComplete(false);
-    if (newLevel !== null) {
-      setShowLevelUp(true);
-    } else {
-      setCurrentLesson(null);
-    }
-  };
-
-  // --- FECHAR MODAL DE LEVEL UP ---
-  const handleCloseLevelUp = () => {
-    setShowLevelUp(false);
-    setNewLevel(null);
-    setCurrentLesson(null);
+    // Verifica conquistas com valores atualizados
+    checkAndTriggerAchievements(updatedXp, updatedCoins, updatedCompleted);
   };
 
   // --- FALHA DE LIÇÃO (PERDA DE VIDA) ---
@@ -183,6 +296,9 @@ export default function App() {
     } else {
       setSandboxOutput(res.output || "[Código executado sem saídas padrão (print)]");
     }
+
+    // Verifica conquista de sandbox
+    checkAndTriggerAchievements(xp, coins, completedLessons, { sandboxExecuted: true });
   };
 
   return (
@@ -212,7 +328,7 @@ export default function App() {
       )}
 
       {/* Conteúdo Principal */}
-      <main className="flex-1 flex flex-col max-w-6xl w-full mx-auto p-4 md:py-8 pb-20 lg:pb-4">
+      <main className="flex-1 flex flex-col max-w-6xl w-full mx-auto p-4 md:py-8 pb-20 lg:pb-4" data-queue-size={modalQueue.length}>
         
         {/* Banner de erro de inicialização do Pyodide */}
         {pyodideError && (
@@ -266,6 +382,7 @@ export default function App() {
                   completedLessonsCount={completedLessons.length}
                   totalLessonsCount={LESSONS_DATABASE.length}
                   xp={xp}
+                  achievements={achievements}
                 />
               </div>
 
@@ -306,20 +423,27 @@ export default function App() {
           )}
         </AnimatePresence>
 
-        {/* --- MODAIS DE CONCLUSÃO E LEVEL UP --- */}
-        {showLessonComplete && currentLesson && (
+        {/* --- FILA DE MODAIS SEQUENCIAL (FIFO) --- */}
+        {activeModal?.type === 'complete' && (
           <LessonCompleteModal
-            xpEarned={25}
-            coinsEarned={5}
-            totalXp={xp}
-            onContinue={handleCloseLessonComplete}
+            xpEarned={activeModal.data.xp}
+            coinsEarned={activeModal.data.coins}
+            totalXp={activeModal.data.totalXp}
+            onContinue={handleCloseModal}
             playSound={playSound}
           />
         )}
-        {showLevelUp && newLevel !== null && (
+        {activeModal?.type === 'level_up' && (
           <LevelUpModal
-            newLevel={newLevel}
-            onContinue={handleCloseLevelUp}
+            newLevel={activeModal.data.level}
+            onContinue={handleCloseModal}
+            playSound={playSound}
+          />
+        )}
+        {activeModal?.type === 'achievement' && (
+          <AchievementUnlockedModal
+            achievement={activeModal.data}
+            onContinue={handleCloseModal}
             playSound={playSound}
           />
         )}
@@ -338,6 +462,7 @@ export default function App() {
           completedLessonsCount={completedLessons.length}
           totalLessonsCount={LESSONS_DATABASE.length}
           xp={xp}
+          achievements={achievements}
         />
       </div>
 

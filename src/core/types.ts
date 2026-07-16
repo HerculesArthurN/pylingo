@@ -49,4 +49,17 @@ export interface IGameState {
   activeTab: ActiveTab;
   currentLessonId: string | null;
   soundEnabled: boolean;
+  achievements: string[];
+}
+
+export type AchievementTargetType = 'xp' | 'coins' | 'streak' | 'lessons' | 'phase_complete';
+
+export interface IAchievement {
+  id: string;
+  title: string;
+  description: string;
+  icon: string; // Nome do ícone Lucide
+  targetType: AchievementTargetType;
+  targetValue: number; // Para phase_complete, representa o número da fase
+  coinReward: number;
 }
