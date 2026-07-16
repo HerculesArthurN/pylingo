@@ -11,7 +11,7 @@
  *   - Invariante:    Apenas as 3 abas definidas em `ActiveTab` são renderizadas.
  */
 import React from 'react';
-import { BookOpen, Code2, Award, Sparkles, RotateCcw, Zap } from 'lucide-react';
+import { BookOpen, Code2, Award, Sparkles, RotateCcw, Zap, User } from 'lucide-react';
 import { ActiveTab, MascotMood, ILeitnerState } from '../core/types';
 import { Mascot } from './Mascot';
 import { calculateLevel } from '../core/leveling';
@@ -34,6 +34,7 @@ const TABS: ReadonlyArray<{ id: ActiveTab; label: string; Icon: typeof BookOpen 
   { id: 'tree',    label: 'Árvore',  Icon: BookOpen },
   { id: 'sandbox', label: 'Sandbox', Icon: Code2 },
   { id: 'shop',    label: 'Loja',    Icon: Award },
+  { id: 'profile', label: 'Perfil',  Icon: User },
 ] as const;
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -88,7 +89,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 }`}
               >
                 <Icon className="w-5 h-5" />
-                <span>{label === 'Árvore' ? 'Árvore de Lições' : label === 'Sandbox' ? 'Sandbox Livre' : 'Loja do Lingo'}</span>
+                <span>
+                  {label === 'Árvore' 
+                    ? 'Árvore de Lições' 
+                    : label === 'Sandbox' 
+                      ? 'Sandbox Livre' 
+                      : label === 'Loja' 
+                        ? 'Loja do Lingo' 
+                        : 'Seu Perfil'}
+                </span>
               </button>
             ))}
           </div>

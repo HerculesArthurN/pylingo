@@ -10,12 +10,14 @@ import { OnboardingOverlay } from './components/OnboardingOverlay';
 import { LessonCompleteModal } from './components/LessonCompleteModal';
 import { LevelUpModal } from './components/LevelUpModal';
 import { AchievementUnlockedModal } from './components/AchievementUnlockedModal';
+import { ProfileView } from './components/ProfileView';
 
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useAudio } from './hooks/useAudio';
 import { usePyodide } from './hooks/usePyodide';
 
-import { HeartsCount, MascotMood, ActiveTab, ILesson, IAchievement, IGameState, ILeitnerState } from './core/types';
+import { HeartsCount, MascotMood, ActiveTab, ILesson, IAchievement, IGameState, ILeitnerState, IXpHistoryItem } from './core/types';
+import { getLocalIsoDate, addXpToHistory } from './core/profile';
 import { LESSONS_DATABASE } from './core/lessonsData';
 import { addXp, deductHeart, addHeart, deductCoins, unlockNextLesson } from './core/progression';
 import { calculateLevel } from './core/leveling';
@@ -34,6 +36,7 @@ export default function App() {
   const [soundEnabled, setSoundEnabled] = useLocalStorage<boolean>('pylingo_sound_v1', true);
   const [onboardingDone, setOnboardingDone] = useLocalStorage<boolean>('pylingo_onboarding_v1', false);
   const [leitnerSchedule, setLeitnerSchedule] = useLocalStorage<Record<string, ILeitnerState>>('pylingo_leitner_v1', {});
+  const [xpHistory, setXpHistory] = useLocalStorage<IXpHistoryItem[]>('pylingo_xp_history_v1', []);
 
   // --- ENGINE PYODIDE (WASM em Web Worker) ---
   const { ready: pyodideReady, error: pyodideError, runCode } = usePyodide();
@@ -123,6 +126,7 @@ export default function App() {
         currentLessonId: currentLesson ? currentLesson.id : null,
         soundEnabled: soundEnabled,
         leitnerSchedule: leitnerSchedule,
+        xpHistory: xpHistory,
       };
 
       const newDetections = checkNewAchievements(mockState, [...LESSONS_DATABASE]);
@@ -201,6 +205,7 @@ export default function App() {
       setCompletedLessons([]);
       setAchievements([]);
       setLeitnerSchedule({});
+      setXpHistory([]);
       setLessonMistakes(0);
       setMascotMood('thinking');
       setCurrentLesson(null);
@@ -264,6 +269,10 @@ export default function App() {
     setXp(updatedXp);
     setCoins(updatedCoins);
     setCompletedLessons(updatedCompleted);
+
+    // Atualiza o histórico de XP diário
+    const hojeStr = getLocalIsoDate(Date.now());
+    setXpHistory(prev => addXpToHistory(prev, totalXpEarned, hojeStr));
 
     // Desbloqueia a próxima lição sequencial
     const currentIndex = LESSONS_DATABASE.findIndex(l => l.id === currentLesson.id);
@@ -452,6 +461,20 @@ export default function App() {
                     onBuyHeart={handleBuyHeart}
                     onToggleGeekMood={handleToggleGeekMood}
                     onResetProgress={handleResetProgress}
+                  />
+                )}
+
+                {activeTab === 'profile' && (
+                  <ProfileView
+                    xp={xp}
+                    streak={streak}
+                    completedLessonsCount={completedLessons.length}
+                    totalLessonsCount={LESSONS_DATABASE.length}
+                    achievementsCount={achievements.length}
+                    totalAchievementsCount={ACHIEVEMENTS_LIST.length}
+                    coins={coins}
+                    xpHistory={xpHistory}
+                    mascotMood={mascotMood}
                   />
                 )}
               </div>

@@ -12,7 +12,7 @@ export type MascotMood = 'happy' | 'thinking' | 'sad' | 'geek';
 /**
  * Separadores de ecrãs/abas principais do painel de controlo.
  */
-export type ActiveTab = 'tree' | 'sandbox' | 'shop';
+export type ActiveTab = 'tree' | 'sandbox' | 'shop' | 'profile';
 
 /**
  * Níveis de dificuldade suportados pelas lições.
@@ -41,6 +41,11 @@ export interface ILeitnerState {
   nextReviewTimestamp: number; // Unix timestamp em ms
 }
 
+export interface IXpHistoryItem {
+  date: string; // Formato YYYY-MM-DD
+  xp: number;   // XP acumulado obtido no dia
+}
+
 /**
  * Estado Global da Aplicação de Gamificação.
  */
@@ -56,6 +61,7 @@ export interface IGameState {
   soundEnabled: boolean;
   achievements: string[];
   leitnerSchedule: Record<string, ILeitnerState>;
+  xpHistory: IXpHistoryItem[];
 }
 
 export type AchievementTargetType = 'xp' | 'coins' | 'streak' | 'lessons' | 'phase_complete';
