@@ -433,6 +433,274 @@ assert p.pop() == None, "pop() em pilha vazia deve retornar None."
 assert p.peek() == None, "peek() em pilha vazia deve retornar None."
 `,
     hint: 'Use self._dados.append(elemento) no push. Em pop(), verifique if self.is_empty(): return None, senão use return self._dados.pop(). Em peek(), retorne self._dados[-1] se não estiver vazia. Em is_empty(), retorne len(self._dados) == 0.'
+  },
+
+  // --- FASE 6: GIT E GITHUB ---
+  {
+    id: 'f6_l1',
+    phase: 6,
+    phaseTitle: 'Git e GitHub',
+    title: 'Área de Staging e Commit',
+    icon: 'GitBranch',
+    difficulty: 'Fácil',
+    description: 'O Git é um sistema de controle de versão distribuído. Duas de suas principais áreas são: a Staging Area (onde preparamos arquivos com `git add`) e o repositório local (onde salvamos permanentemente as alterações com `git commit`). Desta forma, podemos escolher exatamente o que vai em cada pacote de alteração.',
+    instructions: 'Implemente uma classe `MiniGit` com os métodos: `__init__(self)` (inicializa `self.staging` como dicionário vazio e `self.commits` como lista vazia); `add(self, arquivo, conteudo)` (insere o arquivo e seu conteúdo no staging); e `commit(self, mensagem)` (cria um commit com ID incremental iniciando em 1, a mensagem e uma cópia dos arquivos do staging, limpa o staging e retorna o ID do commit).',
+    codeSkeleton: 'class MiniGit:\n    def __init__(self):\n        # Inicialize staging e commits aqui\n        pass\n\n    def add(self, arquivo, conteudo):\n        # Adicione arquivo ao staging\n        pass\n\n    def commit(self, mensagem):\n        # Crie o commit e retorne o ID incremental\n        pass',
+    testAssertions: `
+# Suíte de Testes PyLingo - MiniGit
+assert 'MiniGit' in locals(), "A classe 'MiniGit' não foi definida."
+git = MiniGit()
+assert hasattr(git, 'staging') and isinstance(git.staging, dict), "Você deve inicializar 'self.staging' como um dicionário."
+assert hasattr(git, 'commits') and isinstance(git.commits, list), "Você deve inicializar 'self.commits' como uma lista."
+
+git.add("main.py", "print('Olá')")
+assert git.staging.get("main.py") == "print('Olá')", "O método 'add' deve salvar o arquivo na staging area."
+
+id_commit = git.commit("Primeiro commit")
+assert id_commit == 1, "O primeiro commit deve retornar o ID 1."
+assert len(git.staging) == 0, "A staging area deve ser esvaziada imediatamente após o commit."
+assert len(git.commits) == 1, "A lista de commits deve conter exatamente 1 registro."
+assert git.commits[0]["mensagem"] == "Primeiro commit", "A mensagem do commit está incorreta."
+assert git.commits[0]["arquivos"].get("main.py") == "print('Olá')", "Os arquivos salvos no commit divergem do staging original."
+`,
+    hint: 'Em __init__, defina self.staging = {} e self.commits = []. Em add, self.staging[arquivo] = conteudo. Em commit, o ID é len(self.commits) + 1. Faça uma cópia usando dict(self.staging), salve um dicionário em self.commits com as chaves "id", "mensagem" e "arquivos", esvazie o staging com self.staging.clear() ou self.staging = {}, e retorne o ID.'
+  },
+
+  // --- FASE 7: BANCOS DE DADOS ---
+  {
+    id: 'f7_l1',
+    phase: 7,
+    phaseTitle: 'Bancos de Dados',
+    title: 'Criação e Inserção SQL',
+    icon: 'Database',
+    difficulty: 'Médio',
+    description: 'Bancos de dados relacionais organizam dados em tabelas com linhas e colunas. Em Python, o módulo nativo `sqlite3` permite rodar comandos SQL de verdade. Usamos `CREATE TABLE` para estruturar e `INSERT INTO` para registrar dados. Após alterações de escrita, chame `.commit()` na conexão para salvar.',
+    instructions: 'Crie uma função `criar_banco()` que se conecta a um banco de dados SQLite em memória (`":memory:"`), cria uma tabela `alunos` com os campos `id` (INTEGER PRIMARY KEY), `nome` (TEXT) e `nota` (REAL). Insira os alunos ("Lingo", 9.5) e ("Python", 10.0), salve com commit e retorne o resultado de `cursor.execute("SELECT * FROM alunos").fetchall()`.',
+    codeSkeleton: 'import sqlite3\n\ndef criar_banco():\n    # Conecte, crie a tabela, insira os registros e retorne fetchall()\n    pass',
+    testAssertions: `
+# Suíte de Testes PyLingo - SQLite 1
+assert 'criar_banco' in locals(), "A função 'criar_banco' não foi declarada."
+res = criar_banco()
+assert isinstance(res, list), "Sua função deve retornar uma lista contendo os registros buscados."
+assert len(res) == 2, f"Deveriam haver exatamente 2 registros na tabela 'alunos', mas o retorno foi: {res}."
+nomes = [row[1] for row in res]
+assert "Lingo" in nomes and "Python" in nomes, "Os nomes dos alunos inseridos estão incorretos."
+`,
+    hint: 'Use conn = sqlite3.connect(":memory:") e cursor = conn.cursor(). Execute "CREATE TABLE alunos (id INTEGER PRIMARY KEY, nome TEXT, nota REAL)". Faça a inserção com "INSERT INTO alunos (nome, nota) VALUES (?, ?)" passando os dados. Não esqueça de conn.commit() e retornar cursor.execute("SELECT * FROM alunos").fetchall().'
+  },
+  {
+    id: 'f7_l2',
+    phase: 7,
+    phaseTitle: 'Bancos de Dados',
+    title: 'Queries e Filtros SQL',
+    icon: 'Database',
+    difficulty: 'Médio',
+    description: 'A linguagem SQL fornece filtros usando a cláusula `WHERE` e ordenação usando `ORDER BY`. Por exemplo: `SELECT * FROM produtos WHERE preco > 50 ORDER BY nome DESC` seleciona e ordena produtos de forma decrescente.',
+    instructions: 'Escreva uma função `filtrar_aprovados(conexao)` que recebe uma conexão SQLite ativa. Ela deve consultar e retornar os registros (fetchall) da tabela `alunos` onde a nota seja maior ou igual a 7.0, ordenados de forma decrescente pela nota.',
+    codeSkeleton: 'def filtrar_aprovados(conexao):\n    cursor = conexao.cursor()\n    # Execute a consulta filtrada e ordenada e retorne o resultado\n    pass',
+    testAssertions: `
+# Suíte de Testes PyLingo - SQLite 2
+import sqlite3
+assert 'filtrar_aprovados' in locals(), "A função 'filtrar_aprovados' não foi declarada."
+
+# Banco em memória para isolamento do teste
+conn = sqlite3.connect(":memory:")
+cursor = conn.cursor()
+cursor.execute("CREATE TABLE alunos (id INTEGER, nome TEXT, nota REAL)")
+cursor.executemany("INSERT INTO alunos VALUES (?, ?, ?)", [
+    (1, "Ana", 5.5),
+    (2, "Lingo", 9.5),
+    (3, "Beto", 7.0),
+    (4, "Carlos", 6.9)
+])
+conn.commit()
+
+resultado = filtrar_aprovados(conn)
+assert len(resultado) == 2, f"Sua consulta deve retornar apenas os 2 alunos aprovados (nota >= 7.0), mas retornou: {len(resultado)}."
+assert resultado[0][1] == "Lingo" and resultado[1][1] == "Beto", "Os registros de aprovação retornados ou sua ordenação decrescente estão incorretos."
+`,
+    hint: 'Execute a consulta: "SELECT * FROM alunos WHERE nota >= 7.0 ORDER BY nota DESC" no cursor e retorne cursor.fetchall().'
+  },
+
+  // --- FASE 8: DESENVOLVIMENTO WEB ---
+  {
+    id: 'f8_l1',
+    phase: 8,
+    phaseTitle: 'Desenvolvimento Web',
+    title: 'Roteador HTTP Simples',
+    icon: 'Globe',
+    difficulty: 'Médio',
+    description: 'No desenvolvimento web backend, roteamento é o processo de mapear requisições HTTP (composta por um método como GET ou POST e um caminho ou path) para funções resolvedoras (handlers) específicas no servidor.',
+    instructions: 'Implemente uma classe `WebRouter` que contenha: `__init__(self)` (inicializa `self.rotas` como dicionário vazio); `registrar(self, metodo, path, handler)` (mapeia o par `(metodo, path)` para a função `handler` no dicionário); e `despachar(self, metodo, path)` (busca a rota correspondente, executa o handler e retorna o resultado. Se não existir, retorna a tupla `(404, "Não Encontrado")`).',
+    codeSkeleton: 'class WebRouter:\n    def __init__(self):\n        pass\n\n    def registrar(self, metodo, path, handler):\n        pass\n\n    def despachar(self, metodo, path):\n        pass',
+    testAssertions: `
+# Suíte de Testes PyLingo - WebRouter
+assert 'WebRouter' in locals(), "A classe 'WebRouter' não foi definida."
+router = WebRouter()
+assert hasattr(router, 'rotas') and isinstance(router.rotas, dict), "Você deve inicializar 'self.rotas' como um dicionário."
+
+router.registrar("GET", "/home", lambda: (200, "Home Page"))
+router.registrar("POST", "/login", lambda: (201, "Autenticado"))
+
+assert router.despachar("GET", "/home") == (200, "Home Page"), "O roteador falhou ao despachar uma requisição GET válida."
+assert router.despachar("POST", "/login") == (201, "Autenticado"), "O roteador falhou ao despachar uma requisição POST válida."
+assert router.despachar("GET", "/dashboard") == (404, "Não Encontrado"), "Rotas não cadastradas devem retornar o código de status 404 de fallback."
+`,
+    hint: 'Em registrar, salve a chave (metodo, path) mapeada para o handler. Em despachar, verifique se a tupla chave está em self.rotas — se sim, chame-a usando self.rotas[(metodo, path)](), senão retorne (404, "Não Encontrado").'
+  },
+  {
+    id: 'f8_l2',
+    phase: 8,
+    phaseTitle: 'Desenvolvimento Web',
+    title: 'Parser de Query String',
+    icon: 'Globe',
+    difficulty: 'Fácil',
+    description: 'A query string é a parte da URL usada para enviar parâmetros opcionais ao servidor (ex: `busca=python&limite=10`). As chaves e valores são separados por `=` e os pares separados por `&`. Decodificar essa string em uma estrutura de dados útil (como dicionário) é fundamental no desenvolvimento de APIs.',
+    instructions: 'Escreva uma função `parse_query_string(query)` que recebe uma string de consulta e retorna um dicionário com os respectivos parâmetros decodificados. Se a string for vazia, retorne um dicionário vazio.',
+    codeSkeleton: 'def parse_query_string(query):\n    # Escreva sua lógica de decodificação e retorne o dicionário correspondente\n    pass',
+    testAssertions: `
+# Suíte de Testes PyLingo - Query String
+assert 'parse_query_string' in locals(), "A função 'parse_query_string' não foi declarada."
+assert parse_query_string("") == {}, "Query strings vazias devem resultar em um dicionário vazio."
+
+parsed = parse_query_string("busca=python&limite=10")
+assert parsed.get("busca") == "python", "Falha ao decodificar chave 'busca'."
+assert parsed.get("limite") == "10", "Falha ao decodificar chave 'limite'."
+assert len(parsed) == 2, "O dicionário resultante possui mais chaves do que o esperado."
+`,
+    hint: 'Use query.split("&") para separar cada par chave=valor. Em seguida, para cada par, use split("=") para extrair chave e valor, salvando-os em um dicionário de retorno.'
+  },
+
+  // --- FASE 9: TESTES AUTOMATIZADOS ---
+  {
+    id: 'f9_l1',
+    phase: 9,
+    phaseTitle: 'Testes Automatizados',
+    title: 'Escrevendo Testes Unitários',
+    icon: 'ShieldCheck',
+    difficulty: 'Difícil',
+    description: 'Testes unitários garantem que partes individuais de um código funcionam perfeitamente de forma isolada. O módulo padrão `unittest` do Python nos permite estruturar casos de teste herdando da classe `unittest.TestCase` e utilizando asserções baseadas em métodos de classe como `self.assertEqual` ou `self.assertRaises`.',
+    instructions: 'Escreva uma classe de teste chamada `TestJurosCompostos` que herda de `unittest.TestCase` para validar a função `juros_compostos(capital, taxa, tempo)` (que já estará disponível em memória). Crie dois métodos: (1) `test_calculo_normal(self)` que valida se `juros_compostos(1000, 0.1, 2)` é igual a 1210.0; e (2) `test_valores_invalidos(self)` que valida se passar um valor negativo para capital (ex: -100) levanta a exceção `ValueError`.',
+    codeSkeleton: 'import unittest\n\nclass TestJurosCompostos(unittest.TestCase):\n    # Defina os métodos de teste requisitados abaixo\n    pass',
+    testAssertions: `
+# Injetando a função alvo do teste no escopo de execução
+def juros_compostos(capital, taxa, tempo):
+    if capital < 0 or taxa < 0 or tempo < 0:
+        raise ValueError("Valores negativos não são válidos para o cálculo.")
+    return round(capital * ((1 + taxa) ** tempo), 2)
+
+globals()['juros_compostos'] = juros_compostos
+
+assert 'TestJurosCompostos' in locals(), "A classe de teste 'TestJurosCompostos' não foi declarada."
+import sys, unittest
+
+# Harness seguro para rodar unittest de forma controlada em WASM/Web Worker sem SystemExit
+suite = unittest.TestSuite()
+suite.addTest(TestJurosCompostos('test_calculo_normal'))
+suite.addTest(TestJurosCompostos('test_valores_invalidos'))
+
+runner = unittest.TextTestRunner(stream=sys.stdout)
+result = runner.run(suite)
+
+assert result.wasSuccessful(), f"A validação dos seus testes falhou: {result.failures}"
+`,
+    hint: 'No método test_calculo_normal, use self.assertEqual(juros_compostos(1000, 0.1, 2), 1210.0). No método test_valores_invalidos, use o gerenciador de contexto: with self.assertRaises(ValueError): juros_compostos(-100, 0.1, 2).'
+  },
+
+  // --- FASE 10: PROJETOS DE PORTFÓLIO ---
+  {
+    id: 'f10_l1',
+    phase: 10,
+    phaseTitle: 'Projetos de Portfólio',
+    title: 'Compactador RLE',
+    icon: 'FolderArchive',
+    difficulty: 'Difícil',
+    description: 'O algoritmo Run-Length Encoding (RLE) é uma técnica simples de compressão de dados sem perda. Ele reduz sequências consecutivas do mesmo caractere pela contagem da sequência seguida do caractere correspondente. Por exemplo: "AAAAABBBCC" é compactado para "5A3B2C".',
+    instructions: 'Implemente duas funções: `compactar(texto)` que recebe um texto e o retorna compactado por RLE; e `descompactar(texto_compactado)` que realiza a operação inversa, expandindo a string original a partir das contagens.',
+    codeSkeleton: 'def compactar(texto):\n    # Escreva seu algoritmo de compactação RLE aqui\n    pass\n\ndef descompactar(texto_compactado):\n    # Escreva a lógica reversa de descompressão RLE\n    pass',
+    testAssertions: `
+# Suíte de Testes PyLingo - RLE
+assert 'compactar' in locals() and 'descompactar' in locals(), "As funções de compactação ou descompactação estão ausentes."
+assert compactar("AAAAABBBCC") == "5A3B2C", "Sua função compactar falhou ao tratar o caso básico."
+assert compactar("XYZ") == "1X1Y1Z", "Falha ao tratar sequências unitárias."
+assert descompactar("5A3B2C") == "AAAAABBBCC", "Sua função de descompactar falhou ao remontar a string original."
+assert descompactar(compactar("WWWWWWWWWW")) == "WWWWWWWWWW", "O fluxo completo de compressão e descompressão está gerando perdas."
+`,
+    hint: 'Em compactar, percorra a string mantendo um contador do caractere atual e, quando ele mudar, adicione f"{contador}{caractere}" ao resultado. Em descompactar, leia os dígitos (contagem) e multiplique-os pelo caractere seguinte, ex: int(contador) * caractere.'
+  },
+  {
+    id: 'f10_l2',
+    phase: 10,
+    phaseTitle: 'Projetos de Portfólio',
+    title: 'Validador de Sintaxe JSON',
+    icon: 'FolderCheck',
+    difficulty: 'Difícil',
+    description: 'A pilha (Stack) é a estrutura de dados LIFO ideal para validar o aninhamento e fechamento correto de delimitadores sintáticos como chaves `{}`, colchetes `[]` e parênteses `()`. Se encontrarmos um delimitador de fechamento, ele deve obrigatoriamente corresponder ao último delimitador de abertura inserido no topo da pilha.',
+    instructions: 'Escreva uma função `validar_delimitadores(texto)` que avalia uma string e retorna `True` se todas as chaves `{}` e colchetes `[]` estiverem balanceados e aninhados na ordem correta, e `False` caso contrário.',
+    codeSkeleton: 'def validar_delimitadores(texto):\n    # Utilize uma estrutura de dados de Pilha para resolver o problema\n    pass',
+    testAssertions: `
+# Suíte de Testes PyLingo - Validador JSON
+assert 'validar_delimitadores' in locals(), "A função 'validar_delimitadores' não foi declarada."
+assert validar_delimitadores('{"id": ["A", "B"]}') is True, "Sua validação falhou ao aceitar um JSON sintaticamente perfeito."
+assert validar_delimitadores('{[}]') is False, "Sua validação falhou ao não recusar um cruzamento ilegal de delimitadores."
+assert validar_delimitadores('{{}') is False, "Delimitadores sem correspondente aberto/fechado devem retornar False."
+`,
+    hint: 'Use uma lista como pilha. Ao encontrar "{" ou "[", adicione na pilha. Ao encontrar "}" ou "]", verifique se a pilha não está vazia e se o elemento removido do topo combina com o caractere encontrado. No final, a pilha deve estar vazia.'
+  },
+
+  // --- FASE 11: PREPARAÇÃO ESPECIALISTA BIG TECH ---
+  {
+    id: 'f11_l1',
+    phase: 11,
+    phaseTitle: 'Preparação Especialista Big Tech',
+    title: 'Inverter Árvore Binária',
+    icon: 'Activity',
+    difficulty: 'Difícil',
+    description: 'A inversão de árvores binárias (famoso desafio do LeetCode) consiste em trocar recursivamente os filhos da esquerda e da direita de cada nó da árvore. É uma excelente forma de praticar manipulação de ponteiros e recursão em estruturas não-lineares.',
+    instructions: 'Escreva a função `inverter_arvore(raiz)` que recebe a raiz de uma árvore binária (usando a classe TreeNode que já está declarada) e realiza a inversão in-place de todos os seus nós esquerdos e direitos, retornando a própria raiz.',
+    codeSkeleton: 'class TreeNode:\n    def __init__(self, val=0, left=None, right=None):\n        self.val = val\n        self.left = left\n        self.right = right\n\ndef inverter_arvore(raiz):\n    # Implemente a inversão estrutural recursiva e retorne a raiz\n    pass',
+    testAssertions: `
+# Suíte de Testes PyLingo - LeetCode 226
+assert 'inverter_arvore' in locals(), "A função 'inverter_arvore' não foi definida."
+
+# Criando árvore mock: 4 (2 (1, 3), 7)
+raiz = TreeNode(4, TreeNode(2, TreeNode(1), TreeNode(3)), TreeNode(7))
+inverter_arvore(raiz)
+
+assert raiz.left.val == 7, "A inversão falhou no nó esquerdo da raiz principal."
+assert raiz.right.val == 2, "A inversão falhou no nó direito da raiz principal."
+assert raiz.right.left.val == 3 and raiz.right.right.val == 1, "A inversão falhou ao propagar recursivamente para os nós folhas."
+`,
+    hint: 'Se a raiz for None, retorne None. Caso contrário, troque os filhos: raiz.left, raiz.right = raiz.right, raiz.left. Em seguida, chame recursivamente inverter_arvore(raiz.left) e inverter_arvore(raiz.right), e por fim retorne a raiz.'
+  },
+  {
+    id: 'f11_l2',
+    phase: 11,
+    phaseTitle: 'Preparação Especialista Big Tech',
+    title: 'Two Sum',
+    icon: 'Activity',
+    difficulty: 'Difícil',
+    description: 'O clássico problema "Two Sum" (número 1 do LeetCode) pede para encontrar dois números em um vetor que somem um valor alvo e retornar seus índices. Uma solução de força bruta com loops aninhados tem complexidade O(N²). Para passar nas Big Techs, você precisa de uma solução otimizada com complexidade linear O(N) usando Hash Maps (dicionários em Python).',
+    instructions: 'Escreva uma função `two_sum(nums, alvo)` que retorna uma lista com os dois índices dos números que somam o valor alvo. A solução deve obrigatoriamente rodar em tempo linear O(N) para passar no teste de estresse.',
+    codeSkeleton: 'def two_sum(nums, alvo):\n    # Otimize sua busca usando Hash Map (dicionário em Python) para ser O(N)\n    pass',
+    testAssertions: `
+# Suíte de Testes PyLingo - LeetCode 1
+assert 'two_sum' in locals(), "A função 'two_sum' não foi declarada."
+assert sorted(two_sum([2, 7, 11, 15], 9)) == [0, 1], "Sua função falhou no caso de teste básico."
+assert sorted(two_sum([3, 2, 4], 6)) == [1, 2], "Sua função falhou ao mapear elementos fora de ordem de tamanho."
+
+# Teste de Estresse para Forçar Complexidade O(N)
+lista_longa = list(range(10000))
+alvo_estresse = 19997
+import time
+inicio = time.time()
+res_estresse = two_sum(lista_longa, alvo_estresse)
+tempo_gasto = time.time() - inicio
+
+assert sorted(res_estresse) == [9998, 9999], "A busca falhou ao localizar elementos em grandes conjuntos."
+assert tempo_gasto < 0.15, f"Estouro de Complexidade! Seu código demorou {tempo_gasto:.2f}s. Utilize um Hash Map para atingir performance O(N) linear."
+`,
+    hint: 'Use um dicionário para mapear o número complementar (alvo - num) para seu índice. Conforme itera por nums com enumerate, verifique se o número atual já está no dicionário. Se sim, você encontrou o par! Senão, adicione o número complementar e seu índice no dicionário.'
   }
 ];
 
