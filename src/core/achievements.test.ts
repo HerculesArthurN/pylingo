@@ -83,6 +83,7 @@ describe('Sistema de Conquistas — Núcleo Lógico Puro (achievements.ts)', () 
       currentLessonId: null,
       soundEnabled: true,
       achievements: [],
+      leitnerSchedule: {},
       ...overrides,
     });
 

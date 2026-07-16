@@ -15,11 +15,12 @@ import { useLocalStorage } from './hooks/useLocalStorage';
 import { useAudio } from './hooks/useAudio';
 import { usePyodide } from './hooks/usePyodide';
 
-import { HeartsCount, MascotMood, ActiveTab, ILesson, IAchievement, IGameState } from './core/types';
+import { HeartsCount, MascotMood, ActiveTab, ILesson, IAchievement, IGameState, ILeitnerState } from './core/types';
 import { LESSONS_DATABASE } from './core/lessonsData';
 import { addXp, deductHeart, addHeart, deductCoins, unlockNextLesson } from './core/progression';
 import { calculateLevel } from './core/leveling';
 import { ACHIEVEMENTS_LIST, checkNewAchievements } from './core/achievements';
+import { BOX_INTERVALS, promoteLesson, demoteLesson, isLessonDue } from './core/spacedRepetition';
 
 export default function App() {
   // --- ESTADO PERSISTENTE (Casca Imperativa: LocalStorage) ---
@@ -32,6 +33,7 @@ export default function App() {
   const [achievements, setAchievements] = useLocalStorage<string[]>('pylingo_achievements_v1', []);
   const [soundEnabled, setSoundEnabled] = useLocalStorage<boolean>('pylingo_sound_v1', true);
   const [onboardingDone, setOnboardingDone] = useLocalStorage<boolean>('pylingo_onboarding_v1', false);
+  const [leitnerSchedule, setLeitnerSchedule] = useLocalStorage<Record<string, ILeitnerState>>('pylingo_leitner_v1', {});
 
   // --- ENGINE PYODIDE (WASM em Web Worker) ---
   const { ready: pyodideReady, error: pyodideError, runCode } = usePyodide();
@@ -44,6 +46,7 @@ export default function App() {
   const [sandboxCode, setSandboxCode] = useState<string>('# Escreva qualquer código aqui!\n\nfor i in range(5):\n    print(f"Olá, PyLingo número {i}!")\n');
   const [sandboxOutput, setSandboxOutput] = useState<string>('');
   const [sandboxLoading, setSandboxLoading] = useState<boolean>(false);
+  const [lessonMistakes, setLessonMistakes] = useState<number>(0);
 
   // --- FILA DE MODAIS SEQUENCIAL (FIFO) ---
   interface ModalItem {
@@ -119,6 +122,7 @@ export default function App() {
         activeTab: activeTab,
         currentLessonId: currentLesson ? currentLesson.id : null,
         soundEnabled: soundEnabled,
+        leitnerSchedule: leitnerSchedule,
       };
 
       const newDetections = checkNewAchievements(mockState, [...LESSONS_DATABASE]);
@@ -196,6 +200,8 @@ export default function App() {
       setUnlockedLessons(['f1_l1']);
       setCompletedLessons([]);
       setAchievements([]);
+      setLeitnerSchedule({});
+      setLessonMistakes(0);
       setMascotMood('thinking');
       setCurrentLesson(null);
       setSandboxOutput('');
@@ -208,6 +214,7 @@ export default function App() {
   // --- SELECIONAR LIÇÃO NA ÁRVORE ---
   const handleSelectLesson = (lesson: ILesson) => {
     playSound('click');
+    setLessonMistakes(0);
     setCurrentLesson(lesson);
     setMascotMood('thinking');
   };
@@ -219,8 +226,34 @@ export default function App() {
     // Captura nível antes da atualização de XP
     const previousLevel = calculateLevel(xp);
 
+    const now = Date.now();
+    const record = leitnerSchedule[currentLesson.id];
+    let extraXp = 0;
+    let nextLeitnerSchedule = { ...leitnerSchedule };
+
+    if (!record) {
+      // Primeira conclusão: Caixa 2, revisão programada para 24 horas depois
+      nextLeitnerSchedule[currentLesson.id] = {
+        box: 2,
+        nextReviewTimestamp: now + BOX_INTERVALS[1],
+      };
+    } else {
+      // Já existe registro
+      if (isLessonDue(record.nextReviewTimestamp, now)) {
+        if (lessonMistakes > 0) {
+          nextLeitnerSchedule[currentLesson.id] = demoteLesson(now);
+        } else {
+          nextLeitnerSchedule[currentLesson.id] = promoteLesson(record.box, now);
+          extraXp = 15;
+        }
+      }
+    }
+
+    setLeitnerSchedule(nextLeitnerSchedule);
+
     // Regras de negócio puras aplicadas no core
-    const updatedXp = addXp(xp, 25);
+    const totalXpEarned = 25 + extraXp;
+    const updatedXp = addXp(xp, totalXpEarned);
     const updatedCoins = coins + 5;
 
     let updatedCompleted = [...completedLessons];
@@ -248,7 +281,7 @@ export default function App() {
     // 1. Modal de Conclusão da Lição
     newModals.push({
       type: 'complete',
-      data: { xp: 25, coins: 5, totalXp: updatedXp }
+      data: { xp: totalXpEarned, coins: 5, totalXp: updatedXp }
     });
 
     // 2. Modal de Level Up (se houver)
@@ -268,6 +301,7 @@ export default function App() {
 
   // --- FALHA DE LIÇÃO (PERDA DE VIDA) ---
   const handleLessonFail = () => {
+    setLessonMistakes(prev => prev + 1);
     try {
       const updatedHearts = deductHeart(hearts);
       setHearts(updatedHearts);
@@ -383,6 +417,7 @@ export default function App() {
                   totalLessonsCount={LESSONS_DATABASE.length}
                   xp={xp}
                   achievements={achievements}
+                  leitnerSchedule={leitnerSchedule}
                 />
               </div>
 
@@ -394,6 +429,7 @@ export default function App() {
                     unlockedLessons={unlockedLessons}
                     completedLessons={completedLessons}
                     onSelectLesson={handleSelectLesson}
+                    leitnerSchedule={leitnerSchedule}
                   />
                 )}
 
@@ -463,6 +499,7 @@ export default function App() {
           totalLessonsCount={LESSONS_DATABASE.length}
           xp={xp}
           achievements={achievements}
+          leitnerSchedule={leitnerSchedule}
         />
       </div>
 

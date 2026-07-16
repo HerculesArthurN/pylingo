@@ -10,8 +10,8 @@
  */
 import React from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle2, Lock, Code2 } from 'lucide-react';
-import { ILesson } from '../core/types';
+import { CheckCircle2, Lock, Code2, RotateCcw } from 'lucide-react';
+import { ILesson, ILeitnerState } from '../core/types';
 import { ROADMAP_PHASES } from '../core/lessonsData';
 
 interface LearningTreeProps {
@@ -19,6 +19,7 @@ interface LearningTreeProps {
   unlockedLessons: string[];
   completedLessons: string[];
   onSelectLesson: (lesson: ILesson) => void;
+  leitnerSchedule: Record<string, ILeitnerState>;
 }
 
 export const LearningTree: React.FC<LearningTreeProps> = ({
@@ -26,6 +27,7 @@ export const LearningTree: React.FC<LearningTreeProps> = ({
   unlockedLessons,
   completedLessons,
   onSelectLesson,
+  leitnerSchedule,
 }) => {
   return (
     <div className="space-y-12 pb-16 select-none">
@@ -66,6 +68,9 @@ export const LearningTree: React.FC<LearningTreeProps> = ({
                     const isCompleted = completedLessons.includes(lesson.id);
                     const isActive = isUnlocked && !isCompleted;
 
+                    const leitnerRecord = leitnerSchedule[lesson.id];
+                    const isDue = isCompleted && !!leitnerRecord && Date.now() >= leitnerRecord.nextReviewTimestamp;
+
                     // Zigue-zague estilo Duolingo — offsets responsivos
                     let xOffsetClass = 'translate-x-0';
                     if (idx % 3 === 1) xOffsetClass = 'translate-x-3 sm:translate-x-6 md:translate-x-8';
@@ -88,11 +93,19 @@ export const LearningTree: React.FC<LearningTreeProps> = ({
                         <motion.button
                           onClick={() => isUnlocked && onSelectLesson(lesson)}
                           disabled={!isUnlocked}
-                          /* ── Animação de celebração para nós completados ── */
-                          initial={isCompleted ? { scale: 1 } : false}
-                          animate={isCompleted ? { scale: [1, 1.3, 1] } : {}}
+                          /* ── Animação de celebração para nós completados ou aura pulsante se due ── */
+                          initial={isDue ? { scale: 1 } : isCompleted ? { scale: 1 } : false}
+                          animate={
+                            isDue
+                              ? { boxShadow: ["0 0 0 0px rgba(245, 158, 11, 0.4)", "0 0 0 10px rgba(245, 158, 11, 0)"] }
+                              : isCompleted
+                              ? { scale: [1, 1.3, 1] }
+                              : {}
+                          }
                           transition={
-                            isCompleted
+                            isDue
+                              ? { duration: 1.5, repeat: Infinity }
+                              : isCompleted
                               ? { duration: 0.4, type: 'spring', stiffness: 300, damping: 12 }
                               : {}
                           }
@@ -100,7 +113,9 @@ export const LearningTree: React.FC<LearningTreeProps> = ({
                           whileHover={isUnlocked ? { scale: 1.12 } : {}}
                           whileTap={isUnlocked ? { scale: 0.95 } : {}}
                           className={`w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center border-b-8 active:border-b-0 active:translate-y-1 shadow-md focus:outline-none ${
-                            isCompleted
+                            isDue
+                              ? 'bg-amber-500 border-amber-700 text-white shadow-amber-100 hover:bg-amber-600'
+                              : isCompleted
                               ? 'bg-emerald-500 border-emerald-700 text-white shadow-emerald-100 hover:bg-emerald-600'
                               : isActive
                               ? 'bg-duo-green border-duo-green-dark text-white pulse-primary'
@@ -108,7 +123,9 @@ export const LearningTree: React.FC<LearningTreeProps> = ({
                           }`}
                           style={{ WebkitTapHighlightColor: 'transparent' }}
                         >
-                          {isCompleted ? (
+                          {isDue ? (
+                            <RotateCcw className="w-8 h-8" />
+                          ) : isCompleted ? (
                             <CheckCircle2 className="w-8 h-8" />
                           ) : !isUnlocked ? (
                             <Lock className="w-7 h-7" />
@@ -131,8 +148,13 @@ export const LearningTree: React.FC<LearningTreeProps> = ({
                           >
                             {lesson.difficulty}
                           </span>
-                          <p className="text-[9px] text-slate-400 mt-1 font-semibold">
-                            {isCompleted ? 'Praticar Novamente' : isUnlocked ? 'Jogar' : 'Bloqueada'}
+                          {isDue && (
+                            <p className="text-[9px] text-amber-600 mt-1 bg-amber-50 rounded px-1.5 py-0.5 border border-amber-200 animate-pulse font-semibold">
+                              Revisão necessária para consolidação!
+                            </p>
+                          )}
+                          <p className={`text-[9px] mt-1 font-semibold ${isDue ? 'text-amber-600 font-bold' : 'text-slate-400'}`}>
+                            {isDue ? 'Revisar' : isCompleted ? 'Praticar Novamente' : isUnlocked ? 'Jogar' : 'Bloqueada'}
                           </p>
                         </div>
                       </motion.div>

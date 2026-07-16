@@ -11,8 +11,8 @@
  *   - Invariante:    Apenas as 3 abas definidas em `ActiveTab` são renderizadas.
  */
 import React from 'react';
-import { BookOpen, Code2, Award, Sparkles } from 'lucide-react';
-import { ActiveTab, MascotMood } from '../core/types';
+import { BookOpen, Code2, Award, Sparkles, RotateCcw, Zap } from 'lucide-react';
+import { ActiveTab, MascotMood, ILeitnerState } from '../core/types';
 import { Mascot } from './Mascot';
 import { calculateLevel } from '../core/leveling';
 import { ACHIEVEMENTS_LIST } from '../core/achievements';
@@ -26,6 +26,7 @@ interface SidebarProps {
   totalLessonsCount: number;
   xp: number;
   achievements: string[];
+  leitnerSchedule: Record<string, ILeitnerState>;
 }
 
 // ─── Definição estrita dos tabs para evitar duplicação ────────────────────────
@@ -42,11 +43,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
   completedLessonsCount,
   totalLessonsCount,
   xp,
-  achievements
+  achievements,
+  leitnerSchedule,
 }) => {
   const progressPercentage = totalLessonsCount > 0 
     ? Math.round((completedLessonsCount / totalLessonsCount) * 100) 
     : 0;
+
+  const now = Date.now();
+  const dueReviewsCount = Object.values(leitnerSchedule).filter(
+    (record) => now >= record.nextReviewTimestamp
+  ).length;
 
   return (
     <>
@@ -109,6 +116,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <Sparkles className="w-4 h-4 text-blue-500" /> Pontuação Acumulada:
               </span>
               <span className="font-mono font-black text-blue-600 text-sm">{xp} XP</span>
+            </div>
+
+            {/* Card de Revisões Pendentes */}
+            <div className={`flex justify-between items-center rounded-2xl p-3 text-xs border transition-all duration-300 ${
+              dueReviewsCount > 0
+                ? 'bg-amber-50 border-amber-200 text-amber-800'
+                : 'bg-emerald-50 border-emerald-100 text-emerald-800'
+            }`}>
+              <div className="flex items-center gap-2">
+                {dueReviewsCount > 0 ? (
+                  <RotateCcw className="w-4 h-4 text-amber-500 animate-[spin_4s_linear_infinite]" />
+                ) : (
+                  <Zap className="w-4 h-4 text-emerald-500 animate-pulse" />
+                )}
+                <span className="font-bold">
+                  {dueReviewsCount > 0 ? `${dueReviewsCount} revisões sugeridas` : 'Revisão em dia! 🚀'}
+                </span>
+              </div>
+              {dueReviewsCount > 0 && (
+                <span className="bg-amber-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full animate-pulse">
+                  {dueReviewsCount}
+                </span>
+              )}
             </div>
           </div>
         </div>

@@ -36,6 +36,11 @@ export interface ILesson {
   hint: string;
 }
 
+export interface ILeitnerState {
+  box: number; // 1 a 5
+  nextReviewTimestamp: number; // Unix timestamp em ms
+}
+
 /**
  * Estado Global da Aplicação de Gamificação.
  */
@@ -50,6 +55,7 @@ export interface IGameState {
   currentLessonId: string | null;
   soundEnabled: boolean;
   achievements: string[];
+  leitnerSchedule: Record<string, ILeitnerState>;
 }
 
 export type AchievementTargetType = 'xp' | 'coins' | 'streak' | 'lessons' | 'phase_complete';
