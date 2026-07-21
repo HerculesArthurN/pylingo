@@ -1,15 +1,28 @@
 /* eslint-disable no-restricted-globals */
 /// <reference lib="webworker" />
 
-// Importa o interpretador Pyodide via CDN
-// Usamos a versão estável 0.26.1 do Pyodide
-importScripts("https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js");
+// A importação do Pyodide via CDN foi movida para dentro de getPyodide()
+// para garantir que self.onmessage seja sempre registrado no top-level,
+// mesmo quando a CDN estiver bloqueada ou offline.
 
 let pyodideInstance: any = null;
 
 async function getPyodide() {
   if (pyodideInstance) return pyodideInstance;
-  
+
+  // Carrega o script do Pyodide via CDN de forma resiliente.
+  // Se a CDN estiver indisponível, o erro é capturado e propagado
+  // com uma mensagem descritiva ao invés de falhar silenciosamente.
+  try {
+    importScripts("https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js");
+  } catch (cdnError: any) {
+    throw new Error(
+      `[PyLingo] Falha ao carregar Pyodide da CDN. ` +
+      `Verifique sua conexão com a internet ou se a CDN não está bloqueada. ` +
+      `Detalhes: ${cdnError.message}`
+    );
+  }
+
   // @ts-ignore - loadPyodide está disponível globalmente após importScripts no worker
   pyodideInstance = await self.loadPyodide();
   
@@ -42,7 +55,7 @@ function extractAssertLines(assertionsBlock: string): string[] {
 }
 
 self.onmessage = async (e: MessageEvent) => {
-  const { type, code, testAssertions } = e.data;
+  const { type, code, testAssertions, executionId } = e.data;
 
   if (type === 'init') {
     try {
@@ -57,6 +70,19 @@ self.onmessage = async (e: MessageEvent) => {
   if (type === 'run') {
     try {
       const py = await getPyodide();
+
+      // Limpa o escopo global do módulo __main__ entre execuções.
+      // Preserva apenas nomes dunder e módulos importados para evitar
+      // vazamento de estado entre lições (falsos positivos em asserts).
+      await py.runPythonAsync(`
+import types as _types
+_main = sys.modules['__main__']
+_preserve = {k for k in _main.__dict__ if k.startswith('__') or isinstance(_main.__dict__[k], _types.ModuleType)}
+for _k in list(_main.__dict__.keys()):
+    if _k not in _preserve:
+        del _main.__dict__[_k]
+del _preserve, _k, _main, _types
+`);
 
       // Limpa e redireciona os fluxos de saída padrão (stdout e stderr)
       await py.runPythonAsync(`
@@ -100,6 +126,7 @@ sys.stderr = io.StringIO()
           const stderr = await py.runPythonAsync("sys.stderr.getvalue()");
           self.postMessage({
             type: 'run-result',
+            executionId,
             success: false,
             output: partialStdout,
             error: firstFailedMessage,
@@ -119,6 +146,7 @@ sys.stderr = io.StringIO()
 
       self.postMessage({
         type: 'run-result',
+        executionId,
         success: true,
         output: stdout,
         error: stderr || undefined,
@@ -138,6 +166,7 @@ sys.stderr = io.StringIO()
 
       self.postMessage({
         type: 'run-result',
+        executionId,
         success: false,
         output: stdout,
         error: err.message,
