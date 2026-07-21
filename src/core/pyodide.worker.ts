@@ -1,20 +1,20 @@
 /* eslint-disable no-restricted-globals */
 /// <reference lib="webworker" />
 
-// A importação do Pyodide via CDN foi movida para dentro de getPyodide()
-// para garantir que self.onmessage seja sempre registrado no top-level,
-// mesmo quando a CDN estiver bloqueada ou offline.
-
 let pyodideInstance: any = null;
 
 async function getPyodide() {
   if (pyodideInstance) return pyodideInstance;
 
-  // Carrega o script do Pyodide via CDN de forma resiliente.
-  // Se a CDN estiver indisponível, o erro é capturado e propagado
-  // com uma mensagem descritiva ao invés de falhar silenciosamente.
   try {
-    importScripts("https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js");
+    // Em Web Workers de tipo ES Module ({ type: 'module' }), importScripts() é proibido pela especificação W3C.
+    // Carregamos o módulo ES oficial do Pyodide (pyodide.mjs) via import() dinâmico nativo da CDN.
+    // @ts-ignore
+    const { loadPyodide } = await import("https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.mjs");
+
+    pyodideInstance = await loadPyodide({
+      indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.1/full/"
+    });
   } catch (cdnError: any) {
     throw new Error(
       `[PyLingo] Falha ao carregar Pyodide da CDN. ` +
@@ -23,9 +23,6 @@ async function getPyodide() {
     );
   }
 
-  // @ts-ignore - loadPyodide está disponível globalmente após importScripts no worker
-  pyodideInstance = await self.loadPyodide();
-  
   // Inicialização básica dos pacotes de I/O padrão
   await pyodideInstance.runPythonAsync(`
 import sys
@@ -72,16 +69,16 @@ self.onmessage = async (e: MessageEvent) => {
       const py = await getPyodide();
 
       // Limpa o escopo global do módulo __main__ entre execuções.
-      // Preserva apenas nomes dunder e módulos importados para evitar
+      // Preserva apenas nomes dunder e módulos essenciais (sys, io) para evitar
       // vazamento de estado entre lições (falsos positivos em asserts).
       await py.runPythonAsync(`
-import types as _types
-_main = sys.modules['__main__']
-_preserve = {k for k in _main.__dict__ if k.startswith('__') or isinstance(_main.__dict__[k], _types.ModuleType)}
-for _k in list(_main.__dict__.keys()):
-    if _k not in _preserve:
-        del _main.__dict__[_k]
-del _preserve, _k, _main, _types
+import sys
+_m = sys.modules['__main__'].__dict__
+_user_keys = [k for k in list(_m.keys()) if not k.startswith('__') and k not in ('sys', 'io', '_m', '_k', '_user_keys')]
+for _k in _user_keys:
+    _m.pop(_k, None)
+_m.pop('_user_keys', None)
+_m.pop('_m', None)
 `);
 
       // Limpa e redireciona os fluxos de saída padrão (stdout e stderr)
