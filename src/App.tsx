@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
@@ -11,6 +11,7 @@ import { LessonCompleteModal } from './components/LessonCompleteModal';
 import { LevelUpModal } from './components/LevelUpModal';
 import { AchievementUnlockedModal } from './components/AchievementUnlockedModal';
 import { ProfileView } from './components/ProfileView';
+import { AuthView } from './components/AuthView';
 
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useAudio } from './hooks/useAudio';
@@ -23,6 +24,8 @@ import { addXp, deductHeart, addHeart, deductCoins, unlockNextLesson } from './c
 import { calculateLevel } from './core/leveling';
 import { ACHIEVEMENTS_LIST, checkNewAchievements } from './core/achievements';
 import { BOX_INTERVALS, promoteLesson, demoteLesson, isLessonDue } from './core/spacedRepetition';
+import { supabase, isCloudEnabled } from './core/supabaseClient';
+import { mergeProgress } from './core/cloud';
 
 export default function App() {
   // --- ESTADO PERSISTENTE (Casca Imperativa: LocalStorage) ---
@@ -37,6 +40,186 @@ export default function App() {
   const [onboardingDone, setOnboardingDone] = useLocalStorage<boolean>('pylingo_onboarding_v1', false);
   const [leitnerSchedule, setLeitnerSchedule] = useLocalStorage<Record<string, ILeitnerState>>('pylingo_leitner_v1', {});
   const [xpHistory, setXpHistory] = useLocalStorage<IXpHistoryItem[]>('pylingo_xp_history_v1', []);
+
+  // --- ESTADOS DE AUTENTICAÇÃO ---
+  const [user, setUser] = useState<any>(null);
+  const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
+
+  // --- MONITORAR AUTENTICAÇÃO (Supabase Auth Listener) ---
+  useEffect(() => {
+    const client = supabase;
+    if (!isCloudEnabled || !client) return;
+
+    // Escuta mudanças de autenticação
+    const { data: { subscription } } = client.auth.onAuthStateChange(async (event, session) => {
+      const currentUser = session?.user ?? null;
+      setUser(currentUser);
+
+      if (currentUser && (event === 'SIGNED_IN' || event === 'INITIAL_SESSION')) {
+        try {
+          const { data, error } = await client
+            .from('profiles')
+            .select('*')
+            .eq('id', currentUser.id)
+            .maybeSingle();
+
+          if (error && error.code !== 'PGRST116') {
+            throw error;
+          }
+
+          const localXp = Number(localStorage.getItem('pylingo_xp_v1') || '0');
+          const localHearts = Number(localStorage.getItem('pylingo_hearts_v1') || '5') as HeartsCount;
+          const localStreak = Number(localStorage.getItem('pylingo_streak_v1') || '1');
+          const localCoins = Number(localStorage.getItem('pylingo_coins_v1') || '10');
+          
+          let localUnlocked: string[] = ['f1_l1'];
+          try {
+            const raw = localStorage.getItem('pylingo_unlocked_v1');
+            if (raw) localUnlocked = JSON.parse(raw);
+          } catch {}
+
+          let localCompleted: string[] = [];
+          try {
+            const raw = localStorage.getItem('pylingo_completed_v1');
+            if (raw) localCompleted = JSON.parse(raw);
+          } catch {}
+
+          let localAchievements: string[] = [];
+          try {
+            const raw = localStorage.getItem('pylingo_achievements_v1');
+            if (raw) localAchievements = JSON.parse(raw);
+          } catch {}
+
+          let localLeitner: Record<string, ILeitnerState> = {};
+          try {
+            const raw = localStorage.getItem('pylingo_leitner_v1');
+            if (raw) localLeitner = JSON.parse(raw);
+          } catch {}
+
+          let localXpHistory: IXpHistoryItem[] = [];
+          try {
+            const raw = localStorage.getItem('pylingo_xp_history_v1');
+            if (raw) localXpHistory = JSON.parse(raw);
+          } catch {}
+
+          if (data) {
+            const localState: IGameState = {
+              xp: localXp,
+              hearts: localHearts,
+              streak: localStreak,
+              coins: localCoins,
+              unlockedLessons: localUnlocked,
+              completedLessons: localCompleted,
+              activeTab: 'tree',
+              currentLessonId: null,
+              soundEnabled: true,
+              achievements: localAchievements,
+              leitnerSchedule: localLeitner,
+              xpHistory: localXpHistory,
+            };
+
+            const remoteState: IGameState = {
+              xp: data.xp ?? 0,
+              hearts: (data.hearts ?? 5) as HeartsCount,
+              streak: data.streak ?? 1,
+              coins: data.coins ?? 10,
+              unlockedLessons: data.unlocked_lessons || data.unlockedLessons || ['f1_l1'],
+              completedLessons: data.completed_lessons || data.completedLessons || [],
+              activeTab: 'tree',
+              currentLessonId: null,
+              soundEnabled: true,
+              achievements: data.achievements || [],
+              leitnerSchedule: data.leitner_schedule || data.leitnerSchedule || {},
+              xpHistory: data.xp_history || data.xpHistory || [],
+            };
+
+            const merged = mergeProgress(localState, remoteState);
+
+            setXp(merged.xp);
+            setHearts(merged.hearts);
+            setStreak(merged.streak);
+            setCoins(merged.coins);
+            setUnlockedLessons(merged.unlockedLessons);
+            setCompletedLessons(merged.completedLessons);
+            setAchievements(merged.achievements);
+            setLeitnerSchedule(merged.leitnerSchedule);
+            setXpHistory(merged.xpHistory);
+          } else {
+            // Criar registro na tabela profiles com dados locais atuais
+            const payload = {
+              id: currentUser.id,
+              xp: localXp,
+              coins: localCoins,
+              hearts: localHearts,
+              streak: localStreak,
+              unlocked_lessons: localUnlocked,
+              completed_lessons: localCompleted,
+              achievements: localAchievements,
+              leitner_schedule: localLeitner,
+              xp_history: localXpHistory,
+              updated_at: new Date().toISOString(),
+            };
+
+            const { error: insertError } = await client
+              .from('profiles')
+              .insert(payload);
+
+            if (insertError) {
+              console.error('Erro ao registrar novo usuário no Supabase:', insertError);
+            }
+          }
+        } catch (err) {
+          console.error('Erro de sincronização de login com o Supabase:', err);
+        }
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  // --- SINCRONIZAÇÃO ASSÍNCRONA DEBOUNCED (2 segundos) ---
+  useEffect(() => {
+    const client = supabase;
+    if (!isCloudEnabled || !client || !user) {
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      try {
+        const payload = {
+          id: user.id,
+          xp,
+          coins,
+          hearts,
+          streak,
+          unlocked_lessons: unlockedLessons,
+          completed_lessons: completedLessons,
+          achievements,
+          leitner_schedule: leitnerSchedule,
+          xp_history: xpHistory,
+          updated_at: new Date().toISOString(),
+        };
+
+        const { error } = await client
+          .from('profiles')
+          .upsert(payload);
+
+        if (error) {
+          console.error('Erro ao fazer upsert do progresso:', error);
+        }
+      } catch (err) {
+        console.error('Erro na sincronização automática:', err);
+      }
+    }, 2000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [xp, coins, hearts, completedLessons, unlockedLessons, achievements, leitnerSchedule, xpHistory, user]);
 
   // --- ENGINE PYODIDE (WASM em Web Worker) ---
   const { ready: pyodideReady, error: pyodideError, runCode } = usePyodide();
@@ -475,6 +658,14 @@ export default function App() {
                     coins={coins}
                     xpHistory={xpHistory}
                     mascotMood={mascotMood}
+                    user={user}
+                    onOpenAuth={() => setShowAuthModal(true)}
+                    onLogout={async () => {
+                      if (supabase) {
+                        await supabase.auth.signOut();
+                      }
+                      setUser(null);
+                    }}
                   />
                 )}
               </div>
@@ -507,6 +698,19 @@ export default function App() {
           />
         )}
       </main>
+
+      <AnimatePresence>
+        {showAuthModal && (
+          <AuthView
+            onAuthSuccess={(u) => {
+              setUser(u);
+              setShowAuthModal(false);
+            }}
+            onClose={() => setShowAuthModal(false)}
+            playSound={playSound}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Tab Bar Mobile — renderizada fora do grid para não ser ocultada pelo hidden lg:block */}
       <div className="lg:hidden">

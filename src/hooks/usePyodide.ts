@@ -26,6 +26,8 @@ export function usePyodide() {
   
   const workerRef = useRef<Worker | null>(null);
   const runResolverRef = useRef<((value: RunResult) => void) | null>(null);
+  const executionIdRef = useRef<string | null>(null);
+  const initTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Inicializa a instância do Web Worker
   const initWorker = useCallback(() => {
@@ -56,9 +58,15 @@ export function usePyodide() {
         testsPassed,
         testsFailed,
         firstFailedMessage,
+        executionId: responseId,
       } = e.data;
 
       if (type === 'init-ready') {
+        // Limpa o timer de timeout da inicialização CDN
+        if (initTimeoutRef.current) {
+          clearTimeout(initTimeoutRef.current);
+          initTimeoutRef.current = null;
+        }
         setLoading(false);
         if (success) {
           setReady(true);
@@ -68,6 +76,10 @@ export function usePyodide() {
           setError(initError || "Falha na inicialização do Pyodide.");
         }
       } else if (type === 'run-result') {
+        // Valida nonce: descarta mensagens spoofadas ou de execuções anteriores
+        if (responseId !== executionIdRef.current) return;
+        executionIdRef.current = null;
+
         if (runResolverRef.current) {
           runResolverRef.current({
             success,
@@ -84,6 +96,14 @@ export function usePyodide() {
     };
 
     worker.postMessage({ type: 'init' });
+
+    // Timeout de segurança: se a CDN não responder em 15s, aborta o loading
+    initTimeoutRef.current = setTimeout(() => {
+      if (!ready) {
+        setLoading(false);
+        setError("Tempo limite de conexão com o servidor Python CDN expirado. Verifique sua conexão de internet.");
+      }
+    }, 15000);
   }, []);
 
   // Inicializa o Worker no mount do componente
@@ -92,6 +112,10 @@ export function usePyodide() {
     return () => {
       if (workerRef.current) {
         workerRef.current.terminate();
+      }
+      if (initTimeoutRef.current) {
+        clearTimeout(initTimeoutRef.current);
+        initTimeoutRef.current = null;
       }
     };
   }, [initWorker]);
@@ -107,6 +131,10 @@ export function usePyodide() {
         });
         return;
       }
+
+      // Gera nonce único para esta execução (anti-spoofing)
+      const executionId = crypto.randomUUID();
+      executionIdRef.current = executionId;
 
       // Atribui o resolve atual à referência
       runResolverRef.current = resolve;
@@ -126,6 +154,7 @@ export function usePyodide() {
             error: "TimeoutError: O tempo limite de execução de 5.0 segundos foi atingido (possível loop infinito)."
           });
           runResolverRef.current = null;
+          executionIdRef.current = null;
 
           // 3. Recria o Web Worker para as próximas execuções
           initWorker();
@@ -139,11 +168,12 @@ export function usePyodide() {
         originalResolver(res);
       };
 
-      // Dispara a mensagem com o código e testes
+      // Dispara a mensagem com o código, testes e nonce
       workerRef.current.postMessage({
         type: 'run',
         code,
-        testAssertions
+        testAssertions,
+        executionId,
       });
     });
   }, [ready, initWorker]);

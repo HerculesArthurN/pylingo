@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Zap, Flame, Trophy, Coins } from 'lucide-react';
+import { Zap, Flame, Trophy, Coins, ShieldCheck, LogOut, Key } from 'lucide-react';
 import { IXpHistoryItem } from '../core/types';
 import { Mascot } from './Mascot';
 import { calculateLevel } from '../core/leveling';
@@ -25,6 +25,9 @@ interface ProfileViewProps {
   coins: number;
   xpHistory: IXpHistoryItem[];
   mascotMood: 'happy' | 'thinking' | 'sad' | 'geek';
+  user: any;
+  onOpenAuth: () => void;
+  onLogout: () => void;
 }
 
 const DAY_FULL_NAMES: Record<string, string> = {
@@ -69,6 +72,9 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
   coins,
   xpHistory,
   mascotMood,
+  user,
+  onOpenAuth,
+  onLogout,
 }) => {
   const currentLevel = calculateLevel(xp);
   const badgeText = getLevelBadge(currentLevel);
@@ -213,57 +219,110 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         </motion.div>
       </div>
 
-      {/* Coluna Direita: Gráfico de Desempenho Semanal */}
-      <motion.div
-        variants={itemVariants}
-        className="bg-white border-2 border-slate-200 border-b-4 rounded-3xl p-6 flex flex-col hover:border-slate-300 transition-colors h-full"
-      >
-        <div className="mb-4">
-          <h3 className="text-lg font-black text-slate-800 tracking-tight">
-            Desempenho Semanal
-          </h3>
-          <p className="text-xs font-bold text-slate-400">
-            XP obtido por dia da semana atual
-          </p>
-        </div>
+      {/* Coluna Direita: Sincronização + Gráfico */}
+      <div className="flex flex-col gap-6 w-full">
+        
+        {/* Bloco de Autenticação */}
+        <motion.div
+          variants={itemVariants}
+          className="bg-white border-2 border-slate-200 border-b-4 rounded-3xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-slate-300 transition-colors"
+        >
+          {user ? (
+            <>
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="bg-emerald-100 p-2.5 rounded-2xl text-emerald-600 shrink-0">
+                  <ShieldCheck size={24} className="stroke-[2.5]" />
+                </div>
+                <div className="flex flex-col min-w-0">
+                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-600">Sincronizado com a Nuvem</span>
+                  <span className="text-sm font-bold text-slate-700 truncate" title={user.email}>
+                    Autenticado como: <span className="font-extrabold text-slate-800">{user.email}</span>
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={onLogout}
+                className="flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 font-extrabold text-xs rounded-xl border border-slate-200 hover:border-rose-200 transition-all shrink-0 active:scale-95"
+              >
+                <LogOut size={14} />
+                <span>Sair</span>
+              </button>
+            </>
+          ) : (
+            <>
+              <div className="flex items-center gap-3">
+                <div className="bg-amber-100 p-2.5 rounded-2xl text-amber-500 shrink-0">
+                  <Key size={24} className="stroke-[2.5]" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-amber-500">Salvar na Nuvem</span>
+                  <p className="text-xs font-bold text-slate-600 leading-snug">
+                    Sincronize seu progresso na nuvem para não perder suas conquistas!
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={onOpenAuth}
+                className="flex items-center justify-center gap-2 px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 active:translate-y-0.5 border-b-4 border-emerald-700 active:border-b-0 text-white font-extrabold text-xs rounded-xl shadow-sm transition-all shrink-0"
+              >
+                <span>Criar Conta / Entrar</span>
+              </button>
+            </>
+          )}
+        </motion.div>
 
-        {/* Container do Gráfico */}
-        <div className="w-full relative h-[280px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={weeklyData}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-              <XAxis
-                dataKey="dayName"
-                axisLine={false}
-                tickLine={false}
-                stroke="#94a3b8"
-                fontSize={11}
-                fontWeight="bold"
-              />
-              <YAxis
-                axisLine={false}
-                tickLine={false}
-                stroke="#94a3b8"
-                fontSize={11}
-                fontWeight="bold"
-              />
-              <Tooltip
-                content={<CustomTooltip />}
-                cursor={{ fill: '#f1f5f9', opacity: 0.5 }}
-              />
-              <Bar dataKey="xp" fill="#58CC02" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+        {/* Gráfico de Desempenho Semanal */}
+        <motion.div
+          variants={itemVariants}
+          className="bg-white border-2 border-slate-200 border-b-4 rounded-3xl p-6 flex flex-col hover:border-slate-300 transition-colors h-full"
+        >
+          <div className="mb-4">
+            <h3 className="text-lg font-black text-slate-800 tracking-tight">
+              Desempenho Semanal
+            </h3>
+            <p className="text-xs font-bold text-slate-400">
+              XP obtido por dia da semana atual
+            </p>
+          </div>
 
-        {/* Resumo da semana */}
-        <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
-          <span className="font-bold text-slate-400">Aulas Concluídas:</span>
-          <span className="font-extrabold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg">
-            {completedLessonsCount} / {totalLessonsCount}
-          </span>
-        </div>
-      </motion.div>
+          {/* Container do Gráfico */}
+          <div className="w-full relative h-[280px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={weeklyData}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                <XAxis
+                  dataKey="dayName"
+                  axisLine={false}
+                  tickLine={false}
+                  stroke="#94a3b8"
+                  fontSize={11}
+                  fontWeight="bold"
+                />
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                  stroke="#94a3b8"
+                  fontSize={11}
+                  fontWeight="bold"
+                />
+                <Tooltip
+                  content={<CustomTooltip />}
+                  cursor={{ fill: '#f1f5f9', opacity: 0.5 }}
+                />
+                <Bar dataKey="xp" fill="#58CC02" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Resumo da semana */}
+          <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+            <span className="font-bold text-slate-400">Aulas Concluídas:</span>
+            <span className="font-extrabold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg">
+              {completedLessonsCount} / {totalLessonsCount}
+            </span>
+          </div>
+        </motion.div>
+      </div>
     </motion.div>
   );
 };
