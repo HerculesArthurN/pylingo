@@ -1,1 +1,61 @@
-node_modules
+# ─────────────────────────────────────────────────────────
+# PyLingo — .gitignore
+# ─────────────────────────────────────────────────────────
+
+# Dependências
+node_modules/
+.pnp
+.pnp.js
+
+# Builds e artefatos de produção
+dist/
+build/
+*.tsbuildinfo
+
+# Ambientes virtuais Python
+.venv/
+venv/
+__pycache__/
+
+# Variáveis de ambiente e credenciais
+.env
+.env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+*.key
+secrets/
+
+# Documentação técnica interna e privada
+docs/
+*_audit.md
+*_plan.md
+*_revised.md
+pylingo_*.md
+pylingo_*.tsx
+PRD.md
+Plano de Arquitetura e Desenvolvimento Multi-Agente.md
+
+# IDE e editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Testes e cobertura
+coverage/
+*.lcov
+
+# Sistema
+.cache/
