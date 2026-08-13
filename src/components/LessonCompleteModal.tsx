@@ -1,22 +1,16 @@
 /**
  * LessonCompleteModal.tsx
  *
- * Modal fullscreen de celebração exibido ao completar uma lição.
- *
- * Contrato (DbC):
- *   - Pré-condição:  `xpEarned > 0`, `coinsEarned >= 0`, `totalXp >= 0`.
- *   - Pós-condição:  Renderiza overlay com confetes, ticker de XP/moedas,
- *                    barra de nível animada e botão de continuação.
- *   - Invariante:    Nenhum estado visual inconsistente — tickers sempre
- *                    convergem para o valor final; barra nunca excede 100%.
+ * Modal fullscreen de celebração exibido ao completar uma lição (Bioma Pythonico).
  */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Star, Coins } from 'lucide-react';
 import { Mascot } from './Mascot';
 import { calculateLevel, getLevelProgress } from '../core/leveling';
+import { PrimaryButton3D } from './PrimaryButton3D';
+import { biomaSpringTransition } from '../utils/motion';
 
-// ─── Contrato de Props ──────────────────────────────────────────────────────────
 interface LessonCompleteModalProps {
   xpEarned: number;
   coinsEarned: number;
@@ -25,13 +19,12 @@ interface LessonCompleteModalProps {
   playSound: (type: 'success' | 'error' | 'click') => void;
 }
 
-// ─── Confetti Config ────────────────────────────────────────────────────────────
 const CONFETTI_COLORS = [
-  '#58CC02', // verde
-  '#CE82FF', // roxo
-  '#FF9600', // laranja
-  '#1CB0F6', // azul
-  '#FF4B4B', // vermelho
+  '#1E5A3B', // bioma-leaf
+  '#B45309', // bioma-amber
+  '#8C321D', // bioma-clay
+  '#163323', // bioma-moss
+  '#D8F3DC', // bioma-leaf-light
 ] as const;
 
 const CONFETTI_COUNT = 35;
@@ -52,7 +45,7 @@ function generateConfetti(): readonly ConfettiParticle[] {
     id: i,
     x: `${Math.random() * 100}vw`,
     color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
-    size: Math.random() * 6 + 6, // 6–12px
+    size: Math.random() * 6 + 6,
     borderRadius: Math.random() > 0.5 ? '50%' : `${Math.random() * 4}px`,
     rotate: Math.random() * 720 - 360,
     duration: Math.random() * 2 + 1.5,
@@ -60,11 +53,6 @@ function generateConfetti(): readonly ConfettiParticle[] {
   }));
 }
 
-// ─── Ticker Hook ────────────────────────────────────────────────────────────────
-/**
- * Conta de 0 até `target` em aproximadamente `durationMs` usando requestAnimationFrame.
- * Retorna o valor inteiro atual do contador.
- */
 function useCountUp(target: number, durationMs: number = 1000): number {
   const [count, setCount] = useState(0);
   const startTimeRef = useRef<number | null>(null);
@@ -102,7 +90,6 @@ function useCountUp(target: number, durationMs: number = 1000): number {
   return count;
 }
 
-// ─── Componente Principal ───────────────────────────────────────────────────────
 export const LessonCompleteModal: React.FC<LessonCompleteModalProps> = ({
   xpEarned,
   coinsEarned,
@@ -110,7 +97,6 @@ export const LessonCompleteModal: React.FC<LessonCompleteModalProps> = ({
   onContinue,
   playSound,
 }) => {
-  // Fail-Fast: rejeitar valores inválidos
   if (xpEarned <= 0) {
     throw new Error(
       `[LessonCompleteModal] xpEarned deve ser > 0. Recebido: ${xpEarned}`
@@ -127,18 +113,13 @@ export const LessonCompleteModal: React.FC<LessonCompleteModalProps> = ({
     );
   }
 
-  // ── Confetti (memoizado para evitar recriação a cada render) ──
   const confetti = useMemo(() => generateConfetti(), []);
-
-  // ── Tickers animados ──
   const xpCount = useCountUp(xpEarned, 1000);
   const coinsCount = useCountUp(coinsEarned, 800);
 
-  // ── Nível e progresso ──
   const level = calculateLevel(totalXp);
   const { currentLevelXp, nextLevelXp, percentage } = getLevelProgress(totalXp);
 
-  // ── Efeito sonoro (1 única vez na montagem) ──
   const hasFiredSound = useRef(false);
   useEffect(() => {
     if (!hasFiredSound.current) {
@@ -148,9 +129,14 @@ export const LessonCompleteModal: React.FC<LessonCompleteModalProps> = ({
   }, [playSound]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-slate-900/70">
-      {/* ── Confetes (layer do overlay, fora do card) ── */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div 
+      role="dialog"
+      aria-modal="true"
+      aria-label="Modal de Lição Concluída"
+      className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-bioma-moss-dark/70"
+    >
+      {/* Confetes */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
         {confetti.map((p) => (
           <motion.div
             key={p.id}
@@ -173,40 +159,38 @@ export const LessonCompleteModal: React.FC<LessonCompleteModalProps> = ({
         ))}
       </div>
 
-      {/* ── Card central ── */}
+      {/* Card central */}
       <motion.div
-        className="relative z-10 bg-white rounded-3xl shadow-2xl px-8 py-10 mx-4 max-w-md w-full flex flex-col items-center gap-5"
+        className="relative z-10 bg-bioma-card rounded-organic-md border border-bioma-border shadow-warm-md px-8 py-10 mx-4 max-w-md w-full flex flex-col items-center gap-5"
         initial={{ scale: 0.8, opacity: 0, y: 30 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
-        transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+        transition={biomaSpringTransition}
       >
-        {/* ── Mascote ── */}
         <Mascot mood="happy" size="h-28 w-28" />
 
-        {/* ── Título ── */}
         <motion.h2
-          className="text-3xl font-black text-emerald-500 text-center"
+          className="text-3xl font-extrabold text-bioma-moss text-center"
           initial={{ scale: 0.5, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: 'spring', stiffness: 200 }}
+          transition={biomaSpringTransition}
         >
           Lição Concluída!
         </motion.h2>
 
-        {/* ── Ticker de XP ── */}
+        {/* Ticker de XP */}
         <motion.div
           className="flex items-center gap-2"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Star className="w-8 h-8 text-amber-400 fill-amber-400" />
-          <span className="text-4xl font-black text-amber-400">
+          <Star className="w-8 h-8 text-bioma-amber fill-bioma-amber" />
+          <span className="text-4xl font-extrabold text-bioma-amber">
             +{xpCount} XP
           </span>
         </motion.div>
 
-        {/* ── Ticker de Moedas ── */}
+        {/* Ticker de Moedas */}
         {coinsEarned > 0 && (
           <motion.div
             className="flex items-center gap-2"
@@ -214,29 +198,29 @@ export const LessonCompleteModal: React.FC<LessonCompleteModalProps> = ({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
           >
-            <Coins className="w-6 h-6 text-yellow-500" />
-            <span className="text-2xl font-bold text-yellow-500">
+            <Coins className="w-6 h-6 text-bioma-amber" />
+            <span className="text-2xl font-extrabold text-bioma-amber">
               +{coinsCount} Moedas
             </span>
           </motion.div>
         )}
 
-        {/* ── Barra de Progresso do Nível ── */}
+        {/* Barra de Progresso do Nível */}
         <motion.div
           className="w-full mt-2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
         >
-          <div className="flex justify-between text-sm font-semibold mb-1">
-            <span className="text-slate-600">Nível {level}</span>
-            <span className="text-slate-400">
+          <div className="flex justify-between text-sm font-bold mb-1">
+            <span className="text-bioma-bark">Nível {level}</span>
+            <span className="text-bioma-muted">
               {currentLevelXp}/{nextLevelXp} XP
             </span>
           </div>
-          <div className="bg-slate-200 rounded-full h-4 overflow-hidden">
+          <div className="bg-bioma-sand border border-bioma-border rounded-full h-4 overflow-hidden">
             <motion.div
-              className="bg-gradient-to-r from-emerald-400 to-emerald-500 h-full rounded-full"
+              className="bg-bioma-leaf h-full rounded-full"
               initial={{ width: '0%' }}
               animate={{ width: `${percentage}%` }}
               transition={{ duration: 1.2, ease: 'easeOut', delay: 0.7 }}
@@ -244,15 +228,14 @@ export const LessonCompleteModal: React.FC<LessonCompleteModalProps> = ({
           </div>
         </motion.div>
 
-        {/* ── Botão Continuar ── */}
-        <motion.button
-          className="btn-duo-primary w-full mt-4 text-base"
+        {/* Botão Continuar */}
+        <PrimaryButton3D
+          variant="leaf"
           onClick={onContinue}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          className="w-full mt-4 text-base"
         >
           CONTINUAR →
-        </motion.button>
+        </PrimaryButton3D>
       </motion.div>
     </div>
   );

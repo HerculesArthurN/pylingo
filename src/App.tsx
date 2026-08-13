@@ -258,7 +258,6 @@ export default function App() {
     }
   };
 
-  // --- COMPRA DE PASSE DE DICAS (LOJA) ---
   const handleBuyHintPass = () => {
     try {
       const nextCoins = deductCoins(coins, 35);
@@ -313,13 +312,11 @@ export default function App() {
     setMascotMood('thinking');
   };
 
-  // --- CONCLUSÃO DE EXERCÍCIO COM SUCESSO ---
   const handleLessonSuccess = (attempts: number = 1, maxHintUsed: number = 0) => {
     if (!currentLesson) return;
 
     const previousLevel = calculateLevel(xp);
 
-    // Registra nível de dica utilizado
     if (maxHintUsed > 0) {
       setHintsUsed(prev => ({ ...prev, [currentLesson.id]: maxHintUsed }));
     }
@@ -407,7 +404,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans selection:bg-emerald-200">
+    <div className="min-h-screen bg-bioma-sand text-bioma-bark flex flex-col font-sans selection:bg-bioma-leaf selection:text-white bg-bioma-pattern">
       
       {/* Header Global */}
       <Header
@@ -436,14 +433,13 @@ export default function App() {
       <main className="flex-1 flex flex-col max-w-6xl w-full mx-auto p-4 md:py-8 pb-20 lg:pb-4" data-queue-size={modalQueue.length}>
         
         {pyodideError && (
-          <div className="bg-rose-100 border border-rose-200 text-rose-800 px-4 py-3 rounded-2xl mb-6 text-xs font-bold font-mono">
+          <div className="bg-bioma-clay-soft text-bioma-clay border border-bioma-clay/40 px-4 py-3 rounded-organic-sm mb-6 text-xs font-bold font-mono">
             ⚠️ Ocorreu um erro ao carregar o interpretador Python WASM: {pyodideError}
           </div>
         )}
 
         <AnimatePresence mode="wait">
           {currentLesson ? (
-            // Visualização de Exercício / Lição Ativa
             <motion.div
               key="active-lesson"
               initial={{ opacity: 0, x: 40 }}
@@ -464,7 +460,6 @@ export default function App() {
               />
             </motion.div>
           ) : activeTab === 'book' && activeChapter ? (
-            // Visualização do Livro Interativo
             <motion.div
               key="active-book"
               initial={{ opacity: 0, x: 40 }}
@@ -482,7 +477,6 @@ export default function App() {
               />
             </motion.div>
           ) : (
-            // Interface Dashboard Padrão
             <motion.div
               key="dashboard"
               initial={{ opacity: 0, x: 40 }}
@@ -491,7 +485,6 @@ export default function App() {
               transition={{ duration: 0.25, ease: 'easeInOut' }}
               className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
             >
-              {/* Sidebar Lateral */}
               <div className="hidden lg:block lg:col-span-4">
                 <Sidebar
                   activeTab={activeTab}
@@ -511,7 +504,6 @@ export default function App() {
                 />
               </div>
 
-              {/* Painel Central */}
               <div className="lg:col-span-8">
                 {activeTab === 'tree' && (
                   <LearningTree
@@ -574,7 +566,6 @@ export default function App() {
           )}
         </AnimatePresence>
 
-        {/* Modais Sequenciais */}
         {activeModal?.type === 'complete' && (
           <LessonCompleteModal
             xpEarned={activeModal.data.xp}
@@ -613,7 +604,6 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {/* Tab Bar Mobile */}
       <div className="lg:hidden">
         <Sidebar
           activeTab={activeTab}
@@ -634,12 +624,12 @@ export default function App() {
         />
       </div>
 
-      <footer className="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs text-slate-400 select-none mb-16 lg:mb-0">
+      <footer className="bg-bioma-card border-t border-bioma-border py-6 mt-12 text-center text-xs text-bioma-muted select-none mb-16 lg:mb-0">
         <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
-          <span>© 2026 PyLingo Inc. Projetado para capacitação real em Computação e Python.</span>
+          <span>© 2026 PyLingo Inc. Bioma Pythonico v2.0 • Aprendizado Acolhedor & Fluido.</span>
           <div className="flex items-center space-x-2">
-            <span className="bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-bold">Vite Web Worker</span>
-            <span className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full font-bold">Pyodide WASM Runtime</span>
+            <span className="bg-bioma-sand text-bioma-bark border border-bioma-border px-3 py-1 rounded-organic-sm font-bold">Vite Web Worker</span>
+            <span className="bg-bioma-leaf-light text-bioma-leaf px-3 py-1 rounded-organic-sm font-bold">Pyodide WASM Runtime</span>
           </div>
         </div>
       </footer>

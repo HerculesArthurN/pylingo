@@ -1,13 +1,7 @@
 /**
  * Mascot.tsx
  *
- * Componente declarativo e animado do mascote Lingo (cobra Python).
- *
- * Contrato (DbC):
- *   - Pré-condição:  `mood` deve ser um dos literais de `MascotMood`.
- *   - Pós-condição:  Renderiza o mascote com animações determinísticas para o humor recebido.
- *   - Invariante:    Jamais usa strings literais de humor fora do tipo — falha imediato se receber
- *                    valor desconhecido (Fail-Fast / Irrepresentabilidade de Estados Inválidos).
+ * Componente declarativo e animado do mascote Lingo (cobra Python) - Bioma Pythonico.
  */
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
@@ -19,19 +13,19 @@ interface MascotProps {
   size?: string; // classe Tailwind ex: "h-40 w-40"
 }
 
-// ─── Paleta de cores por humor ────────────────────────────────────────────────
+// ─── Paleta de cores por humor (Bioma Pythonico) ──────────────────────────────
 const BODY_COLOR: Record<MascotMood, string> = {
-  happy:    '#22c55e',
-  thinking: '#22c55e',
-  sad:      '#64748b',
-  geek:     '#22c55e',
+  happy:    '#2D6A4F',
+  thinking: '#2D6A4F',
+  sad:      '#52605B',
+  geek:     '#2D6A4F',
 };
 
 const EYE_COLOR: Record<MascotMood, string> = {
-  happy:    '#1e293b',
-  thinking: '#1e293b',
-  sad:      '#94a3b8',
-  geek:     '#1e293b',
+  happy:    '#1C2826',
+  thinking: '#1C2826',
+  sad:      '#52605B',
+  geek:     '#1C2826',
 };
 
 // ─── Variantes Framer Motion por humor ───────────────────────────────────────
@@ -96,10 +90,6 @@ const BODY_VARIANTS: Record<MascotMood, Variants> = {
 };
 
 // ─── Pálpebra — animação de piscada espontânea ────────────────────────────────
-/**
- * Hook que retorna se o mascote está piscando (true por 120 ms a cada ~4 s).
- * Usado exclusivamente nos estados 'thinking' e 'geek'.
- */
 function useBlinkCycle(active: boolean): boolean {
   const [blinking, setBlinking] = useState(false);
 
@@ -112,12 +102,12 @@ function useBlinkCycle(active: boolean): boolean {
     let timeout: ReturnType<typeof setTimeout>;
 
     const schedule = () => {
-      const delay = 3500 + Math.random() * 2000; // 3.5–5.5 s entre piscadas
+      const delay = 3500 + Math.random() * 2000;
       timeout = setTimeout(() => {
         setBlinking(true);
         setTimeout(() => {
           setBlinking(false);
-          schedule(); // agenda a próxima
+          schedule();
         }, 120);
       }, delay);
     };
@@ -131,14 +121,13 @@ function useBlinkCycle(active: boolean): boolean {
 
 // ─── Sub-componentes de acessórios por humor ─────────────────────────────────
 
-/** 5 partículas de confete SVG para o estado 'happy'. */
 const HappyConfetti: React.FC = () => {
   const particles = [
-    { cx: 15,  cy: 25,  r: 3, fill: '#eab308', delayMs: 0 },
-    { cx: 135, cy: 18,  r: 4, fill: '#3b82f6', delayMs: 150 },
-    { cx: 120, cy: 120, r: 3, fill: '#ec4899', delayMs: 80 },
-    { cx: 20,  cy: 110, r: 2, fill: '#f97316', delayMs: 220 },
-    { cx: 130, cy: 95,  r: 3, fill: '#a855f7', delayMs: 50 },
+    { cx: 15,  cy: 25,  r: 3, fill: '#D97706', delayMs: 0 },
+    { cx: 135, cy: 18,  r: 4, fill: '#2D6A4F', delayMs: 150 },
+    { cx: 120, cy: 120, r: 3, fill: '#8C4A32', delayMs: 80 },
+    { cx: 20,  cy: 110, r: 2, fill: '#D97706', delayMs: 220 },
+    { cx: 130, cy: 95,  r: 3, fill: '#2D6A4F', delayMs: 50 },
   ];
 
   return (
@@ -165,11 +154,10 @@ const HappyConfetti: React.FC = () => {
   );
 };
 
-/** Lágrima SVG deslizante para o estado 'sad'. */
 const SadTear: React.FC = () => (
   <motion.path
     d="M48,62 Q44,70 48,75 Q53,75 51,68 Z"
-    fill="#38bdf8"
+    fill="#8C4A32"
     initial={{ opacity: 0, y: -4 }}
     animate={{ opacity: [0, 1, 1, 0], y: [-4, 14] }}
     transition={{
@@ -181,28 +169,22 @@ const SadTear: React.FC = () => (
   />
 );
 
-/** Óculos escuros que entram deslizando do topo para o estado 'geek'. */
 const GeekSunglasses: React.FC = () => (
   <motion.g
     initial={{ y: -60, opacity: 0 }}
     animate={{ y: 0,   opacity: 1 }}
     transition={{ type: 'spring', stiffness: 120, damping: 14 }}
   >
-    {/* Lente esquerda */}
-    <rect x="25" y="45" width="38" height="15" rx="5" fill="#0f172a" />
-    {/* Lente direita */}
-    <rect x="77" y="45" width="38" height="15" rx="5" fill="#0f172a" />
-    {/* Ponte */}
-    <line x1="63" y1="52" x2="77" y2="52" stroke="#0f172a" strokeWidth="5" />
-    {/* Hastes */}
-    <path d="M15,50 L25,50" stroke="#0f172a" strokeWidth="3" strokeLinecap="round" />
-    <path d="M115,50 L127,50" stroke="#0f172a" strokeWidth="3" strokeLinecap="round" />
+    <rect x="25" y="45" width="38" height="15" rx="5" fill="#1C2826" />
+    <rect x="77" y="45" width="38" height="15" rx="5" fill="#1C2826" />
+    <line x1="63" y1="52" x2="77" y2="52" stroke="#1C2826" strokeWidth="5" />
+    <path d="M15,50 L25,50" stroke="#1C2826" strokeWidth="3" strokeLinecap="round" />
+    <path d="M115,50 L127,50" stroke="#1C2826" strokeWidth="3" strokeLinecap="round" />
   </motion.g>
 );
 
 // ─── Componente Principal ─────────────────────────────────────────────────────
 export const Mascot: React.FC<MascotProps> = ({ mood, size = 'h-40 w-40' }) => {
-  // Fail-Fast: garante que nenhum valor fora do tipo chegue aqui.
   const validMoods: MascotMood[] = ['happy', 'thinking', 'sad', 'geek'];
   if (!validMoods.includes(mood)) {
     throw new Error(
@@ -214,18 +196,16 @@ export const Mascot: React.FC<MascotProps> = ({ mood, size = 'h-40 w-40' }) => {
   const eyeColor   = EYE_COLOR[mood];
   const bodyVars   = BODY_VARIANTS[mood];
 
-  // Piscada ativa apenas em thinking/geek (onde os olhos estão visíveis e sem animação caótica)
   const blinkActive = mood === 'thinking' || mood === 'geek';
   const isBlinking  = useBlinkCycle(blinkActive);
 
-  // Sobrancelhas tristes inclinadas
   const eyebrowLeftStyle  = mood === 'sad' ? { transform: 'rotate(15deg)',  transformOrigin: '46px 38px'  } : {};
   const eyebrowRightStyle = mood === 'sad' ? { transform: 'rotate(-15deg)', transformOrigin: '93px 38px' } : {};
 
   return (
     <div className={`relative ${size} select-none`}>
       <motion.div
-        key={mood}                  // recria a animação a cada troca de humor
+        key={mood}
         variants={bodyVars}
         animate="animate"
         className="w-full h-full"
@@ -235,7 +215,8 @@ export const Mascot: React.FC<MascotProps> = ({ mood, size = 'h-40 w-40' }) => {
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           className="w-full h-full"
-          aria-label={`Mascote Lingo — humor: ${mood}`}
+          role="img"
+          aria-label={`Mascote Lingo no estado ${mood === 'happy' ? 'feliz' : mood === 'sad' ? 'triste' : mood === 'geek' ? 'óculos escuros sênior' : 'pensando'}`}
         >
           {/* ── Corpo enrolado da cobra ── */}
           <path
@@ -247,28 +228,28 @@ export const Mascot: React.FC<MascotProps> = ({ mood, size = 'h-40 w-40' }) => {
           />
           <path
             d="M75,130 C120,130 140,110 135,90"
-            stroke="#15803d"
+            stroke="#1E3A2B"
             strokeWidth="14"
             strokeLinecap="round"
           />
 
           {/* ── Manchas decorativas douradas ── */}
-          <circle cx="35"  cy="85"  r="5" fill="#facc15" />
-          <circle cx="80"  cy="110" r="4" fill="#facc15" />
-          <circle cx="115" cy="85"  r="5" fill="#facc15" />
+          <circle cx="35"  cy="85"  r="5" fill="#D97706" />
+          <circle cx="80"  cy="110" r="4" fill="#D97706" />
+          <circle cx="115" cy="85"  r="5" fill="#D97706" />
 
           {/* ── Cabeça ── */}
           <rect x="30" y="25" width="80" height="55" rx="25" fill={bodyColor} />
 
           {/* ── Sobrancelhas ── */}
-          <line x1="38" y1="38" x2="55" y2="38" stroke="#15803d" strokeWidth="4" strokeLinecap="round" style={eyebrowLeftStyle}  />
-          <line x1="85" y1="38" x2="102" y2="38" stroke="#15803d" strokeWidth="4" strokeLinecap="round" style={eyebrowRightStyle} />
+          <line x1="38" y1="38" x2="55" y2="38" stroke="#1E3A2B" strokeWidth="4" strokeLinecap="round" style={eyebrowLeftStyle}  />
+          <line x1="85" y1="38" x2="102" y2="38" stroke="#1E3A2B" strokeWidth="4" strokeLinecap="round" style={eyebrowRightStyle} />
 
           {/* ── Bochechas rosadas (happy) ── */}
           {mood === 'happy' && (
             <>
-              <circle cx="38"  cy="62" r="5" fill="#f43f5e" opacity="0.5" />
-              <circle cx="102" cy="62" r="5" fill="#f43f5e" opacity="0.5" />
+              <circle cx="38"  cy="62" r="5" fill="#8C4A32" opacity="0.5" />
+              <circle cx="102" cy="62" r="5" fill="#8C4A32" opacity="0.5" />
             </>
           )}
 
@@ -276,7 +257,7 @@ export const Mascot: React.FC<MascotProps> = ({ mood, size = 'h-40 w-40' }) => {
           {mood !== 'geek' && (
             <>
               {/* Olho esquerdo */}
-              <circle cx="48" cy="50" r="8" fill="#ffffff" />
+              <circle cx="48" cy="50" r="8" fill="#FFFFFF" />
               <circle cx="48" cy="50" r="4" fill={eyeColor} />
               {/* Pálpebra esquerda (piscada) */}
               <motion.rect
@@ -288,7 +269,7 @@ export const Mascot: React.FC<MascotProps> = ({ mood, size = 'h-40 w-40' }) => {
               />
 
               {/* Olho direito */}
-              <circle cx="92" cy="50" r="8" fill="#ffffff" />
+              <circle cx="92" cy="50" r="8" fill="#FFFFFF" />
               <circle cx="92" cy="50" r="4" fill={eyeColor} />
               {/* Pálpebra direita (piscada) */}
               <motion.rect
@@ -308,14 +289,14 @@ export const Mascot: React.FC<MascotProps> = ({ mood, size = 'h-40 w-40' }) => {
             width="30"
             height={mood === 'happy' ? 12 : 4}
             rx="5"
-            fill="#1e293b"
+            fill="#1C2826"
             style={{ transition: 'height 0.3s ease' }}
           />
 
           {/* ── Língua bifurcada ── */}
           <path
             d="M66,62 L66,74 L62,78 M66,74 L70,78"
-            stroke="#f43f5e"
+            stroke="#8C4A32"
             strokeWidth="3"
             strokeLinecap="round"
           />

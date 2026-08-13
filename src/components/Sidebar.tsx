@@ -1,10 +1,3 @@
-/**
- * Sidebar.tsx
- *
- * Componente de navegação responsivo:
- *   - Desktop (lg+): Sidebar lateral com mascote, tabs e progresso.
- *   - Mobile  (<lg): Tab bar fixa no bottom com ícones compactos.
- */
 import React from 'react';
 import { BookOpen, Code2, Award, Sparkles, RotateCcw, Zap, User } from 'lucide-react';
 import { ActiveTab, MascotMood, ILeitnerState } from '../core/types';
@@ -24,7 +17,6 @@ interface SidebarProps {
   leitnerSchedule: Record<string, ILeitnerState>;
 }
 
-// ─── Definição estrita dos tabs ────────────────────────
 const TABS: ReadonlyArray<{ id: ActiveTab; label: string; Icon: typeof BookOpen }> = [
   { id: 'tree',    label: 'Árvore',  Icon: BookOpen },
   { id: 'book',    label: 'Livro',   Icon: BookOpen },
@@ -54,20 +46,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <>
-      {/* ══════════════════════════════════════════════════════════════════════
-          DESKTOP — Sidebar lateral (visível apenas em lg+)
-          ══════════════════════════════════════════════════════════════════════ */}
+      {/* DESKTOP — Sidebar lateral (visível apenas em lg+) */}
       <div className="hidden lg:block space-y-6 select-none">
         
         {/* Container do Mascote */}
-        <div className="bg-white rounded-3xl border-2 border-slate-200 p-6 flex flex-col items-center text-center shadow-sm">
-          <div className="bg-slate-50 rounded-2xl p-6 w-full flex flex-col items-center border border-slate-100 relative overflow-hidden">
-            <div className="absolute top-2.5 right-2.5 bg-emerald-100 text-emerald-800 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">
+        <div className="bg-bioma-card rounded-organic-md border border-bioma-border p-6 flex flex-col items-center text-center shadow-warm-sm">
+          <div className="bg-bioma-sand rounded-organic-sm p-6 w-full flex flex-col items-center border border-bioma-sand-dark relative overflow-hidden">
+            <div className="absolute top-2.5 right-2.5 bg-bioma-leaf-light text-bioma-leaf text-xs font-bold px-2.5 py-1 rounded-organic-sm uppercase tracking-wider border border-bioma-leaf/20">
               Nível {calculateLevel(xp)}
             </div>
             <Mascot mood={mascotMood} size="h-36 w-36" />
-            <h3 className="text-lg font-black text-slate-800 mt-4">Lingo, o Python</h3>
-            <p className="text-xs text-slate-500 font-medium max-w-xs mt-1.5 leading-relaxed">
+            <h3 className="text-lg font-bold text-bioma-bark mt-4">Lingo, o Python</h3>
+            <p className="text-xs text-bioma-muted font-medium max-w-xs mt-1.5 leading-relaxed">
               "Olá, Humano! Pratique Python todos os dias para manter seu fogo aceso e me deixar feliz."
             </p>
           </div>
@@ -78,10 +68,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <button 
                 key={id}
                 onClick={() => onTabChange(id)}
-                className={`w-full p-4 rounded-2xl font-black text-sm flex items-center gap-3 transition-all relative ${
+                className={`w-full p-4 rounded-organic-sm font-bold text-sm flex items-center gap-3 transition-all relative cursor-pointer focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 ${
                   activeTab === id 
-                    ? 'bg-emerald-500 text-white border-b-4 border-emerald-700 shadow-md shadow-emerald-100' 
-                    : 'bg-white text-slate-600 border-2 border-slate-200 border-b-4 hover:bg-slate-50 active:border-b-2 active:translate-y-[2px]'
+                    ? 'bg-bioma-leaf text-white shadow-warm-3d active:translate-y-[6px]' 
+                    : 'bg-bioma-card text-bioma-bark border border-bioma-border hover:bg-bioma-sand'
                 }`}
               >
                 <Icon className="w-5 h-5" />
@@ -102,47 +92,47 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Caixa de Progresso — Desktop */}
-        <div className="bg-white rounded-3xl border-2 border-slate-200 p-6 shadow-sm space-y-4">
-          <h4 className="text-xs font-black text-slate-400 tracking-widest uppercase">Seu Desempenho</h4>
+        <div className="bg-bioma-card rounded-organic-md border border-bioma-border p-6 shadow-warm-sm space-y-4">
+          <h4 className="text-xs font-bold text-bioma-muted tracking-widest uppercase">Seu Desempenho</h4>
           <div className="space-y-3">
             <div>
-              <div className="flex justify-between text-xs font-bold text-slate-600 mb-1.5">
+              <div className="flex justify-between text-xs font-bold text-bioma-bark mb-1.5">
                 <span>Progresso Geral</span>
                 <span>{completedLessonsCount} / {totalLessonsCount} ({progressPercentage}%)</span>
               </div>
-              <div className="w-full bg-slate-100 rounded-full h-3.5 border border-slate-200 overflow-hidden">
+              <div className="w-full bg-bioma-sand rounded-full h-3.5 border border-bioma-border overflow-hidden">
                 <div 
-                  className="bg-emerald-500 h-full rounded-full transition-all duration-500 border-r-2 border-emerald-600" 
+                  className="bg-bioma-leaf h-full rounded-full transition-all duration-500" 
                   style={{ width: `${progressPercentage}%` }}
                 ></div>
               </div>
             </div>
 
-            <div className="flex items-center justify-between p-3 bg-slate-50 rounded-2xl border border-slate-100 text-xs">
-              <span className="font-bold text-slate-500 flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-blue-500" /> Pontuação Acumulada:
+            <div className="flex items-center justify-between p-3 bg-bioma-sand rounded-organic-sm border border-bioma-border text-xs">
+              <span className="font-bold text-bioma-muted flex items-center gap-1.5">
+                <Sparkles className="w-4 h-4 text-bioma-leaf" /> Pontuação Acumulada:
               </span>
-              <span className="font-mono font-black text-blue-600 text-sm">{xp} XP</span>
+              <span className="font-mono font-bold text-bioma-leaf text-sm">{xp} XP</span>
             </div>
 
             {/* Card de Revisões Pendentes */}
-            <div className={`flex justify-between items-center rounded-2xl p-3 text-xs border transition-all duration-300 ${
+            <div className={`flex justify-between items-center rounded-organic-sm p-3 text-xs border transition-all duration-300 ${
               dueReviewsCount > 0
-                ? 'bg-amber-50 border-amber-200 text-amber-800'
-                : 'bg-emerald-50 border-emerald-100 text-emerald-800'
+                ? 'bg-bioma-amber-soft border-bioma-amber/40 text-bioma-amber'
+                : 'bg-bioma-leaf-light border-bioma-leaf/30 text-bioma-leaf'
             }`}>
               <div className="flex items-center gap-2">
                 {dueReviewsCount > 0 ? (
-                  <RotateCcw className="w-4 h-4 text-amber-500 animate-[spin_4s_linear_infinite]" />
+                  <RotateCcw className="w-4 h-4 text-bioma-amber animate-[spin_4s_linear_infinite]" />
                 ) : (
-                  <Zap className="w-4 h-4 text-emerald-500 animate-pulse" />
+                  <Zap className="w-4 h-4 text-bioma-leaf animate-pulse" />
                 )}
                 <span className="font-bold">
                   {dueReviewsCount > 0 ? `${dueReviewsCount} revisões sugeridas` : 'Revisão em dia! 🚀'}
                 </span>
               </div>
               {dueReviewsCount > 0 && (
-                <span className="bg-amber-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full animate-pulse">
+                <span className="bg-bioma-amber text-white text-xs font-bold px-2 py-0.5 rounded-full animate-pulse">
                   {dueReviewsCount}
                 </span>
               )}
@@ -151,8 +141,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Seção de Conquistas — Desktop */}
-        <div className="bg-white rounded-3xl border-2 border-slate-200 p-6 shadow-sm space-y-4">
-          <h4 className="text-xs font-black text-slate-400 tracking-widest uppercase">Conquistas</h4>
+        <div className="bg-bioma-card rounded-organic-md border border-bioma-border p-6 shadow-warm-sm space-y-4">
+          <h4 className="text-xs font-bold text-bioma-muted tracking-widest uppercase">Conquistas</h4>
           <div className="grid grid-cols-3 gap-3">
             {ACHIEVEMENTS_LIST.map((ach) => {
               const isUnlocked = achievements.includes(ach.id);
@@ -160,29 +150,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
               
               return (
                 <div key={ach.id} className="relative group flex flex-col items-center">
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border-2 transition-all relative ${
+                  <div className={`w-12 h-12 rounded-organic-sm flex items-center justify-center border transition-all relative ${
                     isUnlocked 
-                      ? 'bg-gradient-to-br from-amber-50 to-orange-50 border-amber-400 text-amber-500 shadow-sm shadow-amber-100 hover:scale-105 cursor-default' 
-                      : 'bg-slate-50 border-slate-200 text-slate-300'
+                      ? 'bg-bioma-amber-soft border-bioma-amber/40 text-bioma-amber shadow-warm-sm hover:scale-105 cursor-default' 
+                      : 'bg-bioma-sand border-bioma-border text-bioma-muted'
                   }`}>
-                    <IconComponent className={`w-6 h-6 ${isUnlocked ? 'drop-shadow-sm' : 'opacity-40'}`} />
+                    <IconComponent className={`w-6 h-6 ${isUnlocked ? 'drop-shadow-sm' : 'opacity-70'}`} />
                     {!isUnlocked && (
-                      <div className="absolute -bottom-1 -right-1 bg-slate-200 rounded-full p-0.5 border border-white">
-                        <LucideIcons.Lock className="w-2.5 h-2.5 text-slate-500" />
+                      <div className="absolute -bottom-1 -right-1 bg-bioma-sand-dark rounded-full p-0.5 border border-bioma-card">
+                        <LucideIcons.Lock className="w-3 h-3 text-bioma-muted" />
                       </div>
                     )}
                   </div>
                   
                   {/* Tooltip */}
-                  <div className="absolute bottom-full mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none flex flex-col items-center z-50 w-48">
-                    <div className="bg-slate-900 text-white text-[11px] font-medium rounded-xl p-3 text-center shadow-lg leading-relaxed border border-slate-700">
-                      <p className="font-extrabold text-amber-400 mb-0.5">{ach.title}</p>
-                      <p className="text-slate-300 text-[10px]">{ach.description}</p>
-                      <p className="text-amber-300 font-bold mt-1 text-[9px] uppercase tracking-wider flex items-center justify-center gap-1">
-                        <LucideIcons.Coins className="w-3 h-3 text-amber-400 fill-amber-400" /> +{ach.coinReward} LingoCoins
+                  <div className="absolute bottom-full mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none flex flex-col items-center z-50 w-52">
+                    <div className="bg-bioma-moss-dark text-white text-xs font-medium rounded-organic-sm p-3 text-center shadow-warm-md leading-relaxed border border-bioma-moss">
+                      <p className="font-extrabold text-bioma-amber mb-1">{ach.title}</p>
+                      <p className="text-emerald-200 text-xs font-semibold">{ach.description}</p>
+                      <p className="text-bioma-amber font-extrabold mt-1.5 text-xs uppercase tracking-wider flex items-center justify-center gap-1">
+                        <LucideIcons.Coins className="w-3.5 h-3.5 text-bioma-amber fill-bioma-amber" /> +{ach.coinReward} LingoCoins
                       </p>
                     </div>
-                    <div className="w-2.5 h-2.5 bg-slate-900 rotate-45 -mt-1.5 border-r border-b border-slate-700" />
+                    <div className="w-2.5 h-2.5 bg-bioma-moss-dark rotate-45 -mt-1.5 border-r border-b border-bioma-moss" />
                   </div>
                 </div>
               );
@@ -192,10 +182,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       </div>
 
-      {/* ══════════════════════════════════════════════════════════════════════
-          MOBILE — Tab bar fixa no bottom (visível apenas < lg)
-          ══════════════════════════════════════════════════════════════════════ */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 select-none">
+      {/* MOBILE — Tab bar fixa no bottom (visível apenas < lg) */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-bioma-card border-t border-bioma-border select-none shadow-warm-md">
         <div className="flex justify-around items-center px-2 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
           {TABS.map(({ id, label, Icon }) => {
             const isActive = activeTab === id;
@@ -203,14 +191,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <button
                 key={id}
                 onClick={() => onTabChange(id)}
-                className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-colors ${
+                className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-organic-sm transition-colors cursor-pointer focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 ${
                   isActive
-                    ? 'text-emerald-600'
-                    : 'text-slate-400 active:text-slate-600'
+                    ? 'text-bioma-leaf font-bold'
+                    : 'text-bioma-muted active:text-bioma-bark'
                 }`}
               >
-                <Icon className={`w-6 h-6 ${isActive ? 'text-emerald-500' : ''}`} />
-                <span className={`text-[10px] font-bold ${isActive ? 'text-emerald-600' : 'text-slate-400'}`}>
+                <Icon className={`w-6 h-6 ${isActive ? 'text-bioma-leaf' : ''}`} aria-hidden="true" />
+                <span className={`text-xs font-bold ${isActive ? 'text-bioma-leaf' : 'text-bioma-muted'}`}>
                   {label}
                 </span>
               </button>

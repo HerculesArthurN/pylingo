@@ -1,6 +1,7 @@
 import React from 'react';
 import { Lightbulb, Glasses, RotateCcw, Music, TestTube } from 'lucide-react';
 import { MascotMood } from '../core/types';
+import { PrimaryButton3D } from './PrimaryButton3D';
 
 interface ShopProps {
   coins: number;
@@ -22,143 +23,132 @@ export const Shop: React.FC<ShopProps> = ({
   return (
     <div className="space-y-6 select-none">
       {/* Welcome box */}
-      <div className="bg-white rounded-3xl border-2 border-slate-200 p-6 shadow-sm">
-        <h2 className="text-xl font-black text-slate-800">Loja do Lingo v2.0</h2>
-        <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
+      <div className="bg-bioma-card rounded-organic-md border border-bioma-border p-6 shadow-warm-sm">
+        <h2 className="text-xl font-bold text-bioma-moss">Loja do Lingo v2.0</h2>
+        <p className="text-xs text-bioma-muted mt-1.5 leading-relaxed font-medium">
           Troque suas LingoCoins conquistadas com dedicação por passes de dicas avançadas ou estilos cosméticos para o mascote Lingo!
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Item: Passe de Dicas — costs 35 coins */}
-        <div className="bg-white border-2 border-slate-200 rounded-3xl p-6 flex flex-col justify-between hover:shadow-md transition-shadow">
+        <div className="bg-bioma-card border border-bioma-border rounded-organic-md p-6 flex flex-col justify-between hover:shadow-warm-md transition-shadow">
           <div>
-            <div className="bg-amber-100 text-amber-600 p-3.5 rounded-2xl w-fit border border-amber-200">
-              <Lightbulb className="w-8 h-8 fill-amber-500 text-amber-500" />
+            <div className="bg-bioma-amber-soft text-bioma-amber p-3.5 rounded-organic-sm w-fit border border-bioma-amber/30">
+              <Lightbulb className="w-8 h-8 fill-bioma-amber text-bioma-amber" />
             </div>
             <div className="flex items-center justify-between mt-4">
-              <h3 className="text-lg font-black text-slate-800">Passe de Dicas</h3>
+              <h3 className="text-lg font-bold text-bioma-bark">Passe de Dicas</h3>
               {hintPassRemaining > 0 && (
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                <span className="text-xs font-bold px-2.5 py-0.5 rounded-organic-sm bg-bioma-leaf-light text-bioma-leaf border border-bioma-leaf/20">
                   {hintPassRemaining} restantes
                 </span>
               )}
             </div>
-            <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
+            <p className="text-xs text-bioma-muted mt-1.5 leading-relaxed font-medium">
               Receba acesso a 5 lições com Dica Nível 3 (Passo a Passo) ativada sem sofrer a penalidade de -10% de XP.
             </p>
           </div>
-          <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
-            <span className="font-black text-slate-700 text-sm">
-              Preço: <span className="text-amber-500">35 Coins</span>
+          <div className="mt-6 pt-4 border-t border-bioma-border flex items-center justify-between">
+            <span className="font-bold text-bioma-bark text-sm">
+              Preço: <span className="text-bioma-amber">35 Coins</span>
             </span>
-            <button
+            <PrimaryButton3D
+              variant="amber"
               onClick={onBuyHintPass}
               disabled={coins < 35}
-              className={`px-4 py-2.5 rounded-xl font-black text-xs transition-all relative ${
-                coins < 35
-                  ? 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed'
-                  : 'bg-amber-500 border-b-4 border-amber-700 hover:bg-amber-600 text-white active:border-b-0 active:translate-y-1'
-              }`}
             >
               Adquirir Passe
-            </button>
+            </PrimaryButton3D>
           </div>
         </div>
 
         {/* Item: Equip "Senior" style (Geek sunglasses) — FREE */}
-        <div className="bg-white border-2 border-slate-200 rounded-3xl p-6 flex flex-col justify-between hover:shadow-md transition-shadow">
+        <div className="bg-bioma-card border border-bioma-border rounded-organic-md p-6 flex flex-col justify-between hover:shadow-warm-md transition-shadow">
           <div>
-            <div className="bg-slate-100 text-slate-700 p-3.5 rounded-2xl w-fit border border-slate-200">
-              <Glasses className="w-8 h-8 text-slate-800" />
+            <div className="bg-bioma-sand text-bioma-bark p-3.5 rounded-organic-sm w-fit border border-bioma-border">
+              <Glasses className="w-8 h-8 text-bioma-moss" />
             </div>
-            <h3 className="text-lg font-black text-slate-800 mt-4">Estilo Sênior</h3>
-            <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
+            <h3 className="text-lg font-bold text-bioma-bark mt-4">Estilo Sênior</h3>
+            <p className="text-xs text-bioma-muted mt-1.5 leading-relaxed font-medium">
               Equipe o mascote Lingo com óculos escuros de desenvolvedor sênior de Big Tech.
             </p>
           </div>
-          <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
-            <span className="font-black text-slate-700 text-sm">
-              Preço: <span className="text-emerald-500 font-bold">Grátis</span>
+          <div className="mt-6 pt-4 border-t border-bioma-border flex items-center justify-between">
+            <span className="font-bold text-bioma-bark text-sm">
+              Preço: <span className="text-bioma-leaf font-bold">Grátis</span>
             </span>
-            <button
+            <PrimaryButton3D
+              variant="sand"
               onClick={onToggleGeekMood}
-              className="px-4 py-2.5 rounded-xl font-black text-xs bg-slate-800 border-b-4 border-slate-950 hover:bg-slate-700 text-white active:border-b-0 active:translate-y-1 transition-all"
             >
               {mascotMood === 'geek' ? 'Desequipar' : 'Equipar'}
-            </button>
+            </PrimaryButton3D>
           </div>
         </div>
 
         {/* Item: Estilo Cientista */}
-        <div className="bg-white border-2 border-slate-200 rounded-3xl p-6 flex flex-col justify-between hover:shadow-md transition-shadow">
+        <div className="bg-bioma-card border border-bioma-border rounded-organic-md p-6 flex flex-col justify-between hover:shadow-warm-md transition-shadow">
           <div>
-            <div className="bg-blue-100 text-blue-600 p-3.5 rounded-2xl w-fit border border-blue-200">
-              <TestTube className="w-8 h-8 text-blue-600" />
+            <div className="bg-bioma-leaf-light text-bioma-leaf p-3.5 rounded-organic-sm w-fit border border-bioma-leaf/30">
+              <TestTube className="w-8 h-8 text-bioma-leaf" />
             </div>
-            <h3 className="text-lg font-black text-slate-800 mt-4">Lingo Cientista</h3>
-            <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
+            <h3 className="text-lg font-bold text-bioma-bark mt-4">Lingo Cientista</h3>
+            <p className="text-xs text-bioma-muted mt-1.5 leading-relaxed font-medium">
               Mascote no estilo cientista de dados e inteligência artificial.
             </p>
           </div>
-          <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
-            <span className="font-black text-slate-700 text-sm">
-              Preço: <span className="text-amber-500">50 Coins</span>
+          <div className="mt-6 pt-4 border-t border-bioma-border flex items-center justify-between">
+            <span className="font-bold text-bioma-bark text-sm">
+              Preço: <span className="text-bioma-amber">50 Coins</span>
             </span>
-            <button
+            <PrimaryButton3D
+              variant="leaf"
               disabled={coins < 50}
-              className={`px-4 py-2.5 rounded-xl font-black text-xs transition-all ${
-                coins < 50
-                  ? 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed'
-                  : 'bg-blue-600 border-b-4 border-blue-800 hover:bg-blue-700 text-white active:border-b-0 active:translate-y-1'
-              }`}
             >
               Adquirir
-            </button>
+            </PrimaryButton3D>
           </div>
         </div>
 
         {/* Item: Estilo Músico */}
-        <div className="bg-white border-2 border-slate-200 rounded-3xl p-6 flex flex-col justify-between hover:shadow-md transition-shadow">
+        <div className="bg-bioma-card border border-bioma-border rounded-organic-md p-6 flex flex-col justify-between hover:shadow-warm-md transition-shadow">
           <div>
-            <div className="bg-purple-100 text-purple-600 p-3.5 rounded-2xl w-fit border border-purple-200">
-              <Music className="w-8 h-8 text-purple-600" />
+            <div className="bg-bioma-amber-soft text-bioma-amber p-3.5 rounded-organic-sm w-fit border border-bioma-amber/30">
+              <Music className="w-8 h-8 text-bioma-amber" />
             </div>
-            <h3 className="text-lg font-black text-slate-800 mt-4">Lingo Músico</h3>
-            <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
+            <h3 className="text-lg font-bold text-bioma-bark mt-4">Lingo Músico</h3>
+            <p className="text-xs text-bioma-muted mt-1.5 leading-relaxed font-medium">
               Estilo criativo com fones de ouvido para codificar ouvindo lo-fi.
             </p>
           </div>
-          <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
-            <span className="font-black text-slate-700 text-sm">
-              Preço: <span className="text-amber-500">50 Coins</span>
+          <div className="mt-6 pt-4 border-t border-bioma-border flex items-center justify-between">
+            <span className="font-bold text-bioma-bark text-sm">
+              Preço: <span className="text-bioma-amber">50 Coins</span>
             </span>
-            <button
+            <PrimaryButton3D
+              variant="amber"
               disabled={coins < 50}
-              className={`px-4 py-2.5 rounded-xl font-black text-xs transition-all ${
-                coins < 50
-                  ? 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed'
-                  : 'bg-purple-600 border-b-4 border-purple-800 hover:bg-purple-700 text-white active:border-b-0 active:translate-y-1'
-              }`}
             >
               Adquirir
-            </button>
+            </PrimaryButton3D>
           </div>
         </div>
       </div>
 
       {/* Danger zone: Reset progress */}
-      <div className="bg-white rounded-3xl border-2 border-slate-200 p-6 shadow-sm space-y-4">
-        <h3 className="text-sm font-black text-rose-500 uppercase tracking-wider flex items-center gap-1.5">
+      <div className="bg-bioma-card rounded-organic-md border border-bioma-border p-6 shadow-warm-sm space-y-4">
+        <h3 className="text-sm font-bold text-bioma-clay uppercase tracking-wider flex items-center gap-1.5">
           <RotateCcw className="w-4 h-4" /> Zona de Controle
         </h3>
-        <p className="text-xs text-slate-500 leading-relaxed">
+        <p className="text-xs text-bioma-muted leading-relaxed font-medium">
           Deseja reiniciar toda a sua jornada de aprendizado? Isso removerá seu XP acumulado, moedas e histórico de exercícios concluídos. Esta ação é irreversível.
         </p>
         <div className="pt-2">
           <button
             onClick={onResetProgress}
-            className="px-4 py-2.5 bg-rose-50 text-rose-600 border-2 border-rose-200 font-bold text-xs rounded-xl hover:bg-rose-100 active:scale-95 transition-all"
+            aria-label="Reiniciar progresso da conta (Ação irreversível)"
+            className="px-4 py-2.5 bg-bioma-clay-soft text-bioma-clay border border-bioma-clay/40 font-extrabold text-xs rounded-organic-sm hover:bg-bioma-clay hover:text-white active:scale-95 transition-all cursor-pointer focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2"
           >
             Reiniciar Progresso
           </button>

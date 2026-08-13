@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { HelpCircle, CheckCircle2, XCircle } from 'lucide-react';
+import { PrimaryButton3D } from './PrimaryButton3D';
 
 interface MiniQuizProps {
   question: string;
@@ -38,60 +39,69 @@ export const MiniQuiz: React.FC<MiniQuizProps> = ({
   const isCorrect = selectedIndex === correctIndex;
 
   return (
-    <div className="bg-slate-50 border-2 border-slate-200 rounded-3xl p-5 md:p-6 my-4 select-none">
-      <div className="flex items-center space-x-2 text-indigo-600 font-black text-xs uppercase tracking-widest mb-3">
+    <div
+      role="region"
+      aria-label="Mini Quiz de Fixação Teórica"
+      className="bg-bioma-sand border border-bioma-border rounded-organic-md p-5 md:p-6 my-4 select-none shadow-warm-sm"
+    >
+      <div className="flex items-center space-x-2 text-bioma-leaf font-extrabold text-xs uppercase tracking-widest mb-3">
         <HelpCircle className="w-4 h-4" />
         <span>Mini Quiz de Fixação</span>
       </div>
 
-      <h4 className="text-sm md:text-base font-bold text-slate-800 mb-4">{question}</h4>
+      <h4 className="text-sm md:text-base font-extrabold text-bioma-bark mb-4">{question}</h4>
 
-      <div className="space-y-2.5 mb-4">
+      <div className="space-y-2.5 mb-4" role="radiogroup" aria-label={question}>
         {options.map((option, idx) => {
-          let btnStyle = 'border-slate-200 bg-white hover:bg-slate-100 text-slate-700';
+          let btnStyle = 'border-bioma-border bg-bioma-card hover:bg-bioma-sand text-bioma-bark font-semibold';
 
           if (submitted) {
             if (idx === correctIndex) {
-              btnStyle = 'border-emerald-500 bg-emerald-50 text-emerald-800 font-bold';
+              btnStyle = 'border-bioma-leaf bg-bioma-leaf-light text-bioma-moss font-extrabold';
             } else if (idx === selectedIndex) {
-              btnStyle = 'border-rose-500 bg-rose-50 text-rose-800 font-bold';
+              btnStyle = 'border-bioma-clay bg-bioma-clay-soft text-bioma-clay font-extrabold';
             } else {
-              btnStyle = 'border-slate-200 bg-slate-100 text-slate-400 opacity-60';
+              btnStyle = 'border-bioma-border bg-bioma-sand-dark text-bioma-muted opacity-60';
             }
           } else if (idx === selectedIndex) {
-            btnStyle = 'border-indigo-500 bg-indigo-50 text-indigo-800 font-bold shadow-sm';
+            btnStyle = 'border-bioma-leaf bg-bioma-leaf-light text-bioma-moss font-extrabold shadow-warm-sm';
           }
 
           return (
             <button
               key={idx}
+              role="radio"
+              aria-checked={selectedIndex === idx}
+              aria-disabled={submitted}
               onClick={() => handleSelect(idx)}
               disabled={submitted}
-              className={`w-full text-left p-3.5 rounded-2xl border-2 text-xs md:text-sm transition-all flex items-center justify-between ${btnStyle}`}
+              className={`w-full text-left p-3.5 rounded-organic-sm border text-xs md:text-sm transition-all flex items-center justify-between cursor-pointer focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 ${btnStyle}`}
             >
               <span>{option}</span>
-              {submitted && idx === correctIndex && <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0 ml-2" />}
-              {submitted && idx === selectedIndex && idx !== correctIndex && <XCircle className="w-5 h-5 text-rose-600 flex-shrink-0 ml-2" />}
+              {submitted && idx === correctIndex && <CheckCircle2 className="w-5 h-5 text-bioma-leaf flex-shrink-0 ml-2" />}
+              {submitted && idx === selectedIndex && idx !== correctIndex && <XCircle className="w-5 h-5 text-bioma-clay flex-shrink-0 ml-2" />}
             </button>
           );
         })}
       </div>
 
       {!submitted ? (
-        <button
+        <PrimaryButton3D
+          variant="leaf"
           onClick={handleSubmit}
           disabled={selectedIndex === null}
-          className={`w-full py-3 rounded-2xl font-black text-xs uppercase tracking-wider transition-all ${
-            selectedIndex === null
-              ? 'bg-slate-200 text-slate-400 cursor-not-allowed border-2 border-slate-300'
-              : 'bg-indigo-600 hover:bg-indigo-700 text-white border-b-4 border-indigo-800 active:border-b-0 active:translate-y-1'
-          }`}
+          aria-label="Confirmar resposta selecionada no quiz"
+          className="w-full"
         >
           Confirmar Resposta
-        </button>
+        </PrimaryButton3D>
       ) : (
-        <div className={`p-4 rounded-2xl border ${isCorrect ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-rose-50 border-rose-200 text-rose-900'} text-xs leading-relaxed`}>
-          <p className="font-bold mb-1 flex items-center gap-1.5">
+        <div
+          role="status"
+          aria-live="polite"
+          className={`p-4 rounded-organic-sm border ${isCorrect ? 'bg-bioma-leaf-light border-bioma-leaf/40 text-bioma-moss' : 'bg-bioma-clay-soft border-bioma-clay/40 text-bioma-clay'} text-xs leading-relaxed font-semibold`}
+        >
+          <p className="font-extrabold mb-1 flex items-center gap-1.5">
             {isCorrect ? '✨ Excelente! Você acertou!' : '❌ Não é bem isso...'}
           </p>
           <p>{explanation}</p>

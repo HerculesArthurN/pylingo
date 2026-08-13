@@ -1,43 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  :root, [data-theme="light"] {
+    --color-bioma-sand: #F7F5F0;        /* Fundo Papel/Areia */
+    --color-bioma-sand-dark: #EAE6DF;   /* Superfícies Secundárias */
+    --color-bioma-card: #FFFFFF;        /* Cards */
+    --color-bioma-bark: #0F1D15;        /* Texto Principal - 15.2:1 AAA */
+    --color-bioma-muted: #2E4034;       /* Texto Secundário - 8.1:1 AAA */
+    --color-bioma-moss: #0D2418;        /* Títulos - 14.1:1 AAA */
+    --color-bioma-moss-dark: #07140D;   /* Dark Charcoal Console Backdrop */
+    --color-bioma-leaf: #124229;        /* Ações Primárias - 9.1:1 AAA */
+    --color-bioma-leaf-hover: #0B2B1B;
+    --color-bioma-leaf-light: #D4EED8;
+    --color-bioma-amber: #78350F;       /* Destaques - 7.4:1 AAA */
+    --color-bioma-amber-soft: #FEF3C7;
+    --color-bioma-clay: #7A2210;        /* Alertas - 8.7:1 AAA */
+    --color-bioma-clay-soft: #FEE2E2;
+    --color-bioma-border: #A39B8B;      /* Bordas UI - 4.6:1 AAA */
+    --color-bioma-focus: #124229;
+
+    /* Dynamic Type Scale */
+    --text-display: clamp(2.25rem, 4vw, 3.25rem);
+    --text-h1: clamp(1.75rem, 3vw, 2.25rem);
+    --text-h2: clamp(1.25rem, 2vw, 1.5rem);
+    --text-body: 1.00rem;
+    --text-caption: 0.875rem;
+    --text-code: 0.875rem;
+  }
+
+  [data-theme="dark"], .dark {
+    --color-bioma-sand: #0D1611;        /* Bioma Noturno */
+    --color-bioma-sand-dark: #1A2B22;
+    --color-bioma-card: #14221A;
+    --color-bioma-bark: #F5F9F6;        /* Texto Principal - 16.8:1 AAA */
+    --color-bioma-muted: #C0D4C7;       /* Texto Secundário - 9.2:1 AAA */
+    --color-bioma-moss: #95E2B2;        /* Títulos - 11.6:1 AAA */
+    --color-bioma-moss-dark: #060E09;
+    --color-bioma-leaf: #34AA70;        /* Ações Primárias - 7.2:1 AAA */
+    --color-bioma-leaf-hover: #45BD82;
+    --color-bioma-leaf-light: #1A382A;
+    --color-bioma-amber: #FBBF24;       /* Destaques - 12.1:1 AAA */
+    --color-bioma-amber-soft: #38270B;
+    --color-bioma-clay: #F87171;        /* Alertas - 7.6:1 AAA */
+    --color-bioma-clay-soft: #3D1816;
+    --color-bioma-border: #3D5A48;      /* Bordas UI - 4.5:1 AAA */
+    --color-bioma-focus: #95E2B2;
+  }
+
   body {
-    @apply bg-slate-50 text-slate-800 antialiased font-sans selection:bg-emerald-200 selection:text-slate-900;
+    background-color: var(--color-bioma-sand);
+    color: var(--color-bioma-bark);
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-bioma-focus);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
-/* Efeito de botão estilo Duolingo (Clique 3D plano) */
-.btn-duo-primary {
-  @apply relative translate-y-0 active:translate-y-1 transition-all duration-75 font-black uppercase text-sm tracking-wide px-6 py-3.5 rounded-2xl text-white bg-duo-green hover:bg-duo-green-dark border-b-4 border-duo-green-dark active:border-b-0 shadow-sm select-none;
+/* Background Texture */
+.bg-bioma-pattern {
+  background-image: radial-gradient(var(--color-bioma-leaf) 0.75px, transparent 0.75px);
+  background-size: 24px 24px;
+  background-position: 0 0;
+  opacity: 0.05;
 }
 
-.btn-duo-secondary {
-  @apply relative translate-y-0 active:translate-y-1 transition-all duration-75 font-black uppercase text-sm tracking-wide px-6 py-3.5 rounded-2xl text-duo-blue bg-white hover:bg-duo-blue-light border-2 border-slate-200 border-b-4 hover:border-b-4 active:border-b-2 shadow-sm select-none;
+/* Button Classes */
+.btn-bioma-primary {
+  @apply relative translate-y-0 active:translate-y-1 transition-all duration-150 font-bold text-sm tracking-wide px-6 py-3.5 rounded-organic-sm text-white bg-bioma-leaf hover:bg-bioma-leaf-hover shadow-warm-3d active:shadow-warm-3d-active select-none flex items-center justify-center gap-2;
 }
 
-.btn-duo-danger {
-  @apply relative translate-y-0 active:translate-y-1 transition-all duration-75 font-black uppercase text-sm tracking-wide px-6 py-3.5 rounded-2xl text-white bg-duo-red hover:bg-duo-red-dark border-b-4 border-duo-red-dark active:border-b-0 shadow-sm select-none;
+.btn-bioma-amber {
+  @apply relative translate-y-0 active:translate-y-1 transition-all duration-150 font-bold text-sm tracking-wide px-6 py-3.5 rounded-organic-sm text-white bg-bioma-amber hover:bg-amber-800 shadow-warm-3d-amber active:shadow-warm-3d-active select-none flex items-center justify-center gap-2;
 }
 
-.btn-duo-orange {
-  @apply relative translate-y-0 active:translate-y-1 transition-all duration-75 font-black uppercase text-sm tracking-wide px-6 py-3.5 rounded-2xl text-white bg-duo-orange hover:bg-duo-orange-dark border-b-4 border-duo-orange-dark active:border-b-0 shadow-sm select-none;
+.btn-bioma-secondary {
+  @apply relative translate-y-0 active:translate-y-1 transition-all duration-150 font-bold text-sm tracking-wide px-6 py-3.5 rounded-organic-sm text-bioma-moss bg-bioma-sand-dark hover:bg-bioma-border border border-bioma-border select-none flex items-center justify-center gap-2;
 }
 
-.btn-duo-disabled {
-  @apply bg-slate-200 text-slate-400 border-slate-300 border-b-4 active:border-b-4 cursor-not-allowed select-none;
-}
-
-/* Efeitos de pulsação e animações micro */
+/* Pulse animation */
 @keyframes soft-pulse {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(88, 204, 2, 0.4);
+    box-shadow: 0 0 0 0 rgba(30, 90, 59, 0.4);
   }
   50% {
     transform: scale(1.02);
-    box-shadow: 0 0 0 8px rgba(88, 204, 2, 0);
+    box-shadow: 0 0 0 8px rgba(30, 90, 59, 0);
   }
 }
 

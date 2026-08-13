@@ -41,9 +41,9 @@ export const InteractiveCode: React.FC<InteractiveCodeProps> = ({
   };
 
   return (
-    <div className="bg-slate-900 rounded-3xl overflow-hidden border-2 border-slate-800 my-4 shadow-md font-mono text-xs select-none">
+    <div className="bg-bioma-moss-dark rounded-organic-md overflow-hidden border border-bioma-moss my-4 shadow-warm-sm font-mono text-xs select-none">
       {/* Bar */}
-      <div className="bg-slate-950 px-4 py-2.5 flex items-center justify-between border-b border-slate-800">
+      <div className="bg-[#0E1511] px-4 py-2.5 flex items-center justify-between border-b border-bioma-moss/50">
         <span className="text-emerald-400 font-bold flex items-center gap-1.5">
           <Terminal className="w-4 h-4 text-emerald-400" /> Playground Interativo
         </span>
@@ -51,37 +51,44 @@ export const InteractiveCode: React.FC<InteractiveCodeProps> = ({
           <button
             onClick={handleRun}
             disabled={isRunning}
-            className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-white font-bold rounded-xl flex items-center gap-1.5 transition-all text-[11px] disabled:opacity-50"
+            aria-label={isRunning ? 'Executando código Python' : 'Testar código Python'}
+            className="px-3.5 py-1.5 bg-bioma-leaf hover:bg-emerald-700 active:scale-95 text-white font-bold rounded-organic-sm flex items-center gap-1.5 transition-all text-xs focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 disabled:opacity-50 cursor-pointer"
           >
-            <Play className="w-3.5 h-3.5 fill-current" />
+            <Play className="w-3.5 h-3.5 fill-current" aria-hidden="true" />
             <span>{isRunning ? 'Executando...' : 'Testar Código'}</span>
           </button>
         )}
       </div>
 
       {/* Editor / Code view */}
-      <div className="p-4 bg-slate-900">
+      <div className="p-4 bg-bioma-moss-dark">
         {editable ? (
           <textarea
             value={code}
             onChange={(e) => setCode(e.target.value)}
             rows={Math.max(3, code.split('\n').length)}
-            className="w-full bg-transparent text-emerald-400 font-mono focus:outline-none resize-none leading-relaxed"
+            aria-label="Editor de código Python interativo"
+            className="w-full bg-transparent text-[#A7F3D0] font-mono focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 rounded-organic-sm resize-none leading-relaxed"
             spellCheck={false}
           />
         ) : (
-          <pre className="text-emerald-400 whitespace-pre-wrap leading-relaxed">{code}</pre>
+          <pre className="text-[#A7F3D0] whitespace-pre-wrap leading-relaxed">{code}</pre>
         )}
       </div>
 
       {/* Output / Console result */}
       {(output !== null || error !== null) && (
-        <div className="bg-slate-950 p-4 border-t border-slate-800 flex flex-col gap-1">
-          <span className="text-[10px] text-slate-500 uppercase tracking-widest font-bold flex items-center gap-1">
-            <CheckCircle2 className="w-3 h-3 text-emerald-500" /> Saída do Interpretador:
+        <div 
+          role="region"
+          aria-live="polite"
+          aria-label="Saída de execução do código"
+          className="bg-[#0E1511] p-4 border-t border-bioma-moss/50 flex flex-col gap-1"
+        >
+          <span className="text-xs text-emerald-400 uppercase tracking-widest font-bold flex items-center gap-1">
+            <CheckCircle2 className="w-3.5 h-3.5 text-bioma-leaf" aria-hidden="true" /> Saída do Interpretador:
           </span>
-          {output && <pre className="text-slate-200 whitespace-pre-wrap select-text">{output}</pre>}
-          {error && <pre className="text-rose-400 whitespace-pre-wrap select-text">{error}</pre>}
+          {output && <pre className="text-stone-200 font-mono text-xs whitespace-pre-wrap select-text">{output}</pre>}
+          {error && <pre className="text-red-300 font-mono text-xs whitespace-pre-wrap select-text">{error}</pre>}
         </div>
       )}
     </div>

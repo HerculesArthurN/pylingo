@@ -1,28 +1,20 @@
 /**
  * LevelUpModal.tsx
  *
- * Modal fullscreen de celebração exibido ao subir de nível.
- *
- * Contrato (DbC):
- *   - Pré-condição:  `newLevel >= 2` (nível 1 é o estado inicial, logo
- *                    o primeiro "level up" é para o nível 2).
- *   - Pós-condição:  Renderiza overlay com badge dourado, partículas explosivas,
- *                    mensagem motivacional e botão de continuação.
- *   - Invariante:    A mensagem motivacional sempre corresponde ao nível correto;
- *                    partículas nunca são recriadas em re-renders.
+ * Modal fullscreen de celebração exibido ao subir de nível (Bioma Pythonico).
  */
 import React, { useEffect, useMemo, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Mascot } from './Mascot';
+import { PrimaryButton3D } from './PrimaryButton3D';
+import { biomaSpringTransition } from '../utils/motion';
 
-// ─── Contrato de Props ──────────────────────────────────────────────────────────
 interface LevelUpModalProps {
   newLevel: number;
   onContinue: () => void;
   playSound: (type: 'success' | 'error' | 'click') => void;
 }
 
-// ─── Mensagens Motivacionais ────────────────────────────────────────────────────
 function getMotivationalMessage(level: number): string {
   switch (level) {
     case 2:
@@ -36,21 +28,20 @@ function getMotivationalMessage(level: number): string {
   }
 }
 
-// ─── Partículas Douradas (explosão radial) ──────────────────────────────────────
 const GOLDEN_PARTICLE_COUNT = 18;
 
 const GOLDEN_COLORS = [
-  '#F59E0B', // amber-500
-  '#FBBF24', // amber-400
-  '#FCD34D', // amber-300
-  '#FDE68A', // amber-200
+  '#B45309', // bioma-amber
+  '#F59E0B',
+  '#FEF3C7',
+  '#1E5A3B', // bioma-leaf
 ] as const;
 
 interface GoldenParticle {
   readonly id: number;
   readonly color: string;
   readonly size: number;
-  readonly angle: number; // radianos
+  readonly angle: number;
   readonly distance: number;
   readonly duration: number;
   readonly delay: number;
@@ -62,22 +53,20 @@ function generateGoldenParticles(): readonly GoldenParticle[] {
     return {
       id: i,
       color: GOLDEN_COLORS[Math.floor(Math.random() * GOLDEN_COLORS.length)],
-      size: Math.random() * 6 + 4, // 4–10px
+      size: Math.random() * 6 + 4,
       angle,
-      distance: Math.random() * 120 + 80, // 80–200px
-      duration: Math.random() * 0.8 + 0.8, // 0.8–1.6s
-      delay: Math.random() * 0.3 + 0.4, // 0.4–0.7s (após o badge aparecer)
+      distance: Math.random() * 120 + 80,
+      duration: Math.random() * 0.8 + 0.8,
+      delay: Math.random() * 0.3 + 0.4,
     };
   });
 }
 
-// ─── Componente Principal ───────────────────────────────────────────────────────
 export const LevelUpModal: React.FC<LevelUpModalProps> = ({
   newLevel,
   onContinue,
   playSound,
 }) => {
-  // Fail-Fast
   if (newLevel < 2 || !Number.isInteger(newLevel)) {
     throw new Error(
       `[LevelUpModal] newLevel deve ser um inteiro >= 2. Recebido: ${newLevel}`
@@ -87,7 +76,6 @@ export const LevelUpModal: React.FC<LevelUpModalProps> = ({
   const particles = useMemo(() => generateGoldenParticles(), []);
   const message = getMotivationalMessage(newLevel);
 
-  // ── Efeito sonoro (1 única vez na montagem) ──
   const hasFiredSound = useRef(false);
   useEffect(() => {
     if (!hasFiredSound.current) {
@@ -97,9 +85,14 @@ export const LevelUpModal: React.FC<LevelUpModalProps> = ({
   }, [playSound]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-slate-900/70">
-      {/* ── Partículas douradas (explosão radial) ── */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+    <div 
+      role="dialog"
+      aria-modal="true"
+      aria-label="Modal de Subida de Nível"
+      className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-bioma-moss-dark/70"
+    >
+      {/* Partículas douradas */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
         {particles.map((p) => (
           <motion.div
             key={p.id}
@@ -125,65 +118,56 @@ export const LevelUpModal: React.FC<LevelUpModalProps> = ({
         ))}
       </div>
 
-      {/* ── Card central ── */}
+      {/* Card central */}
       <motion.div
-        className="relative z-10 bg-white rounded-3xl shadow-2xl px-8 py-10 mx-4 max-w-md w-full flex flex-col items-center gap-5"
+        className="relative z-10 bg-bioma-card rounded-organic-md border border-bioma-border shadow-warm-md px-8 py-10 mx-4 max-w-md w-full flex flex-col items-center gap-5"
         initial={{ scale: 0.8, opacity: 0, y: 30 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
-        transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+        transition={biomaSpringTransition}
       >
-        {/* ── Badge / Escudo Dourado ── */}
+        {/* Badge / Escudo Dourado */}
         <motion.div
-          className="flex items-center justify-center w-30 h-30 rounded-full bg-gradient-to-br from-amber-300 via-yellow-400 to-amber-500 border-4 border-amber-600 shadow-lg shadow-amber-300/50"
+          className="flex items-center justify-center w-28 h-28 rounded-full bg-bioma-amber border-4 border-amber-800 shadow-warm-sm"
           initial={{ scale: 0, rotate: -180 }}
           animate={{ scale: 1, rotate: 0 }}
-          transition={{
-            type: 'spring',
-            stiffness: 150,
-            damping: 12,
-            delay: 0.3,
-          }}
+          transition={biomaSpringTransition}
         >
-          <span className="text-5xl font-black text-white drop-shadow-md">
+          <span className="text-5xl font-extrabold text-white drop-shadow-md">
             {newLevel}
           </span>
         </motion.div>
 
-        {/* ── Título ── */}
+        {/* Título */}
         <motion.h2
-          className="text-3xl font-black text-amber-500 text-center"
+          className="text-2xl font-extrabold text-bioma-amber text-center"
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, type: 'spring', stiffness: 150 }}
+          transition={{ delay: 0.2 }}
         >
           Nível {newLevel} Desbloqueado!
         </motion.h2>
 
-        {/* ── Mascote + Mensagem motivacional ── */}
+        {/* Mascote + Mensagem motivacional */}
         <motion.div
           className="flex flex-col items-center gap-3"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
+          transition={{ delay: 0.3 }}
         >
           <Mascot mood="happy" size="h-20 w-20" />
-          <p className="text-slate-600 text-center text-base font-medium leading-relaxed max-w-xs">
+          <p className="text-bioma-bark text-center text-base font-semibold leading-relaxed max-w-xs">
             {message}
           </p>
         </motion.div>
 
-        {/* ── Botão "Incrível!" ── */}
-        <motion.button
-          className="btn-duo-orange w-full mt-4 text-base"
+        {/* Botão "Incrível!" */}
+        <PrimaryButton3D
+          variant="amber"
           onClick={onContinue}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.0 }}
+          className="w-full mt-4 text-base"
         >
           INCRÍVEL!
-        </motion.button>
+        </PrimaryButton3D>
       </motion.div>
     </div>
   );

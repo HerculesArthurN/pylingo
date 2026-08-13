@@ -1,5 +1,5 @@
 import React from 'react';
-import Editor from '@monaco-editor/react';
+import Editor, { Monaco } from '@monaco-editor/react';
 
 interface MonacoEditorProps {
   value: string;
@@ -20,25 +20,55 @@ export const MonacoEditor: React.FC<MonacoEditorProps> = ({
     }
   };
 
+  const handleBeforeMount = (monaco: Monaco) => {
+    monaco.editor.defineTheme('bioma-dark', {
+      base: 'vs-dark',
+      inherit: true,
+      rules: [
+        { token: 'keyword', foreground: 'A7F3D0', fontStyle: 'bold' },
+        { token: 'string', foreground: 'FBBF24' },
+        { token: 'number', foreground: 'F59E0B' },
+        { token: 'comment', foreground: '94A3B8', fontStyle: 'italic' },
+        { token: 'function', foreground: '34AA70', fontStyle: 'bold' },
+        { token: 'identifier', foreground: 'F5F9F6' },
+        { token: 'operator', foreground: '34AA70' },
+      ],
+      colors: {
+        'editor.background': '#07140D',
+        'editor.foreground': '#F5F9F6',
+        'editor.lineHighlightBackground': '#14221A',
+        'editorCursor.foreground': '#34AA70',
+        'editorWhitespace.foreground': '#293830',
+        'editorIndentGuide.background': '#293830',
+        'editorIndentGuide.activeBackground': '#34AA70',
+        'editorLineNumber.foreground': '#64748B',
+        'editorLineNumber.activeForeground': '#34AA70',
+        'editor.selectionBackground': '#34AA7044',
+        'editor.inactiveSelectionBackground': '#34AA7022',
+      },
+    });
+  };
+
   return (
     <div className="w-full h-full relative" style={{ height }}>
       <Editor
         language="python"
-        theme="vs-dark"
+        theme="bioma-dark"
+        beforeMount={handleBeforeMount}
         value={value}
         onChange={handleEditorChange}
         loading={
-          <div className="absolute inset-0 bg-slate-950 flex flex-col items-center justify-center text-xs font-mono text-slate-400 gap-3">
+          <div className="absolute inset-0 bg-bioma-moss-dark flex flex-col items-center justify-center text-xs font-mono text-bioma-muted gap-3">
             {/* Esqueleto animado de loading */}
-            <div className="w-8 h-8 rounded-full border-4 border-slate-700 border-t-emerald-500 animate-spin"></div>
-            <span>Carregando Monaco Editor...</span>
+            <div className="w-8 h-8 rounded-full border-4 border-bioma-moss border-t-bioma-leaf animate-spin"></div>
+            <span>Carregando Monaco Editor (Bioma)...</span>
           </div>
         }
         options={{
           readOnly,
           minimap: { enabled: false },
           fontSize: 14,
-          fontFamily: "'Fira Code', 'Courier New', Courier, monospace",
+          fontFamily: "'JetBrains Mono', 'Fira Code', 'Courier New', Courier, monospace",
           fontLigatures: true,
           lineHeight: 22,
           automaticLayout: true,

@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -7,50 +8,43 @@ export default {
   theme: {
     extend: {
       colors: {
-        duo: {
-          green: {
-            DEFAULT: '#58cc02',
-            light: '#84d8ff', // ou usar cores de branding específicas
-            dark: '#46a302',
-            border: '#58cc02'
-          },
-          blue: {
-            DEFAULT: '#1cb0f6',
-            dark: '#1899d6',
-            light: '#ddf4ff'
-          },
-          yellow: {
-            DEFAULT: '#ffc800',
-            dark: '#e6b400'
-          },
-          orange: {
-            DEFAULT: '#ff9600',
-            dark: '#e68500'
-          },
-          red: {
-            DEFAULT: '#ff4b4b',
-            dark: '#ea2b2b',
-            light: '#ffd8d8'
-          },
-          purple: {
-            DEFAULT: '#c879ff',
-            dark: '#a560d4'
-          },
-          gray: {
-            DEFAULT: '#afafaf',
-            dark: '#777777',
-            light: '#e5e5e5',
-            extralight: '#f7f7f7'
-          }
-        }
+        bioma: {
+          sand: 'var(--color-bioma-sand)',
+          'sand-dark': 'var(--color-bioma-sand-dark)',
+          card: 'var(--color-bioma-card)',
+          bark: 'var(--color-bioma-bark)',
+          muted: 'var(--color-bioma-muted)',
+          moss: 'var(--color-bioma-moss)',
+          'moss-dark': 'var(--color-bioma-moss-dark)',
+          leaf: 'var(--color-bioma-leaf)',
+          'leaf-hover': 'var(--color-bioma-leaf-hover)',
+          'leaf-light': 'var(--color-bioma-leaf-light)',
+          amber: 'var(--color-bioma-amber)',
+          'amber-soft': 'var(--color-bioma-amber-soft)',
+          clay: 'var(--color-bioma-clay)',
+          'clay-soft': 'var(--color-bioma-clay-soft)',
+          border: 'var(--color-bioma-border)',
+          focus: 'var(--color-bioma-focus)',
+        },
+      },
+      transitionTimingFunction: {
+        spring: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
       },
       fontFamily: {
-        sans: ['Outfit', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['Plus Jakarta Sans', 'Satoshi', 'sans-serif'],
+        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+      },
+      borderRadius: {
+        'organic-sm': '12px 16px 12px 14px',
+        'organic-md': '20px 24px 18px 22px',
+        'organic-lg': '28px 32px 26px 30px',
       },
       boxShadow: {
-        'duo-flat': '0 4px 0 0 var(--tw-shadow-color)',
-        'duo-flat-lg': '0 6px 0 0 var(--tw-shadow-color)',
-        'duo-flat-active': '0 0px 0 0 var(--tw-shadow-color)',
+        'warm-sm': '0 2px 8px -2px rgba(22, 51, 35, 0.08), 0 1px 3px -1px rgba(22, 51, 35, 0.04)',
+        'warm-md': '0 8px 24px -4px rgba(22, 51, 35, 0.12), 0 2px 6px -1px rgba(22, 51, 35, 0.06)',
+        'warm-3d': '0 6px 0 0 #15422B',
+        'warm-3d-amber': '0 6px 0 0 #853E07',
+        'warm-3d-active': '0 0px 0 0 #15422B',
       }
     },
   },

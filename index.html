@@ -6,12 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PyLingo - Aprenda Python de Forma Gamificada</title>
     <meta name="description" content="Aprenda Python do zero absoluto até nível especialista de forma divertida e gamificada, inspirada no Duolingo." />
-    <!-- Google Fonts -->
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+    <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem('pylingo-theme');
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var theme = (saved === 'dark' || saved === 'light') ? saved : (prefersDark ? 'dark' : 'light');
+          document.documentElement.setAttribute('data-theme', theme);
+          if (theme === 'dark') document.documentElement.classList.add('dark');
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
   </head>
-  <body class="bg-slate-50 text-slate-800 antialiased font-sans">
+  <body class="bg-bioma-sand text-bioma-bark antialiased font-sans selection:bg-bioma-leaf selection:text-white">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
