@@ -197,7 +197,7 @@ export default function App() {
     actionFlags?: { sandboxExecuted?: boolean; shopBought?: boolean }
   ) => {
     let currentPendingCoins = updatedCoins;
-    let currentPendingAchievements = [...achievements];
+    const currentPendingAchievements = [...achievements];
     const newUnlockedAchievements: IAchievement[] = [];
 
     let sandboxFlag = actionFlags?.sandboxExecuted;
@@ -338,12 +338,12 @@ export default function App() {
     const updatedXp = addXp(xp, rewards.xp);
     const updatedCoins = coins + rewards.coins;
 
-    let updatedCompleted = [...completedLessons];
+    const updatedCompleted = [...completedLessons];
     if (!completedLessons.includes(currentLesson.id)) {
       updatedCompleted.push(currentLesson.id);
     }
 
-    let updatedCompletedExercises = [...completedExercises];
+    const updatedCompletedExercises = [...completedExercises];
     if (!completedExercises.includes(currentLesson.id)) {
       updatedCompletedExercises.push(currentLesson.id);
     }

@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-globals */
 /// <reference lib="webworker" />
 
 let pyodideInstance: any = null;
@@ -9,7 +8,7 @@ async function getPyodide() {
   try {
     // Em Web Workers de tipo ES Module ({ type: 'module' }), importScripts() é proibido pela especificação W3C.
     // Carregamos o módulo ES oficial do Pyodide (pyodide.mjs) via import() dinâmico nativo da CDN.
-    // @ts-ignore
+    // @ts-expect-error Importação dinâmica via URL externa da CDN
     const { loadPyodide } = await import("https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.mjs");
 
     pyodideInstance = await loadPyodide({
@@ -159,7 +158,9 @@ sys.stderr = io.StringIO()
         if (pyodideInstance) {
           stdout = await pyodideInstance.runPythonAsync("sys.stdout.getvalue()");
         }
-      } catch (e) {}
+      } catch (_e) {
+        // Ignora erros ao obter stdout durante falha de execução
+      }
 
       self.postMessage({
         type: 'run-result',

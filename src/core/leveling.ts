@@ -52,13 +52,15 @@ export function calculateLevel(totalXp: number): number {
   let level = 1;
   let xpUsed = 0;
 
-  while (true) {
+  let levelActive = true;
+  while (levelActive) {
     const xpNeeded = getXpForLevel(level);
     if (xpUsed + xpNeeded > totalXp) {
-      break;
+      levelActive = false;
+    } else {
+      xpUsed += xpNeeded;
+      level++;
     }
-    xpUsed += xpNeeded;
-    level++;
   }
 
   return level;
