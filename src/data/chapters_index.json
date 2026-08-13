@@ -1,0 +1,149 @@
+{
+  "version": "2.0",
+  "chapters": [
+    {
+      "id": "chapter_1",
+      "number": 1,
+      "title": "Primeiros Passos com Python",
+      "subtitle": "Variáveis, tipos e seu primeiro programa",
+      "icon": "Rocket",
+      "color": "emerald",
+      "estimatedMinutes": 15,
+      "exerciseCount": 12,
+      "exerciseBatteryId": "battery_ch1",
+      "prerequisites": []
+    },
+    {
+      "id": "chapter_2",
+      "number": 2,
+      "title": "Entrada e Saída de Dados",
+      "subtitle": "input(), casting e f-strings mágicas",
+      "icon": "MessageSquare",
+      "color": "blue",
+      "estimatedMinutes": 12,
+      "exerciseCount": 10,
+      "exerciseBatteryId": "battery_ch2",
+      "prerequisites": ["chapter_1"]
+    },
+    {
+      "id": "chapter_3",
+      "number": 3,
+      "title": "Operadores e Expressões",
+      "subtitle": "Operadores relacionais, lógicos e precedência",
+      "icon": "Calculator",
+      "color": "indigo",
+      "estimatedMinutes": 12,
+      "exerciseCount": 10,
+      "exerciseBatteryId": "battery_ch3",
+      "prerequisites": ["chapter_2"]
+    },
+    {
+      "id": "chapter_4",
+      "number": 4,
+      "title": "Condicionais: if, elif, else",
+      "subtitle": "Tomada de decisão e caminhos alternativos",
+      "icon": "GitFork",
+      "color": "violet",
+      "estimatedMinutes": 15,
+      "exerciseCount": 12,
+      "exerciseBatteryId": "battery_ch4",
+      "prerequisites": ["chapter_3"]
+    },
+    {
+      "id": "chapter_5",
+      "number": 5,
+      "title": "Repetições: for e while",
+      "subtitle": "Domando loops e iterações controladas",
+      "icon": "Repeat",
+      "color": "amber",
+      "estimatedMinutes": 18,
+      "exerciseCount": 14,
+      "exerciseBatteryId": "battery_ch5",
+      "prerequisites": ["chapter_4"]
+    },
+    {
+      "id": "chapter_6",
+      "number": 6,
+      "title": "Funções: Organizando o Código",
+      "subtitle": "Criando blocos reutilizáveis com def e return",
+      "icon": "Zap",
+      "color": "purple",
+      "estimatedMinutes": 15,
+      "exerciseCount": 12,
+      "exerciseBatteryId": "battery_ch6",
+      "prerequisites": ["chapter_5"]
+    },
+    {
+      "id": "chapter_7",
+      "number": 7,
+      "title": "Listas e Tuplas",
+      "subtitle": "Coleções ordenadas, slicing e métodos nativos",
+      "icon": "List",
+      "color": "teal",
+      "estimatedMinutes": 15,
+      "exerciseCount": 12,
+      "exerciseBatteryId": "battery_ch7",
+      "prerequisites": ["chapter_6"]
+    },
+    {
+      "id": "chapter_8",
+      "number": 8,
+      "title": "Dicionários e Conjuntos",
+      "subtitle": "Estruturas chave-valor e conjuntos matemáticos",
+      "icon": "Database",
+      "color": "orange",
+      "estimatedMinutes": 15,
+      "exerciseCount": 10,
+      "exerciseBatteryId": "battery_ch8",
+      "prerequisites": ["chapter_7"]
+    },
+    {
+      "id": "chapter_9",
+      "number": 9,
+      "title": "POO: Classes e Objetos",
+      "subtitle": "Abstração, encapusameto e herança pythônica",
+      "icon": "Box",
+      "color": "rose",
+      "estimatedMinutes": 20,
+      "exerciseCount": 12,
+      "exerciseBatteryId": "battery_ch9",
+      "prerequisites": ["chapter_8"]
+    },
+    {
+      "id": "chapter_10",
+      "number": 10,
+      "title": "Algoritmos e Estruturas",
+      "subtitle": "Busca binária, ordenação, pilhas e filas",
+      "icon": "Cpu",
+      "color": "cyan",
+      "estimatedMinutes": 20,
+      "exerciseCount": 10,
+      "exerciseBatteryId": "battery_ch10",
+      "prerequisites": ["chapter_9"]
+    },
+    {
+      "id": "chapter_11",
+      "number": 11,
+      "title": "Tratamento de Erros",
+      "subtitle": "try/except, exceções personalizadas e resiliência",
+      "icon": "ShieldAlert",
+      "color": "red",
+      "estimatedMinutes": 12,
+      "exerciseCount": 10,
+      "exerciseBatteryId": "battery_ch11",
+      "prerequisites": ["chapter_10"]
+    },
+    {
+      "id": "chapter_12",
+      "number": 12,
+      "title": "Projeto Integrador Guiado",
+      "subtitle": "Construindo uma aplicação Python do zero",
+      "icon": "Award",
+      "color": "yellow",
+      "estimatedMinutes": 30,
+      "exerciseCount": 8,
+      "exerciseBatteryId": "battery_ch12",
+      "prerequisites": ["chapter_11"]
+    }
+  ]
+}

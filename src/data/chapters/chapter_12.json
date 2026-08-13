@@ -1,0 +1,26 @@
+{
+  "id": "chapter_12",
+  "number": 12,
+  "title": "Capítulo 12",
+  "subtitle": "Conteúdo em desenvolvimento para o capítulo 12",
+  "icon": "BookOpen",
+  "color": "emerald",
+  "estimatedMinutes": 15,
+  "exerciseBatteryId": "battery_ch12",
+  "prerequisites": [
+    "chapter_11"
+  ],
+  "sections": [
+    {
+      "id": "ch12_sec1",
+      "title": "1. Introdução ao Capítulo 12",
+      "order": 1,
+      "content": [
+        {
+          "type": "text",
+          "content": "Em breve: conteúdo interativo do capítulo 12."
+        }
+      ]
+    }
+  ]
+}

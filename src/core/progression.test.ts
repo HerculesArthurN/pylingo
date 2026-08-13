@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { addXp, deductHeart, addHeart, deductCoins, unlockNextLesson } from './progression';
+import { addXp, deductHeart, addHeart, deductCoins, unlockNextLesson, isChapterUnlocked } from './progression';
 
 describe('Núcleo Lógico Puro (progression.ts)', () => {
   
@@ -60,6 +60,25 @@ describe('Núcleo Lógico Puro (progression.ts)', () => {
     it('deve ignorar e retornar a mesma lista caso a lição já esteja desbloqueada', () => {
       const unlocked = ['f1_l1', 'f2_l1'];
       expect(unlockNextLesson(unlocked, 'f2_l1')).toEqual(['f1_l1', 'f2_l1']);
+    });
+  });
+
+  describe('isChapterUnlocked()', () => {
+    it('deve desbloquear capítulo sem pré-requisitos', () => {
+      expect(isChapterUnlocked('chapter_1', [], [], {})).toBe(true);
+    });
+
+    it('deve desbloquear capítulo quando >= 70% dos exercícios do pré-requisito estão concluídos', () => {
+      const prerequisites = ['chapter_1'];
+      const exercisesByChapter = {
+        'chapter_1': ['c1_e01', 'c1_e02', 'c1_e03', 'c1_e04', 'c1_e05', 'c1_e06', 'c1_e07', 'c1_e08', 'c1_e09', 'c1_e10']
+      };
+      // 70% de 10 é 7
+      const completed7 = ['c1_e01', 'c1_e02', 'c1_e03', 'c1_e04', 'c1_e05', 'c1_e06', 'c1_e07'];
+      expect(isChapterUnlocked('chapter_2', prerequisites, completed7, exercisesByChapter)).toBe(true);
+
+      const completed6 = ['c1_e01', 'c1_e02', 'c1_e03', 'c1_e04', 'c1_e05', 'c1_e06'];
+      expect(isChapterUnlocked('chapter_2', prerequisites, completed6, exercisesByChapter)).toBe(false);
     });
   });
 

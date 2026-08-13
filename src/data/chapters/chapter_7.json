@@ -1,0 +1,26 @@
+{
+  "id": "chapter_7",
+  "number": 7,
+  "title": "Capítulo 7",
+  "subtitle": "Conteúdo em desenvolvimento para o capítulo 7",
+  "icon": "BookOpen",
+  "color": "emerald",
+  "estimatedMinutes": 15,
+  "exerciseBatteryId": "battery_ch7",
+  "prerequisites": [
+    "chapter_6"
+  ],
+  "sections": [
+    {
+      "id": "ch7_sec1",
+      "title": "1. Introdução ao Capítulo 7",
+      "order": 1,
+      "content": [
+        {
+          "type": "text",
+          "content": "Em breve: conteúdo interativo do capítulo 7."
+        }
+      ]
+    }
+  ]
+}

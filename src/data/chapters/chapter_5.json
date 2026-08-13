@@ -1,0 +1,26 @@
+{
+  "id": "chapter_5",
+  "number": 5,
+  "title": "Capítulo 5",
+  "subtitle": "Conteúdo em desenvolvimento para o capítulo 5",
+  "icon": "BookOpen",
+  "color": "emerald",
+  "estimatedMinutes": 15,
+  "exerciseBatteryId": "battery_ch5",
+  "prerequisites": [
+    "chapter_4"
+  ],
+  "sections": [
+    {
+      "id": "ch5_sec1",
+      "title": "1. Introdução ao Capítulo 5",
+      "order": 1,
+      "content": [
+        {
+          "type": "text",
+          "content": "Em breve: conteúdo interativo do capítulo 5."
+        }
+      ]
+    }
+  ]
+}

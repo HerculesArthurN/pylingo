@@ -1,0 +1,26 @@
+{
+  "id": "chapter_9",
+  "number": 9,
+  "title": "Capítulo 9",
+  "subtitle": "Conteúdo em desenvolvimento para o capítulo 9",
+  "icon": "BookOpen",
+  "color": "emerald",
+  "estimatedMinutes": 15,
+  "exerciseBatteryId": "battery_ch9",
+  "prerequisites": [
+    "chapter_8"
+  ],
+  "sections": [
+    {
+      "id": "ch9_sec1",
+      "title": "1. Introdução ao Capítulo 9",
+      "order": 1,
+      "content": [
+        {
+          "type": "text",
+          "content": "Em breve: conteúdo interativo do capítulo 9."
+        }
+      ]
+    }
+  ]
+}

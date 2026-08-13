@@ -4,11 +4,6 @@
  * Componente de navegação responsivo:
  *   - Desktop (lg+): Sidebar lateral com mascote, tabs e progresso.
  *   - Mobile  (<lg): Tab bar fixa no bottom com ícones compactos.
- *
- * Contrato (DbC):
- *   - Pré-condição:  `activeTab` ∈ ActiveTab, `totalLessonsCount > 0` para progresso.
- *   - Pós-condição:  `onTabChange` é chamado com a aba selecionada.
- *   - Invariante:    Apenas as 3 abas definidas em `ActiveTab` são renderizadas.
  */
 import React from 'react';
 import { BookOpen, Code2, Award, Sparkles, RotateCcw, Zap, User } from 'lucide-react';
@@ -29,9 +24,10 @@ interface SidebarProps {
   leitnerSchedule: Record<string, ILeitnerState>;
 }
 
-// ─── Definição estrita dos tabs para evitar duplicação ────────────────────────
+// ─── Definição estrita dos tabs ────────────────────────
 const TABS: ReadonlyArray<{ id: ActiveTab; label: string; Icon: typeof BookOpen }> = [
   { id: 'tree',    label: 'Árvore',  Icon: BookOpen },
+  { id: 'book',    label: 'Livro',   Icon: BookOpen },
   { id: 'sandbox', label: 'Sandbox', Icon: Code2 },
   { id: 'shop',    label: 'Loja',    Icon: Award },
   { id: 'profile', label: 'Perfil',  Icon: User },
@@ -92,11 +88,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <span>
                   {label === 'Árvore' 
                     ? 'Árvore de Lições' 
-                    : label === 'Sandbox' 
-                      ? 'Sandbox Livre' 
-                      : label === 'Loja' 
-                        ? 'Loja do Lingo' 
-                        : 'Seu Perfil'}
+                    : label === 'Livro'
+                      ? 'Livro Interativo'
+                      : label === 'Sandbox' 
+                        ? 'Sandbox Livre' 
+                        : label === 'Loja' 
+                          ? 'Loja do Lingo' 
+                          : 'Seu Perfil'}
                 </span>
               </button>
             ))}

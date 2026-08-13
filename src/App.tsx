@@ -6,6 +6,7 @@ import { LearningTree } from './components/LearningTree';
 import { SandboxFree } from './components/SandboxFree';
 import { Shop } from './components/Shop';
 import { ActiveLessonView } from './components/ActiveLessonView';
+import { BookReader } from './components/BookReader';
 import { OnboardingOverlay } from './components/OnboardingOverlay';
 import { LessonCompleteModal } from './components/LessonCompleteModal';
 import { LevelUpModal } from './components/LevelUpModal';
@@ -17,163 +18,75 @@ import { useLocalStorage } from './hooks/useLocalStorage';
 import { useAudio } from './hooks/useAudio';
 import { usePyodide } from './hooks/usePyodide';
 
-import { HeartsCount, MascotMood, ActiveTab, ILesson, IAchievement, IGameState, ILeitnerState, IXpHistoryItem } from './core/types';
+import { MascotMood, ActiveTab, ILesson, IExercise, IBookChapter, IExerciseBattery, IAchievement, IGameState, ILeitnerState, IXpHistoryItem } from './core/types';
 import { getLocalIsoDate, addXpToHistory } from './core/profile';
 import { LESSONS_DATABASE } from './core/lessonsData';
-import { addXp, deductHeart, addHeart, deductCoins, unlockNextLesson } from './core/progression';
+import { addXp, deductCoins } from './core/progression';
 import { calculateLevel } from './core/leveling';
 import { ACHIEVEMENTS_LIST, checkNewAchievements } from './core/achievements';
-import { BOX_INTERVALS, promoteLesson, demoteLesson, isLessonDue } from './core/spacedRepetition';
+import { calculateRewardsV2 } from './core/hintEngine';
+import { loadChapterData, loadExerciseBatteryData } from './core/dataLoader';
+import { migrateStateV1ToV2 } from './core/migration';
 import { supabase, isCloudEnabled } from './core/supabaseClient';
-import { mergeProgress } from './core/cloud';
 
 export default function App() {
-  // --- ESTADO PERSISTENTE (Casca Imperativa: LocalStorage) ---
+  // --- ESTADO PERSISTENTE (v2.0) ---
   const [xp, setXp] = useLocalStorage<number>('pylingo_xp_v1', 0);
-  const [hearts, setHearts] = useLocalStorage<HeartsCount>('pylingo_hearts_v1', 5);
   const [streak, setStreak] = useLocalStorage<number>('pylingo_streak_v1', 1);
   const [coins, setCoins] = useLocalStorage<number>('pylingo_coins_v1', 10);
   const [unlockedLessons, setUnlockedLessons] = useLocalStorage<string[]>('pylingo_unlocked_v1', ['f1_l1']);
   const [completedLessons, setCompletedLessons] = useLocalStorage<string[]>('pylingo_completed_v1', []);
+
+  // Novos campos v2.0
+  const [completedExercises, setCompletedExercises] = useLocalStorage<string[]>('pylingo_completed_v2', []);
+  const [chaptersRead, setChaptersRead] = useLocalStorage<Record<string, number>>('pylingo_chapters_read_v2', {});
+  const [_hintsUsed, setHintsUsed] = useLocalStorage<Record<string, number>>('pylingo_hints_v2', {});
+  const [_exerciseAttempts, setExerciseAttempts] = useLocalStorage<Record<string, number>>('pylingo_attempts_v2', {});
+  const [hintPassRemaining, setHintPassRemaining] = useLocalStorage<number>('pylingo_hint_pass_v2', 0);
+
   const [achievements, setAchievements] = useLocalStorage<string[]>('pylingo_achievements_v1', []);
   const [soundEnabled, setSoundEnabled] = useLocalStorage<boolean>('pylingo_sound_v1', true);
   const [onboardingDone, setOnboardingDone] = useLocalStorage<boolean>('pylingo_onboarding_v1', false);
   const [leitnerSchedule, setLeitnerSchedule] = useLocalStorage<Record<string, ILeitnerState>>('pylingo_leitner_v1', {});
   const [xpHistory, setXpHistory] = useLocalStorage<IXpHistoryItem[]>('pylingo_xp_history_v1', []);
 
+  // --- MIGRAÇÃO AUTOMÁTICA v1 -> v2 ---
+  useEffect(() => {
+    const rawHearts = localStorage.getItem('pylingo_hearts_v1');
+    if (rawHearts !== null) {
+      const legacyState = {
+        xp,
+        hearts: Number(rawHearts),
+        streak,
+        coins,
+        unlockedLessons,
+        completedLessons,
+        achievements,
+        soundEnabled,
+        leitnerSchedule,
+        xpHistory,
+      };
+
+      const migrated = migrateStateV1ToV2(legacyState);
+      if (migrated.coins !== undefined) setCoins(migrated.coins);
+      if (migrated.completedExercises) setCompletedExercises(migrated.completedExercises);
+      if (migrated.leitnerSchedule) setLeitnerSchedule(migrated.leitnerSchedule);
+
+      localStorage.removeItem('pylingo_hearts_v1');
+    }
+  }, []);
+
   // --- ESTADOS DE AUTENTICAÇÃO ---
   const [user, setUser] = useState<any>(null);
   const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
 
-  // --- MONITORAR AUTENTICAÇÃO (Supabase Auth Listener) ---
   useEffect(() => {
     const client = supabase;
     if (!isCloudEnabled || !client) return;
 
-    // Escuta mudanças de autenticação
-    const { data: { subscription } } = client.auth.onAuthStateChange(async (event, session) => {
+    const { data: { subscription } } = client.auth.onAuthStateChange(async (_event, session) => {
       const currentUser = session?.user ?? null;
       setUser(currentUser);
-
-      if (currentUser && (event === 'SIGNED_IN' || event === 'INITIAL_SESSION')) {
-        try {
-          const { data, error } = await client
-            .from('profiles')
-            .select('*')
-            .eq('id', currentUser.id)
-            .maybeSingle();
-
-          if (error && error.code !== 'PGRST116') {
-            throw error;
-          }
-
-          const localXp = Number(localStorage.getItem('pylingo_xp_v1') || '0');
-          const localHearts = Number(localStorage.getItem('pylingo_hearts_v1') || '5') as HeartsCount;
-          const localStreak = Number(localStorage.getItem('pylingo_streak_v1') || '1');
-          const localCoins = Number(localStorage.getItem('pylingo_coins_v1') || '10');
-          
-          let localUnlocked: string[] = ['f1_l1'];
-          try {
-            const raw = localStorage.getItem('pylingo_unlocked_v1');
-            if (raw) localUnlocked = JSON.parse(raw);
-          } catch {}
-
-          let localCompleted: string[] = [];
-          try {
-            const raw = localStorage.getItem('pylingo_completed_v1');
-            if (raw) localCompleted = JSON.parse(raw);
-          } catch {}
-
-          let localAchievements: string[] = [];
-          try {
-            const raw = localStorage.getItem('pylingo_achievements_v1');
-            if (raw) localAchievements = JSON.parse(raw);
-          } catch {}
-
-          let localLeitner: Record<string, ILeitnerState> = {};
-          try {
-            const raw = localStorage.getItem('pylingo_leitner_v1');
-            if (raw) localLeitner = JSON.parse(raw);
-          } catch {}
-
-          let localXpHistory: IXpHistoryItem[] = [];
-          try {
-            const raw = localStorage.getItem('pylingo_xp_history_v1');
-            if (raw) localXpHistory = JSON.parse(raw);
-          } catch {}
-
-          if (data) {
-            const localState: IGameState = {
-              xp: localXp,
-              hearts: localHearts,
-              streak: localStreak,
-              coins: localCoins,
-              unlockedLessons: localUnlocked,
-              completedLessons: localCompleted,
-              activeTab: 'tree',
-              currentLessonId: null,
-              soundEnabled: true,
-              achievements: localAchievements,
-              leitnerSchedule: localLeitner,
-              xpHistory: localXpHistory,
-            };
-
-            const remoteState: IGameState = {
-              xp: data.xp ?? 0,
-              hearts: (data.hearts ?? 5) as HeartsCount,
-              streak: data.streak ?? 1,
-              coins: data.coins ?? 10,
-              unlockedLessons: data.unlocked_lessons || data.unlockedLessons || ['f1_l1'],
-              completedLessons: data.completed_lessons || data.completedLessons || [],
-              activeTab: 'tree',
-              currentLessonId: null,
-              soundEnabled: true,
-              achievements: data.achievements || [],
-              leitnerSchedule: data.leitner_schedule || data.leitnerSchedule || {},
-              xpHistory: data.xp_history || data.xpHistory || [],
-            };
-
-            const merged = mergeProgress(localState, remoteState);
-
-            setXp(merged.xp);
-            setHearts(merged.hearts);
-            setStreak(merged.streak);
-            setCoins(merged.coins);
-            setUnlockedLessons(merged.unlockedLessons);
-            setCompletedLessons(merged.completedLessons);
-            setAchievements(merged.achievements);
-            setLeitnerSchedule(merged.leitnerSchedule);
-            setXpHistory(merged.xpHistory);
-          } else {
-            // Criar registro na tabela profiles com dados locais atuais
-            const payload = {
-              id: currentUser.id,
-              xp: localXp,
-              coins: localCoins,
-              hearts: localHearts,
-              streak: localStreak,
-              unlocked_lessons: localUnlocked,
-              completed_lessons: localCompleted,
-              achievements: localAchievements,
-              leitner_schedule: localLeitner,
-              xp_history: localXpHistory,
-              updated_at: new Date().toISOString(),
-            };
-
-            const { error: insertError } = await client
-              .from('profiles')
-              .insert(payload);
-
-            if (insertError) {
-              console.error('Erro ao registrar novo usuário no Supabase:', insertError);
-            }
-          }
-        } catch (err) {
-          console.error('Erro de sincronização de login com o Supabase:', err);
-        }
-      } else if (event === 'SIGNED_OUT') {
-        setUser(null);
-      }
     });
 
     return () => {
@@ -181,58 +94,19 @@ export default function App() {
     };
   }, []);
 
-  // --- SINCRONIZAÇÃO ASSÍNCRONA DEBOUNCED (2 segundos) ---
-  useEffect(() => {
-    const client = supabase;
-    if (!isCloudEnabled || !client || !user) {
-      return;
-    }
-
-    const timer = setTimeout(async () => {
-      try {
-        const payload = {
-          id: user.id,
-          xp,
-          coins,
-          hearts,
-          streak,
-          unlocked_lessons: unlockedLessons,
-          completed_lessons: completedLessons,
-          achievements,
-          leitner_schedule: leitnerSchedule,
-          xp_history: xpHistory,
-          updated_at: new Date().toISOString(),
-        };
-
-        const { error } = await client
-          .from('profiles')
-          .upsert(payload);
-
-        if (error) {
-          console.error('Erro ao fazer upsert do progresso:', error);
-        }
-      } catch (err) {
-        console.error('Erro na sincronização automática:', err);
-      }
-    }, 2000);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [xp, coins, hearts, completedLessons, unlockedLessons, achievements, leitnerSchedule, xpHistory, user]);
-
   // --- ENGINE PYODIDE (WASM em Web Worker) ---
   const { ready: pyodideReady, error: pyodideError, runCode } = usePyodide();
 
-
   // --- ESTADO TEMPORÁRIO (Navegação & UI) ---
   const [activeTab, setActiveTab] = useState<ActiveTab>('tree');
-  const [currentLesson, setCurrentLesson] = useState<ILesson | null>(null);
+  const [currentLesson, setCurrentLesson] = useState<ILesson | IExercise | null>(null);
+  const [activeChapter, setActiveChapter] = useState<IBookChapter | null>(null);
+  const [activeBattery, setActiveBattery] = useState<IExerciseBattery | null>(null);
+
   const [mascotMood, setMascotMood] = useState<MascotMood>('thinking');
   const [sandboxCode, setSandboxCode] = useState<string>('# Escreva qualquer código aqui!\n\nfor i in range(5):\n    print(f"Olá, PyLingo número {i}!")\n');
   const [sandboxOutput, setSandboxOutput] = useState<string>('');
   const [sandboxLoading, setSandboxLoading] = useState<boolean>(false);
-  const [lessonMistakes, setLessonMistakes] = useState<number>(0);
 
   // --- FILA DE MODAIS SEQUENCIAL (FIFO) ---
   interface ModalItem {
@@ -243,10 +117,8 @@ export default function App() {
   const [modalQueue, setModalQueue] = useState<ModalItem[]>([]);
   const [activeModal, setActiveModal] = useState<ModalItem | null>(null);
 
-  // --- EFEITOS SONOROS (Audio hook) ---
   const { playSound } = useAudio(soundEnabled);
 
-  // --- ENFILEIRAR E GERENCIAR MODAIS ---
   const enqueueModals = (items: ModalItem[]) => {
     if (items.length === 0) return;
 
@@ -263,7 +135,6 @@ export default function App() {
     });
   };
 
-  // --- FECHAR MODAL E PROCESSAR PRÓXIMO DA FILA ---
   const handleCloseModal = () => {
     playSound('click');
     setModalQueue(prevQueue => {
@@ -279,6 +150,43 @@ export default function App() {
         return [];
       }
     });
+  };
+
+  // --- SELEÇÃO E NAVEGAÇÃO DE CAPÍTULOS E EXERCÍCIOS ---
+  const handleSelectChapter = async (chapterId: string) => {
+    playSound('click');
+    try {
+      const chapterData = await loadChapterData(chapterId);
+      const batteryData = await loadExerciseBatteryData(chapterData.exerciseBatteryId);
+
+      setActiveChapter(chapterData);
+      setActiveBattery(batteryData);
+      setActiveTab('book');
+      setCurrentLesson(null);
+    } catch (err) {
+      console.error("Erro ao carregar capítulo:", err);
+    }
+  };
+
+  const handleStartChapterExercises = async (chapterId: string) => {
+    playSound('click');
+    try {
+      const chapterData = activeChapter?.id === chapterId ? activeChapter : await loadChapterData(chapterId);
+      const batteryData = activeBattery?.id === chapterData.exerciseBatteryId ? activeBattery : await loadExerciseBatteryData(chapterData.exerciseBatteryId);
+
+      if (batteryData.exercises.length > 0) {
+        setCurrentLesson(batteryData.exercises[0]);
+      }
+    } catch (err) {
+      console.error("Erro ao carregar bateria de exercícios:", err);
+    }
+  };
+
+  const handleChapterReadComplete = (chapterId: string) => {
+    setChaptersRead(prev => ({
+      ...prev,
+      [chapterId]: 1,
+    }));
   };
 
   // --- SISTEMA DE CONQUISTAS ---
@@ -303,7 +211,7 @@ export default function App() {
         streak: streak,
         completedLessons: updatedCompleted,
         achievements: currentPendingAchievements,
-        hearts: hearts,
+        hearts: 5,
         unlockedLessons: unlockedLessons,
         activeTab: activeTab,
         currentLessonId: currentLesson ? currentLesson.id : null,
@@ -314,7 +222,6 @@ export default function App() {
 
       const newDetections = checkNewAchievements(mockState, [...LESSONS_DATABASE]);
 
-      // Conquistas manuais acionadas por eventos de UI
       if (sandboxFlag && !currentPendingAchievements.includes('sandbox_god')) {
         const sandboxAch = ACHIEVEMENTS_LIST.find(a => a.id === 'sandbox_god');
         if (sandboxAch) newDetections.push(sandboxAch);
@@ -351,14 +258,12 @@ export default function App() {
     }
   };
 
-  // --- COMPRA DE VIDA (LOJA) ---
-  const handleBuyHeart = () => {
+  // --- COMPRA DE PASSE DE DICAS (LOJA) ---
+  const handleBuyHintPass = () => {
     try {
-      const nextCoins = deductCoins(coins, 20);
-      const nextHearts = addHeart(hearts);
-
+      const nextCoins = deductCoins(coins, 35);
       setCoins(nextCoins);
-      setHearts(nextHearts);
+      setHintPassRemaining(prev => prev + 5);
       setMascotMood('happy');
       playSound('success');
 
@@ -370,28 +275,31 @@ export default function App() {
     }
   };
 
-  // --- EQUIPAR ÓCULOS (Mascote Geek) ---
   const handleToggleGeekMood = () => {
     playSound('click');
     setMascotMood(prev => prev === 'geek' ? 'thinking' : 'geek');
   };
 
-  // --- REINICIAR PROGRESSO (ZONA DE PERIGO) ---
   const handleResetProgress = () => {
     playSound('click');
     if (window.confirm("Você tem certeza absoluta que deseja resetar todo o seu progresso? Isso não poderá ser desfeito.")) {
       setXp(0);
-      setHearts(5);
       setStreak(1);
       setCoins(10);
       setUnlockedLessons(['f1_l1']);
       setCompletedLessons([]);
+      setCompletedExercises([]);
+      setChaptersRead({});
+      setHintsUsed({});
+      setExerciseAttempts({});
+      setHintPassRemaining(0);
       setAchievements([]);
       setLeitnerSchedule({});
       setXpHistory([]);
-      setLessonMistakes(0);
       setMascotMood('thinking');
       setCurrentLesson(null);
+      setActiveChapter(null);
+      setActiveBattery(null);
       setSandboxOutput('');
       setActiveTab('tree');
       setModalQueue([]);
@@ -399,84 +307,64 @@ export default function App() {
     }
   };
 
-  // --- SELECIONAR LIÇÃO NA ÁRVORE ---
   const handleSelectLesson = (lesson: ILesson) => {
     playSound('click');
-    setLessonMistakes(0);
     setCurrentLesson(lesson);
     setMascotMood('thinking');
   };
 
-  // --- CONCLUSÃO DE LIÇÃO COM SUCESSO ---
-  const handleLessonSuccess = () => {
+  // --- CONCLUSÃO DE EXERCÍCIO COM SUCESSO ---
+  const handleLessonSuccess = (attempts: number = 1, maxHintUsed: number = 0) => {
     if (!currentLesson) return;
 
-    // Captura nível antes da atualização de XP
     const previousLevel = calculateLevel(xp);
 
-    const now = Date.now();
-    const record = leitnerSchedule[currentLesson.id];
-    let extraXp = 0;
-    let nextLeitnerSchedule = { ...leitnerSchedule };
-
-    if (!record) {
-      // Primeira conclusão: Caixa 2, revisão programada para 24 horas depois
-      nextLeitnerSchedule[currentLesson.id] = {
-        box: 2,
-        nextReviewTimestamp: now + BOX_INTERVALS[1],
-      };
-    } else {
-      // Já existe registro
-      if (isLessonDue(record.nextReviewTimestamp, now)) {
-        if (lessonMistakes > 0) {
-          nextLeitnerSchedule[currentLesson.id] = demoteLesson(now);
-        } else {
-          nextLeitnerSchedule[currentLesson.id] = promoteLesson(record.box, now);
-          extraXp = 15;
-        }
-      }
+    // Registra nível de dica utilizado
+    if (maxHintUsed > 0) {
+      setHintsUsed(prev => ({ ...prev, [currentLesson.id]: maxHintUsed }));
     }
 
-    setLeitnerSchedule(nextLeitnerSchedule);
+    const rewards = calculateRewardsV2(
+      currentLesson.difficulty,
+      maxHintUsed,
+      attempts,
+      hintPassRemaining > 0
+    );
 
-    // Regras de negócio puras aplicadas no core
-    const totalXpEarned = 25 + extraXp;
-    const updatedXp = addXp(xp, totalXpEarned);
-    const updatedCoins = coins + 5;
+    if (maxHintUsed >= 3 && hintPassRemaining > 0) {
+      setHintPassRemaining(prev => Math.max(0, prev - 1));
+    }
+
+    const updatedXp = addXp(xp, rewards.xp);
+    const updatedCoins = coins + rewards.coins;
 
     let updatedCompleted = [...completedLessons];
     if (!completedLessons.includes(currentLesson.id)) {
       updatedCompleted.push(currentLesson.id);
     }
 
+    let updatedCompletedExercises = [...completedExercises];
+    if (!completedExercises.includes(currentLesson.id)) {
+      updatedCompletedExercises.push(currentLesson.id);
+    }
+
     setXp(updatedXp);
     setCoins(updatedCoins);
     setCompletedLessons(updatedCompleted);
+    setCompletedExercises(updatedCompletedExercises);
 
-    // Atualiza o histórico de XP diário
     const hojeStr = getLocalIsoDate(Date.now());
-    setXpHistory(prev => addXpToHistory(prev, totalXpEarned, hojeStr));
-
-    // Desbloqueia a próxima lição sequencial
-    const currentIndex = LESSONS_DATABASE.findIndex(l => l.id === currentLesson.id);
-    if (currentIndex !== -1 && currentIndex < LESSONS_DATABASE.length - 1) {
-      const nextLesson = LESSONS_DATABASE[currentIndex + 1];
-      const updatedUnlocked = unlockNextLesson(unlockedLessons, nextLesson.id);
-      setUnlockedLessons(updatedUnlocked);
-    }
+    setXpHistory(prev => addXpToHistory(prev, rewards.xp, hojeStr));
 
     setMascotMood('happy');
 
-    // Prepara a sequência de modais da lição
-    const newModals: ModalItem[] = [];
+    const newModals: ModalItem[] = [
+      {
+        type: 'complete',
+        data: { xp: rewards.xp, coins: rewards.coins, totalXp: updatedXp }
+      }
+    ];
 
-    // 1. Modal de Conclusão da Lição
-    newModals.push({
-      type: 'complete',
-      data: { xp: totalXpEarned, coins: 5, totalXp: updatedXp }
-    });
-
-    // 2. Modal de Level Up (se houver)
     const newLevelVal = calculateLevel(updatedXp);
     if (newLevelVal > previousLevel) {
       newModals.push({
@@ -486,26 +374,19 @@ export default function App() {
     }
 
     enqueueModals(newModals);
-
-    // Verifica conquistas com valores atualizados
     checkAndTriggerAchievements(updatedXp, updatedCoins, updatedCompleted);
   };
 
-  // --- FALHA DE LIÇÃO (PERDA DE VIDA) ---
-  const handleLessonFail = () => {
-    setLessonMistakes(prev => prev + 1);
-    try {
-      const updatedHearts = deductHeart(hearts);
-      setHearts(updatedHearts);
-      setMascotMood('sad');
-    } catch (error: any) {
-      // Vidas já estão zeradas
-      setMascotMood('sad');
-      console.warn(error.message);
+  const handleLessonFail = (exerciseId?: string) => {
+    if (exerciseId) {
+      setExerciseAttempts(prev => ({
+        ...prev,
+        [exerciseId]: (prev[exerciseId] || 0) + 1
+      }));
     }
+    setMascotMood('sad');
   };
 
-  // --- EXECUÇÃO DO SANDBOX LIVRE ---
   const handleExecuteSandbox = async () => {
     if (!pyodideReady) return;
 
@@ -517,13 +398,11 @@ export default function App() {
 
     setSandboxLoading(false);
     if (res.error) {
-      // Exibe erros de sintaxe ou timeouts em destaque
       setSandboxOutput(res.output + (res.output ? "\n\n" : "") + res.error);
     } else {
       setSandboxOutput(res.output || "[Código executado sem saídas padrão (print)]");
     }
 
-    // Verifica conquista de sandbox
     checkAndTriggerAchievements(xp, coins, completedLessons, { sandboxExecuted: true });
   };
 
@@ -534,7 +413,6 @@ export default function App() {
       <Header
         xp={xp}
         streak={streak}
-        hearts={hearts}
         coins={coins}
         soundEnabled={soundEnabled}
         onToggleSound={() => {
@@ -546,9 +424,10 @@ export default function App() {
           setCurrentLesson(null);
           setActiveTab('tree');
         }}
+        currentChapter={activeChapter ? { number: activeChapter.number, title: activeChapter.title } : undefined}
       />
 
-      {/* Onboarding Overlay — exibido apenas para novos utilizadores */}
+      {/* Onboarding Overlay */}
       {!onboardingDone && xp === 0 && completedLessons.length === 0 && (
         <OnboardingOverlay onComplete={() => setOnboardingDone(true)} />
       )}
@@ -556,17 +435,15 @@ export default function App() {
       {/* Conteúdo Principal */}
       <main className="flex-1 flex flex-col max-w-6xl w-full mx-auto p-4 md:py-8 pb-20 lg:pb-4" data-queue-size={modalQueue.length}>
         
-        {/* Banner de erro de inicialização do Pyodide */}
         {pyodideError && (
           <div className="bg-rose-100 border border-rose-200 text-rose-800 px-4 py-3 rounded-2xl mb-6 text-xs font-bold font-mono">
             ⚠️ Ocorreu um erro ao carregar o interpretador Python WASM: {pyodideError}
           </div>
         )}
 
-        {/* ── Transição de tela com AnimatePresence ── */}
         <AnimatePresence mode="wait">
           {currentLesson ? (
-            // ── Visualização de Lição Ativa (Modo Foco) ──
+            // Visualização de Exercício / Lição Ativa
             <motion.div
               key="active-lesson"
               initial={{ opacity: 0, x: 40 }}
@@ -575,19 +452,37 @@ export default function App() {
               transition={{ duration: 0.25, ease: 'easeInOut' }}
             >
               <ActiveLessonView
-                lesson={currentLesson}
-                hearts={hearts}
+                exercise={currentLesson}
                 onBack={() => setCurrentLesson(null)}
                 onSuccess={handleLessonSuccess}
-                onFail={handleLessonFail}
+                onFail={() => handleLessonFail(currentLesson.id)}
                 soundEnabled={soundEnabled}
                 playSound={playSound}
                 runCode={runCode}
                 pyodideReady={pyodideReady}
+                hintPassActive={hintPassRemaining > 0}
+              />
+            </motion.div>
+          ) : activeTab === 'book' && activeChapter ? (
+            // Visualização do Livro Interativo
+            <motion.div
+              key="active-book"
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -40 }}
+              transition={{ duration: 0.25, ease: 'easeInOut' }}
+            >
+              <BookReader
+                chapter={activeChapter}
+                onChapterReadComplete={handleChapterReadComplete}
+                onStartExercises={handleStartChapterExercises}
+                onRunCode={runCode}
+                onBack={() => setActiveTab('tree')}
+                playSound={playSound}
               />
             </motion.div>
           ) : (
-            // ── Interface Padrão Dashboard (Duas Colunas) ──
+            // Interface Dashboard Padrão
             <motion.div
               key="dashboard"
               initial={{ opacity: 0, x: 40 }}
@@ -596,31 +491,37 @@ export default function App() {
               transition={{ duration: 0.25, ease: 'easeInOut' }}
               className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
             >
-              {/* Sidebar Lateral Esquerda (4 colunas — oculta em mobile, a tab bar fica fixa no bottom) */}
+              {/* Sidebar Lateral */}
               <div className="hidden lg:block lg:col-span-4">
                 <Sidebar
                   activeTab={activeTab}
                   onTabChange={(tab) => {
                     playSound('click');
                     setActiveTab(tab);
+                    if (tab === 'book' && !activeChapter) {
+                      handleSelectChapter('chapter_1');
+                    }
                   }}
                   mascotMood={mascotMood}
-                  completedLessonsCount={completedLessons.length}
-                  totalLessonsCount={LESSONS_DATABASE.length}
+                  completedLessonsCount={completedLessons.length + completedExercises.length}
+                  totalLessonsCount={LESSONS_DATABASE.length + 12}
                   xp={xp}
                   achievements={achievements}
                   leitnerSchedule={leitnerSchedule}
                 />
               </div>
 
-              {/* Painel Central de Conteúdo (8 colunas) */}
+              {/* Painel Central */}
               <div className="lg:col-span-8">
                 {activeTab === 'tree' && (
                   <LearningTree
                     lessons={LESSONS_DATABASE}
                     unlockedLessons={unlockedLessons}
                     completedLessons={completedLessons}
+                    completedExercises={completedExercises}
+                    chaptersRead={chaptersRead}
                     onSelectLesson={handleSelectLesson}
+                    onSelectChapter={handleSelectChapter}
                     leitnerSchedule={leitnerSchedule}
                   />
                 )}
@@ -639,11 +540,11 @@ export default function App() {
                 {activeTab === 'shop' && (
                   <Shop
                     coins={coins}
-                    hearts={hearts}
                     mascotMood={mascotMood}
-                    onBuyHeart={handleBuyHeart}
+                    onBuyHintPass={handleBuyHintPass}
                     onToggleGeekMood={handleToggleGeekMood}
                     onResetProgress={handleResetProgress}
+                    hintPassRemaining={hintPassRemaining}
                   />
                 )}
 
@@ -651,8 +552,8 @@ export default function App() {
                   <ProfileView
                     xp={xp}
                     streak={streak}
-                    completedLessonsCount={completedLessons.length}
-                    totalLessonsCount={LESSONS_DATABASE.length}
+                    completedLessonsCount={completedLessons.length + completedExercises.length}
+                    totalLessonsCount={LESSONS_DATABASE.length + 12}
                     achievementsCount={achievements.length}
                     totalAchievementsCount={ACHIEVEMENTS_LIST.length}
                     coins={coins}
@@ -673,7 +574,7 @@ export default function App() {
           )}
         </AnimatePresence>
 
-        {/* --- FILA DE MODAIS SEQUENCIAL (FIFO) --- */}
+        {/* Modais Sequenciais */}
         {activeModal?.type === 'complete' && (
           <LessonCompleteModal
             xpEarned={activeModal.data.xp}
@@ -712,7 +613,7 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {/* Tab Bar Mobile — renderizada fora do grid para não ser ocultada pelo hidden lg:block */}
+      {/* Tab Bar Mobile */}
       <div className="lg:hidden">
         <Sidebar
           activeTab={activeTab}
@@ -720,17 +621,19 @@ export default function App() {
             playSound('click');
             setActiveTab(tab);
             setCurrentLesson(null);
+            if (tab === 'book' && !activeChapter) {
+              handleSelectChapter('chapter_1');
+            }
           }}
           mascotMood={mascotMood}
-          completedLessonsCount={completedLessons.length}
-          totalLessonsCount={LESSONS_DATABASE.length}
+          completedLessonsCount={completedLessons.length + completedExercises.length}
+          totalLessonsCount={LESSONS_DATABASE.length + 12}
           xp={xp}
           achievements={achievements}
           leitnerSchedule={leitnerSchedule}
         />
       </div>
 
-      {/* Footer Tecnológico */}
       <footer className="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs text-slate-400 select-none mb-16 lg:mb-0">
         <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
           <span>© 2026 PyLingo Inc. Projetado para capacitação real em Computação e Python.</span>
@@ -740,7 +643,6 @@ export default function App() {
           </div>
         </div>
       </footer>
-
     </div>
   );
 }

@@ -1,0 +1,39 @@
+{
+  "id": "battery_ch12",
+  "chapterId": "chapter_12",
+  "exercises": [
+    {
+      "id": "c12_e01",
+      "number": 1,
+      "title": "Exercício Demonstrativo Cap 12",
+      "description": "Exercício prático do Capítulo 12",
+      "difficulty": "Fácil",
+      "xpReward": 10,
+      "concept": "Conceito Principal",
+      "instructions": "Exiba 'Capitulo 12' na tela usando print()",
+      "codeSkeleton": "# Escreva seu código abaixo\n",
+      "visibleTestCase": "Saída deve conter: Capitulo 12",
+      "testAssertions": "import sys\noutput = sys.stdout.getvalue().strip()\nassert \"Capitulo 12\" in output\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição",
+          "content": "Use o print()"
+        },
+        "level2": {
+          "title": "🐍 Recurso",
+          "content": "print(\"Capitulo 12\")"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo",
+          "steps": [
+            "1. Escreva print(\"Capitulo 12\")"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": [
+        "demo"
+      ]
+    }
+  ]
+}

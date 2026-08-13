@@ -1,0 +1,26 @@
+{
+  "id": "chapter_11",
+  "number": 11,
+  "title": "Capítulo 11",
+  "subtitle": "Conteúdo em desenvolvimento para o capítulo 11",
+  "icon": "BookOpen",
+  "color": "emerald",
+  "estimatedMinutes": 15,
+  "exerciseBatteryId": "battery_ch11",
+  "prerequisites": [
+    "chapter_10"
+  ],
+  "sections": [
+    {
+      "id": "ch11_sec1",
+      "title": "1. Introdução ao Capítulo 11",
+      "order": 1,
+      "content": [
+        {
+          "type": "text",
+          "content": "Em breve: conteúdo interativo do capítulo 11."
+        }
+      ]
+    }
+  ]
+}

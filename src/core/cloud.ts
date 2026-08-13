@@ -3,12 +3,6 @@ import { IGameState, IXpHistoryItem, HeartsCount, ILeitnerState } from './types'
 /**
  * Mescla o histórico de XP diário. Para chaves de data coincidentes, adota o maior valor de XP.
  * Ordena a lista de forma cronológica antes do retorno.
- *
- * @param local O histórico de XP local.
- * @param remote O histórico de XP remoto.
- *
- * @pre local e remote devem ser arrays válidos contendo itens com data no formato YYYY-MM-DD e XP >= 0.
- * @post Retorna uma nova lista de IXpHistoryItem sem duplicatas de data, contendo o maior XP para chaves coincidentes e ordenada cronologicamente de forma crescente.
  */
 export function mergeXpHistory(local: IXpHistoryItem[], remote: IXpHistoryItem[]): IXpHistoryItem[] {
   if (!Array.isArray(local)) {
@@ -61,10 +55,7 @@ export function mergeXpHistory(local: IXpHistoryItem[], remote: IXpHistoryItem[]
 }
 
 /**
- * Valida se um objeto IGameState está em conformidade com as regras e tipos do sistema (DbC).
- *
- * @param state O estado de jogo a ser validado.
- * @param label Identificador para a mensagem de erro (ex: 'local' ou 'remote').
+ * Valida se um objeto IGameState está em conformidade com as regras do sistema (DbC).
  */
 function validateGameState(state: IGameState, label: string): void {
   if (!state || typeof state !== 'object') {
@@ -73,7 +64,7 @@ function validateGameState(state: IGameState, label: string): void {
   if (typeof state.xp !== 'number' || !Number.isInteger(state.xp) || state.xp < 0) {
     throw new Error(`Pre-condition failed: ${label}.xp must be a non-negative integer`);
   }
-  if (![0, 1, 2, 3, 4, 5].includes(state.hearts)) {
+  if (state.hearts !== undefined && ![0, 1, 2, 3, 4, 5].includes(state.hearts)) {
     throw new Error(`Pre-condition failed: ${label}.hearts must be a value between 0 and 5`);
   }
   if (typeof state.streak !== 'number' || !Number.isInteger(state.streak) || state.streak < 0) {
@@ -108,16 +99,7 @@ function validateGameState(state: IGameState, label: string): void {
 }
 
 /**
- * Mescla o estado de jogo unificando listas (completedLessons, unlockedLessons, achievements) como conjuntos sem duplicatas.
- * Combina a agenda do Leitner System (leitnerSchedule) escolhendo a caixa de repetição mais avançada (max) e o timestamp de revisão mais urgente (min).
- * Adota o maior XP, moedas e corações para beneficiar o progresso do usuário.
- * Mescla o histórico com mergeXpHistory.
- *
- * @param local O estado de jogo local do usuário.
- * @param remote O estado de jogo remoto do usuário.
- *
- * @pre local e remote devem ser objetos IGameState válidos em conformidade com as invariantes do sistema.
- * @post Retorna um novo objeto IGameState com o progresso mesclado de forma pura e determinística.
+ * Mescla o estado de jogo unificando listas.
  */
 export function mergeProgress(local: IGameState, remote: IGameState): IGameState {
   validateGameState(local, 'local');
@@ -125,14 +107,13 @@ export function mergeProgress(local: IGameState, remote: IGameState): IGameState
 
   const mergedXp = Math.max(local.xp, remote.xp);
   const mergedCoins = Math.max(local.coins, remote.coins);
-  const mergedHearts = Math.max(local.hearts, remote.hearts) as HeartsCount;
+  const mergedHearts = Math.max(local.hearts ?? 5, remote.hearts ?? 5) as HeartsCount;
   const mergedStreak = Math.max(local.streak, remote.streak);
 
   const mergedUnlockedLessons = Array.from(new Set([...local.unlockedLessons, ...remote.unlockedLessons]));
   const mergedCompletedLessons = Array.from(new Set([...local.completedLessons, ...remote.completedLessons]));
   const mergedAchievements = Array.from(new Set([...local.achievements, ...remote.achievements]));
 
-  // Combinar a agenda Leitner
   const mergedLeitnerSchedule: Record<string, ILeitnerState> = {};
   const allLeitnerKeys = new Set([
     ...Object.keys(local.leitnerSchedule),

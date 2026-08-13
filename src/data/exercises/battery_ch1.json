@@ -1,0 +1,409 @@
+{
+  "id": "battery_ch1",
+  "chapterId": "chapter_1",
+  "exercises": [
+    {
+      "id": "c1_e01",
+      "number": 1,
+      "title": "Olá, Mundo!",
+      "description": "A saída padrão é a forma que os programas se communicam com o mundo. Em Python, usamos a função print() para exibir mensagens na tela.",
+      "difficulty": "Fácil",
+      "xpReward": 10,
+      "concept": "Função print()",
+      "instructions": "Use a função print() para exibir exatamente a mensagem: \"Olá, Mundo!\"",
+      "codeSkeleton": "# Escreva seu código abaixo\n",
+      "visibleTestCase": "Saída no console deve conter: Olá, Mundo!",
+      "testAssertions": "import sys\noutput = sys.stdout.getvalue().strip()\nassert \"Olá, Mundo!\" in output, f\"Esperado 'Olá, Mundo!', recebido: '{output}'\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Pense em falar alto: você quer que o computador exiba uma mensagem de texto na tela."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "Use a função print() passando o texto entre aspas duplas ou simples.",
+          "codeSnippet": "print(\"Seu texto aqui\")"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva a palavra reservada print",
+            "2. Abra parênteses ()",
+            "3. Coloque a frase \"Olá, Mundo!\" dentro dos parênteses"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["print", "iniciante"],
+      "legacyId": "f1_l1"
+    },
+    {
+      "id": "c1_e02",
+      "number": 2,
+      "title": "Guardando um Nome",
+      "description": "Variáveis são como caixas com etiquetas onde guardamos valores. Vamos criar sua primeira variável de texto (String).",
+      "difficulty": "Fácil",
+      "xpReward": 10,
+      "concept": "Variável String",
+      "instructions": "Crie uma variável chamada 'nome' e atribua a ela exatamente o texto \"Python\".",
+      "codeSkeleton": "# Crie sua variável abaixo\n",
+      "visibleTestCase": "A variável 'nome' deve existir e ser igual a 'Python'",
+      "testAssertions": "assert 'nome' in locals() or 'nome' in globals(), \"Variável 'nome' não foi definida.\"\nassert nome == \"Python\", f\"Esperado 'Python', mas a variável nome contém '{nome}'\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Imagine colar uma etiqueta chamada 'nome' numa caixa e colocar a palavra 'Python' dentro dela."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "Em Python, atribuição usa o sinal de igual (=).",
+          "codeSnippet": "nome = \"texto\""
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva o identificador nome",
+            "2. Coloque o sinal de igual =",
+            "3. Escreva \"Python\" entre aspas"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["variáveis", "string"],
+      "legacyId": "f2_l2"
+    },
+    {
+      "id": "c1_e03",
+      "number": 3,
+      "title": "Sua Idade Digital",
+      "description": "Números inteiros em Python são do tipo int. Eles não possuem ponto decimal e servem para contagens.",
+      "difficulty": "Fácil",
+      "xpReward": 10,
+      "concept": "Variável Integer",
+      "instructions": "Crie uma variável chamada 'idade' com o valor numérico inteiro 25.",
+      "codeSkeleton": "# Crie a variável idade abaixo\n",
+      "visibleTestCase": "idade deve ser um número inteiro (int) igual a 25",
+      "testAssertions": "assert 'idade' in locals() or 'idade' in globals(), \"Variável 'idade' não encontrada.\"\nassert idade == 25, f\"Esperado 25, recebido {idade}\"\nassert type(idade) == int, f\"A variável idade deve ser um número inteiro (int), não {type(idade)}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Números não precisam de aspas! Aspas transformam números em texto."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "Atribua o número 25 diretamente sem aspas para que o Python reconheça como int.",
+          "codeSnippet": "idade = 25"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva idade =",
+            "2. Coloque o número 25 (sem aspas!)"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["variáveis", "int"],
+      "legacyId": "f2_l1"
+    },
+    {
+      "id": "c1_e04",
+      "number": 4,
+      "title": "Preço com Centavos",
+      "description": "Números decimais em Python usam ponto (.) em vez de vírgula e pertencem ao tipo float.",
+      "difficulty": "Fácil",
+      "xpReward": 10,
+      "concept": "Variável Float",
+      "instructions": "Crie uma variável chamada 'preco' com o valor 19.90.",
+      "codeSkeleton": "# Crie a variável preco abaixo\n",
+      "visibleTestCase": "preco deve ser do tipo float e igual a 19.90",
+      "testAssertions": "assert 'preco' in locals() or 'preco' in globals(), \"Variável 'preco' não encontrada.\"\nassert preco == 19.90, f\"Esperado 19.90, recebido {preco}\"\nassert type(preco) == float, \"A variável preco deve ser float (use ponto .)\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Em programação em inglês e Python, a separação de decimais é feita por ponto (.), não vírgula."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "Defina a variável usando o ponto decimal.",
+          "codeSnippet": "preco = 19.90"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva preco =",
+            "2. Digite 19.90 usando ponto"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["variáveis", "float"]
+    },
+    {
+      "id": "c1_e05",
+      "number": 5,
+      "title": "Ligado ou Desligado?",
+      "description": "Valores booleanos (bool) representam estados lógicos: Verdadeiro (True) ou Falso (False).",
+      "difficulty": "Fácil",
+      "xpReward": 10,
+      "concept": "Variável Booleana",
+      "instructions": "Crie uma variável chamada 'ativo' e defina o valor booleano True.",
+      "codeSkeleton": "# Crie a variável ativo abaixo\n",
+      "visibleTestCase": "ativo deve ser do tipo bool e igual a True",
+      "testAssertions": "assert 'ativo' in locals() or 'ativo' in globals(), \"Variável 'ativo' não encontrada.\"\nassert ativo is True, f\"Esperado True, recebido {ativo}\"\nassert type(ativo) == bool, \"A variável ativo deve ser booleana (bool)\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Pense num interruptor ligado. Em Python, a palavra True deve ter a primeira letra maiúscula!"
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "Valores booleanos em Python são True e False (com inicial maiúscula e sem aspas).",
+          "codeSnippet": "ativo = True"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva ativo =",
+            "2. Digite True com T maiúsculo e sem aspas"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["variáveis", "bool"]
+    },
+    {
+      "id": "c1_e06",
+      "number": 6,
+      "title": "Calculadora Simples",
+      "description": "Operadores aritméticos permitem realizar cálculos com números e variáveis.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Operação de Soma",
+      "instructions": "Crie uma variável chamada 'soma' que armazene a soma dos números 17 e 25.",
+      "codeSkeleton": "# Escreva o cálculo da soma abaixo\n",
+      "visibleTestCase": "soma deve ser igual a 42",
+      "testAssertions": "assert 'soma' in locals() or 'soma' in globals(), \"Variável 'soma' não encontrada.\"\nassert soma == 42, f\"Esperado 42, recebido {soma}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Você pode atribuir diretamente a expressão matemática à variável."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "Use o operador + para somar dois números.",
+          "codeSnippet": "soma = 17 + 25"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva soma =",
+            "2. Coloque 17 + 25"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["operadores", "soma"],
+      "legacyId": "f2_l3"
+    },
+    {
+      "id": "c1_e07",
+      "number": 7,
+      "title": "Divisão e Resto",
+      "description": "Em Python, // realiza a divisão inteira (desprezando decimais) e % calcula o resto da divisão.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Divisão Inteira e Módulo",
+      "instructions": "Crie duas variáveis: 'quociente' com a divisão inteira de 10 por 3, e 'resto' com o resto de 10 dividido por 3.",
+      "codeSkeleton": "# Crie quociente e resto abaixo\n",
+      "visibleTestCase": "quociente deve ser 3 e resto deve ser 1",
+      "testAssertions": "assert quociente == 3, f\"quociente esperado 3, recebido {quociente}\"\nassert resto == 1, f\"resto esperado 1, recebido {resto}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Dividir 10 por 3 dá 3 caixas completas (quociente) e sobra 1 item (resto)."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "Use // para divisão inteira e % para o resto.",
+          "codeSnippet": "quociente = 10 // 3\nresto = 10 % 3"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Crie quociente = 10 // 3",
+            "2. Crie resto = 10 % 3"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["operadores", "divisão", "módulo"]
+    },
+    {
+      "id": "c1_e08",
+      "number": 8,
+      "title": "Potência Pythônica",
+      "description": "Em Python, o operador de potenciação (elevação a uma potência) é feito com dois asteriscos (**).",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Operador de Potência",
+      "instructions": "Crie uma variável chamada 'potencia' que armazene o resultado de 2 elevado a 3 (2³).",
+      "codeSkeleton": "# Calcule a potência abaixo\n",
+      "visibleTestCase": "potencia deve ser igual a 8",
+      "testAssertions": "assert 'potencia' in locals() or 'potencia' in globals(), \"Variável 'potencia' não encontrada.\"\nassert potencia == 8, f\"Esperado 8, recebido {potencia}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "2 elevado ao cubo é 2 * 2 * 2 = 8."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "Em Python, use ** para potência.",
+          "codeSnippet": "potencia = 2 ** 3"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva potencia =",
+            "2. Digite 2 ** 3"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["operadores", "potência"]
+    },
+    {
+      "id": "c1_e09",
+      "number": 9,
+      "title": "Descobrindo o Tipo",
+      "description": "A função nativa type() retorna a classe/tipo de dado de qualquer objeto ou variável em Python.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Função type()",
+      "instructions": "Dada a variável texto = \"PyLingo\", crie uma variável chamada 'tipo' que receba a chamada type(texto).",
+      "codeSkeleton": "texto = \"PyLingo\"\n# Crie a variável tipo abaixo\n",
+      "visibleTestCase": "tipo deve ser igual a str (obtido via type(texto))",
+      "testAssertions": "assert 'tipo' in locals() or 'tipo' in globals(), \"Variável 'tipo' não encontrada.\"\nassert tipo == str, f\"Esperado tipo <class 'str'>, recebido {tipo}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Pergunte ao Python o tipo da variável texto chamando type(texto)."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "Atribua a chamada da função à variável tipo.",
+          "codeSnippet": "tipo = type(texto)"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva tipo =",
+            "2. Passe a variável texto como parâmetro para type: type(texto)"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["type", "introspecção"]
+    },
+    {
+      "id": "c1_e10",
+      "number": 10,
+      "title": "Transformando Tipos (Casting)",
+      "description": "É possível converter dados de um tipo para outro usando as funções int(), float(), str().",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Casting de Tipos",
+      "instructions": "Dada a variável em formato de texto num_texto = \"42\", converta-a para inteiro e armazene na variável 'numero'.",
+      "codeSkeleton": "num_texto = \"42\"\n# Converta para int abaixo\n",
+      "visibleTestCase": "numero deve ser o inteiro 42 (tipo int)",
+      "testAssertions": "assert 'numero' in locals() or 'numero' in globals(), \"Variável 'numero' não encontrada.\"\nassert numero == 42, f\"Esperado 42, recebido {numero}\"\nassert type(numero) == int, f\"A variável numero deve ser int, não {type(numero)}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Tire as aspas do texto transformando-o num número real usando a função int()."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "Use int(variavel_texto) para realizar o casting.",
+          "codeSnippet": "numero = int(num_texto)"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva numero =",
+            "2. Chame int(num_texto)"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["casting", "int", "str"]
+    },
+    {
+      "id": "c1_e11",
+      "number": 11,
+      "title": "Calculadora de IMC",
+      "description": "O Índice de Massa Corporal (IMC) é calculado pela fórmula: peso / (altura²).",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Expressões Matemáticas Compostas",
+      "instructions": "Crie as variáveis 'peso' = 75 e 'altura' = 1.74. Em seguida, calcule a variável 'imc' usando a fórmula peso / (altura ** 2).",
+      "codeSkeleton": "# Crie peso, altura e imc abaixo\n",
+      "visibleTestCase": "imc deve ser aproximadamente 24.77",
+      "testAssertions": "assert abs(imc - 24.77) < 0.1, f\"IMC calculado incorretamente. Esperado aprox 24.77, recebido {imc}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Calcule primeiro a altura ao quadrado usando parênteses para garantir a precedência correta."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "Em Python: imc = peso / (altura ** 2)",
+          "codeSnippet": "peso = 75\naltura = 1.74\nimc = peso / (altura ** 2)"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Defina peso = 75",
+            "2. Defina altura = 1.74",
+            "3. Calcule imc = peso / (altura ** 2)"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "matemática", "imc"]
+    },
+    {
+      "id": "c1_e12",
+      "number": 12,
+      "title": "Troca de Variáveis (Modo Pythônico)",
+      "description": "Em muitas linguagens, para trocar os valores de duas variáveis é preciso uma variável auxiliar. Em Python, fazemos a troca em uma única linha elegante!",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Troca Simultânea (Swap Pythônico)",
+      "instructions": "Dadas a = 10 e b = 20, faça a troca pythônica de valores para que 'a' passe a valer 20 e 'b' passe a valer 10 em apenas 1 linha.",
+      "codeSkeleton": "a = 10\nb = 20\n# Faça a troca pythônica abaixo em uma linha\n",
+      "visibleTestCase": "Após a troca, a deve ser 20 e b deve ser 10",
+      "testAssertions": "assert a == 20, f\"a deveria ser 20, mas é {a}\"\nassert b == 10, f\"b deveria ser 10, mas é {b}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Python permite atribuir múltiplos valores a múltiplas variáveis ao mesmo tempo."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "A sintaxe a, b = b, a realiza a troca simultânea de valores.",
+          "codeSnippet": "a, b = b, a"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Mantenha as declarações iniciais a = 10 e b = 20",
+            "2. Adicione a linha: a, b = b, a"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["pythonic", "swap", "desafio"]
+    }
+  ]
+}

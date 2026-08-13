@@ -1,0 +1,39 @@
+{
+  "id": "battery_ch3",
+  "chapterId": "chapter_3",
+  "exercises": [
+    {
+      "id": "c3_e01",
+      "number": 1,
+      "title": "Exercício Demonstrativo Cap 3",
+      "description": "Exercício prático do Capítulo 3",
+      "difficulty": "Fácil",
+      "xpReward": 10,
+      "concept": "Conceito Principal",
+      "instructions": "Exiba 'Capitulo 3' na tela usando print()",
+      "codeSkeleton": "# Escreva seu código abaixo\n",
+      "visibleTestCase": "Saída deve conter: Capitulo 3",
+      "testAssertions": "import sys\noutput = sys.stdout.getvalue().strip()\nassert \"Capitulo 3\" in output\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição",
+          "content": "Use o print()"
+        },
+        "level2": {
+          "title": "🐍 Recurso",
+          "content": "print(\"Capitulo 3\")"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo",
+          "steps": [
+            "1. Escreva print(\"Capitulo 3\")"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": [
+        "demo"
+      ]
+    }
+  ]
+}

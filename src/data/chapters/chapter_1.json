@@ -1,0 +1,152 @@
+{
+  "id": "chapter_1",
+  "number": 1,
+  "title": "Primeiros Passos com Python",
+  "subtitle": "Variáveis, tipos e seu primeiro programa",
+  "icon": "Rocket",
+  "color": "emerald",
+  "estimatedMinutes": 15,
+  "exerciseBatteryId": "battery_ch1",
+  "prerequisites": [],
+  "sections": [
+    {
+      "id": "ch1_sec1",
+      "title": "1. O que é uma Variável?",
+      "order": 1,
+      "content": [
+        {
+          "type": "text",
+          "content": "Seja bem-vindo ao Python! Antes de escrevermos linhas complexas de código, precisamos entender como o computador memoriza informações."
+        },
+        {
+          "type": "analogy",
+          "title": "Pense em Caixas Etiquetadas!",
+          "emoji": "📦",
+          "content": "Imagine que você tem várias caixas em casa. Cada caixa possui uma **etiqueta com um nome** (o nome da variável) e **algo guardado dentro dela** (o valor). Criar uma variável em Python é simplesmente dizer ao computador: *'Guarde este valor numa caixa com este nome!'*"
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "nome = \"Lingo\"\nidade = 25\naltura = 1.75",
+          "caption": "Criamos 3 variáveis: nome (texto), idade (número inteiro) e altura (número decimal)"
+        },
+        {
+          "type": "callout",
+          "variant": "pythonic",
+          "content": "🐍 **Modo Pythônico**: Em Python, você não precisa declarar o tipo da variável antes (como `int` ou `String`). O Python descobre o tipo sozinho! Isso é chamado de **tipagem dinâmica**."
+        },
+        {
+          "type": "interactive_code",
+          "code": "nome = \"PyLingo\"\nprint(\"Olá, meu nome é\", nome)",
+          "editable": true,
+          "runnable": true
+        },
+        {
+          "type": "quiz",
+          "question": "Qual é a sintaxe correta para criar uma variável chamada 'saldo' com o valor 100?",
+          "options": [
+            "var saldo = 100",
+            "saldo := 100",
+            "saldo = 100",
+            "int saldo = 100"
+          ],
+          "correctIndex": 2,
+          "explanation": "Em Python, atribuímos valores diretamente usando o sinal de igual (=), sem palavras-chave adicionais!"
+        }
+      ]
+    },
+    {
+      "id": "ch1_sec2",
+      "title": "2. Tipos de Dados Fundamentais",
+      "order": 2,
+      "content": [
+        {
+          "type": "text",
+          "content": "Nem toda informação é igual. O Python possui quatro tipos primitivos fundamentais para classificar os dados:"
+        },
+        {
+          "type": "callout",
+          "variant": "note",
+          "content": "1. **`int`**: Números inteiros (positivos ou negativos, sem vírgula/ponto). Ex: `42`, `-7`, `0`.\n2. **`float`**: Números decimais (com ponto). Ex: `19.90`, `3.14159`.\n3. **`str` (String)**: Textos entre aspas simples ou duplas. Ex: `\"Olá\"`, `'Python'`.\n4. **`bool` (Booleano)**: Valores lógicos: `True` (Verdadeiro) ou `False` (Falso)."
+        },
+        {
+          "type": "analogy",
+          "title": "A Função type()",
+          "emoji": "🔍",
+          "content": "Se você tiver dúvidas sobre o tipo de dado guardado numa variável, pode perguntar ao Python usando a função `type()`!"
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "x = 10\nprint(type(x))  # <class 'int'>\n\ntexto = \"Python\"\nprint(type(texto))  # <class 'str'>"
+        },
+        {
+          "type": "quiz",
+          "question": "Qual é o tipo da variável x = 19.90?",
+          "options": [
+            "int",
+            "float",
+            "str",
+            "bool"
+          ],
+          "correctIndex": 1,
+          "explanation": "Números com ponto decimal em Python são do tipo float (ponto flutuante)."
+        }
+      ]
+    },
+    {
+      "id": "ch1_sec3",
+      "title": "3. Operadores Aritméticos",
+      "order": 3,
+      "content": [
+        {
+          "type": "text",
+          "content": "Computadores são calculadoras extremamente rápidas. Em Python, realizamos operações matemáticas com símbolos nativos muito intuitivos."
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "soma = 10 + 5        # 15\nsubtracao = 20 - 4   # 16\nmultiplicacao = 3 * 4 # 12\ndivisao = 10 / 2     # 5.0 (sempre gera float!)\ndiv_inteira = 10 // 3 # 3 (descarta os decimais)\nresto = 10 % 3        # 1 (resto da divisão)\npotencia = 2 ** 3     # 8 (2 elevado a 3)"
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "content": "⚠️ **Atenção**: A divisão comum (`/`) SEMPRE retorna um `float` em Python, mesmo se a divisão for exata! Exemplo: `4 / 2` resulta em `2.0`."
+        },
+        {
+          "type": "quiz",
+          "question": "Qual será o resultado da operação 10 % 3 em Python?",
+          "options": [
+            "3.33",
+            "3",
+            "1",
+            "0"
+          ],
+          "correctIndex": 2,
+          "explanation": "O operador % (módulo) calcula o RESTO da divisão inteira. 10 dividido por 3 é 3, com sobra de 1."
+        }
+      ]
+    },
+    {
+      "id": "ch1_sec4",
+      "title": "4. Seu Primeiro Programa Pythônico",
+      "order": 4,
+      "content": [
+        {
+          "type": "text",
+          "content": "Agora que conhecemos variáveis, tipos e operadores, estamos prontos para unir tudo num script funcional!"
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "# Programa de Apresentação\nnome = \"Dev\"\nidade = 20\nsoma_anos = idade + 5\n\nprint(\"Olá! Meu nome é\", nome)\nprint(\"Daqui a 5 anos terei\", soma_anos, \"anos!\")"
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "content": "💡 **Prática Guiada**: Você concluiu a leitura teórica do Capítulo 1! Agora clique no botão abaixo para destravar a bateria de 12 exercícios práticos."
+        }
+      ]
+    }
+  ]
+}

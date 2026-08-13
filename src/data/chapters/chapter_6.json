@@ -1,0 +1,26 @@
+{
+  "id": "chapter_6",
+  "number": 6,
+  "title": "Capítulo 6",
+  "subtitle": "Conteúdo em desenvolvimento para o capítulo 6",
+  "icon": "BookOpen",
+  "color": "emerald",
+  "estimatedMinutes": 15,
+  "exerciseBatteryId": "battery_ch6",
+  "prerequisites": [
+    "chapter_5"
+  ],
+  "sections": [
+    {
+      "id": "ch6_sec1",
+      "title": "1. Introdução ao Capítulo 6",
+      "order": 1,
+      "content": [
+        {
+          "type": "text",
+          "content": "Em breve: conteúdo interativo do capítulo 6."
+        }
+      ]
+    }
+  ]
+}

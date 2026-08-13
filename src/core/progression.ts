@@ -12,8 +12,7 @@ export function addXp(currentXp: number, amount: number): number {
 }
 
 /**
- * Reduz estritamente uma vida (coração) do utilizador de forma segura.
- * Contrato Fail-Fast: Lança um erro se tentar deduzir vidas quando o saldo já é 0.
+ * Reduz estritamente uma vida (coração) do utilizador de forma segura (legado v1.0).
  */
 export function deductHeart(currentHearts: HeartsCount): HeartsCount {
   if (currentHearts === 0) {
@@ -23,8 +22,7 @@ export function deductHeart(currentHearts: HeartsCount): HeartsCount {
 }
 
 /**
- * Adiciona uma vida através da compra ou regeneração, limitando ao máximo de 5.
- * Contrato: Lança um erro se tentar ultrapassar o limite máximo de 5 corações.
+ * Adiciona uma vida através da compra ou regeneração (legado v1.0).
  */
 export function addHeart(currentHearts: HeartsCount): HeartsCount {
   if (currentHearts >= 5) {
@@ -58,4 +56,24 @@ export function unlockNextLesson(
     return unlockedLessons;
   }
   return [...unlockedLessons, nextLessonId];
+}
+
+/**
+ * Verifica se um capítulo está desbloqueado (v2.0).
+ * Regra: 70% dos exercícios do(s) pré-requisito(s) devem estar concluídos.
+ */
+export function isChapterUnlocked(
+  _chapterId: string,
+  prerequisites: string[],
+  completedExercises: string[],
+  exercisesByChapter: Record<string, string[]>
+): boolean {
+  if (prerequisites.length === 0) return true;
+
+  return prerequisites.every(prereqId => {
+    const exerciseIds = exercisesByChapter[prereqId] || [];
+    if (exerciseIds.length === 0) return false;
+    const completed = exerciseIds.filter(id => completedExercises.includes(id)).length;
+    return completed >= Math.ceil(exerciseIds.length * 0.7);
+  });
 }

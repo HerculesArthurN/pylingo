@@ -1,0 +1,26 @@
+{
+  "id": "chapter_3",
+  "number": 3,
+  "title": "Capítulo 3",
+  "subtitle": "Conteúdo em desenvolvimento para o capítulo 3",
+  "icon": "BookOpen",
+  "color": "emerald",
+  "estimatedMinutes": 15,
+  "exerciseBatteryId": "battery_ch3",
+  "prerequisites": [
+    "chapter_2"
+  ],
+  "sections": [
+    {
+      "id": "ch3_sec1",
+      "title": "1. Introdução ao Capítulo 3",
+      "order": 1,
+      "content": [
+        {
+          "type": "text",
+          "content": "Em breve: conteúdo interativo do capítulo 3."
+        }
+      ]
+    }
+  ]
+}

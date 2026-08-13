@@ -1,0 +1,26 @@
+{
+  "id": "chapter_10",
+  "number": 10,
+  "title": "Capítulo 10",
+  "subtitle": "Conteúdo em desenvolvimento para o capítulo 10",
+  "icon": "BookOpen",
+  "color": "emerald",
+  "estimatedMinutes": 15,
+  "exerciseBatteryId": "battery_ch10",
+  "prerequisites": [
+    "chapter_9"
+  ],
+  "sections": [
+    {
+      "id": "ch10_sec1",
+      "title": "1. Introdução ao Capítulo 10",
+      "order": 1,
+      "content": [
+        {
+          "type": "text",
+          "content": "Em breve: conteúdo interativo do capítulo 10."
+        }
+      ]
+    }
+  ]
+}

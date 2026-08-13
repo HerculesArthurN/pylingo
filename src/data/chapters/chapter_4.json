@@ -1,0 +1,26 @@
+{
+  "id": "chapter_4",
+  "number": 4,
+  "title": "Capítulo 4",
+  "subtitle": "Conteúdo em desenvolvimento para o capítulo 4",
+  "icon": "BookOpen",
+  "color": "emerald",
+  "estimatedMinutes": 15,
+  "exerciseBatteryId": "battery_ch4",
+  "prerequisites": [
+    "chapter_3"
+  ],
+  "sections": [
+    {
+      "id": "ch4_sec1",
+      "title": "1. Introdução ao Capítulo 4",
+      "order": 1,
+      "content": [
+        {
+          "type": "text",
+          "content": "Em breve: conteúdo interativo do capítulo 4."
+        }
+      ]
+    }
+  ]
+}
