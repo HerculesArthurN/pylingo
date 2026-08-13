@@ -5,35 +5,334 @@
     {
       "id": "c11_e01",
       "number": 1,
-      "title": "Exercício Demonstrativo Cap 11",
-      "description": "Exercício prático do Capítulo 11",
+      "title": "Capturando Divisão por Zero",
+      "description": "Trate a exceção ZeroDivisionError usando try e except.",
       "difficulty": "Fácil",
       "xpReward": 10,
-      "concept": "Conceito Principal",
-      "instructions": "Exiba 'Capitulo 11' na tela usando print()",
-      "codeSkeleton": "# Escreva seu código abaixo\n",
-      "visibleTestCase": "Saída deve conter: Capitulo 11",
-      "testAssertions": "import sys\noutput = sys.stdout.getvalue().strip()\nassert \"Capitulo 11\" in output\n",
+      "concept": "ZeroDivisionError",
+      "instructions": "Crie 'dividir_seguro(a, b)' que retorne a / b, mas se b == 0 capture ZeroDivisionError e retorne None.",
+      "codeSkeleton": "# Implemente dividir_seguro abaixo\n",
+      "visibleTestCase": "dividir_seguro(10, 0) deve retornar None sem travar o programa",
+      "testAssertions": "assert dividir_seguro(10, 0) is None, \"Deveria retornar None\"\nassert dividir_seguro(10, 2) == 5.0, \"Divisão normal incorreta\"\n",
       "hints": {
         "level1": {
-          "title": "💡 Intuição",
-          "content": "Use o print()"
+          "title": "💡 Intuição Lógica",
+          "content": "Use try: return a / b except ZeroDivisionError: return None."
         },
         "level2": {
-          "title": "🐍 Recurso",
-          "content": "print(\"Capitulo 11\")"
+          "title": "🐍 Recurso Python",
+          "content": "def dividir_seguro(a, b):\n    try:\n        return a / b\n    except ZeroDivisionError:\n        return None",
+          "codeSnippet": "def dividir_seguro(a, b):\n    try:\n        return a / b\n    except ZeroDivisionError:\n        return None"
         },
         "level3": {
-          "title": "🗺️ Passo a Passo",
+          "title": "🗺️ Passo a Passo do Algoritmo",
           "steps": [
-            "1. Escreva print(\"Capitulo 11\")"
+            "1. try: return a / b",
+            "2. except ZeroDivisionError: return None"
           ],
           "xpPenaltyPercent": 10
         }
       },
-      "tags": [
-        "demo"
-      ]
+      "tags": ["try", "except"],
+      "legacyId": "f3_l5"
+    },
+    {
+      "id": "c11_e02",
+      "number": 2,
+      "title": "Conversão Segura de String para Int",
+      "description": "Capture o erro ValueError ao converter textos inválidos.",
+      "difficulty": "Fácil",
+      "xpReward": 10,
+      "concept": "ValueError",
+      "instructions": "Crie 'converter_int(val)' que tente int(val) e retorne 0 se ocorrer ValueError.",
+      "codeSkeleton": "# Implemente converter_int abaixo\n",
+      "visibleTestCase": "converter_int('abc') deve retornar 0",
+      "testAssertions": "assert converter_int(\"abc\") == 0, \"Deveria retornar 0\"\nassert converter_int(\"42\") == 42, \"Deveria retornar 42\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "try: return int(val) except ValueError: return 0"
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def converter_int(val):\n    try:\n        return int(val)\n    except ValueError:\n        return 0",
+          "codeSnippet": "def converter_int(val):\n    try:\n        return int(val)\n    except ValueError:\n        return 0"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. try: return int(val)",
+            "2. except ValueError: return 0"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["try", "value-error"]
+    },
+    {
+      "id": "c11_e03",
+      "number": 3,
+      "title": "Lançando Exceção de Idade Inválida",
+      "description": "Lance uma exceção com o comando raise.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Comando raise",
+      "instructions": "Crie a função 'verificar_idade(idade)' que lance ValueError(\"Idade inválida\") se idade < 0, senão retorne True.",
+      "codeSkeleton": "# Implemente verificar_idade abaixo\n",
+      "visibleTestCase": "verificar_idade(-5) deve lançar ValueError",
+      "testAssertions": "try:\n    verificar_idade(-5)\n    assert False, \"Deveria lançar ValueError\"\nexcept ValueError:\n    pass\nassert verificar_idade(18) is True, \"Idade válida falhou\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "if idade < 0: raise ValueError(\"Idade inválida\")"
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def verificar_idade(idade):\n    if idade < 0:\n        raise ValueError(\"Idade inválida\")\n    return True",
+          "codeSnippet": "def verificar_idade(idade):\n    if idade < 0:\n        raise ValueError(\"Idade inválida\")\n    return True"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Se idade < 0: raise ValueError(\"Idade inválida\")",
+            "2. Retorne True"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["raise", "exceção"]
+    },
+    {
+      "id": "c11_e04",
+      "number": 4,
+      "title": "Capturando Múltiplas Exceções",
+      "description": "Trate TypeError e ValueError no mesmo bloco except.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Múltiplas Exceções",
+      "instructions": "Crie 'somar_seguro(a, b)' que tente float(a) + float(b) e capture (ValueError, TypeError) retornando 0.0 se falhar.",
+      "codeSkeleton": "# Implemente somar_seguro abaixo\n",
+      "visibleTestCase": "somar_seguro('abc', 5) deve retornar 0.0",
+      "testAssertions": "assert somar_seguro(\"abc\", 5) == 0.0, \"Deveria retornar 0.0\"\nassert somar_seguro(3, 4) == 7.0, \"Soma incorreta\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "except (ValueError, TypeError): return 0.0"
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def somar_seguro(a, b):\n    try:\n        return float(a) + float(b)\n    except (ValueError, TypeError):\n        return 0.0",
+          "codeSnippet": "def somar_seguro(a, b):\n    try:\n        return float(a) + float(b)\n    except (ValueError, TypeError):\n        return 0.0"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. try: return float(a) + float(b)",
+            "2. except (ValueError, TypeError): return 0.0"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["try", "múltiplos-erros"]
+    },
+    {
+      "id": "c11_e05",
+      "number": 5,
+      "title": "Garantia de Execução com finally",
+      "description": "Ganta que uma variável de limpeza seja atualizada usando finally.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Bloco finally",
+      "instructions": "Crie 'executar_com_limpeza(funcao)' que no try execute funcao(), mas no bloco 'finally' defina a variável global 'limpeza_executada = True'.",
+      "codeSkeleton": "limpeza_executada = False\n# Implemente executar_com_limpeza abaixo\n",
+      "visibleTestCase": "limpeza_executada deve ser True após a chamada mesmo se funcao() der erro",
+      "testAssertions": "global limpeza_executada\nexecutar_com_limpeza(lambda: 1/0)\nassert limpeza_executada is True, \"finally não executou\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "No bloco finally: global limpeza_executada; limpeza_executada = True"
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def executar_com_limpeza(funcao):\n    global limpeza_executada\n    try:\n        funcao()\n    except Exception:\n        pass\n    finally:\n        limpeza_executada = True",
+          "codeSnippet": "def executar_com_limpeza(funcao):\n    global limpeza_executada\n    try:\n        funcao()\n    except Exception:\n        pass\n    finally:\n        limpeza_executada = True"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Implemente try/except/finally",
+            "2. No finally defina limpeza_executada = True"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["finally"]
+    },
+    {
+      "id": "c11_e06",
+      "number": 6,
+      "title": "Validador de Sintaxe JSON",
+      "description": "Crie um validador de sintaxe JSON usando tratamento de exceção.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Validação com try/except",
+      "instructions": "Crie 'validar_json(texto)' que tente importar json e fazer json.loads(texto). Retorne True se válido, senão False.",
+      "codeSkeleton": "# Implemente validar_json abaixo\n",
+      "visibleTestCase": "validar_json('{\"a\": 1}') deve retornar True e validar_json('invalido') False",
+      "testAssertions": "assert validar_json('{\"a\": 1}') is True, \"JSON válido incorreto\"\nassert validar_json(\"invalido\") is False, \"JSON inválido incorreto\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "import json; try: json.loads(texto); return True except Exception: return False"
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "import json\ndef validar_json(texto):\n    try:\n        json.loads(texto)\n        return True\n    except Exception:\n        return False",
+          "codeSnippet": "import json\ndef validar_json(texto):\n    try:\n        json.loads(texto)\n        return True\n    except Exception:\n        return False"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Faça import json",
+            "2. try json.loads(texto); return True; except: return False"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["json", "validador"],
+      "legacyId": "f10_l2"
+    },
+    {
+      "id": "c11_e07",
+      "number": 7,
+      "title": "Exceção Personalizada de Saldo Insuficiente",
+      "description": "Crie sua própria classe de exceção herdando de Exception.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Exceção Personalizada",
+      "instructions": "Crie a subclasse de exceção 'SaldoInsuficienteError(Exception)'. Crie 'sacar_com_excecao(saldo, valor)' que lance SaldoInsuficienteError se valor > saldo.",
+      "codeSkeleton": "# Crie SaldoInsuficienteError e sacar_com_excecao abaixo\n",
+      "visibleTestCase": "sacar_com_excecao(50, 100) deve lançar SaldoInsuficienteError",
+      "testAssertions": "try:\n    sacar_com_excecao(50, 100)\n    assert False, \"Deveria lançar SaldoInsuficienteError\"\nexcept SaldoInsuficienteError:\n    pass\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "class SaldoInsuficienteError(Exception): pass"
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "class SaldoInsuficienteError(Exception): pass\n\ndef sacar_com_excecao(saldo, valor):\n    if valor > saldo:\n        raise SaldoInsuficienteError(\"Saldo insuficiente!\")\n    return saldo - valor",
+          "codeSnippet": "class SaldoInsuficienteError(Exception): pass\n\ndef sacar_com_excecao(saldo, valor):\n    if valor > saldo:\n        raise SaldoInsuficienteError(\"Saldo insuficiente!\")\n    return saldo - valor"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Crie a subclasse class SaldoInsuficienteError(Exception): pass",
+            "2. Lance com raise em sacar_com_excecao"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["exceção-custom"]
+    },
+    {
+      "id": "c11_e08",
+      "number": 8,
+      "title": "Acesso Seguro a Índice de Lista",
+      "description": "Capture IndexError ao acessar posições fora do limite.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "IndexError",
+      "instructions": "Crie 'obter_elemento_seguro(lista, idx, padrao=None)' que tente lista[idx] e capture IndexError retornando padrao.",
+      "codeSkeleton": "# Implemente obter_elemento_seguro abaixo\n",
+      "visibleTestCase": "obter_elemento_seguro([1, 2], 5, -1) deve retornar -1",
+      "testAssertions": "assert obter_elemento_seguro([1, 2], 5, -1) == -1, \"Deveria retornar -1\"\nassert obter_elemento_seguro([10, 20], 0) == 10, \"Elemento válido incorreto\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "try: return lista[idx] except IndexError: return padrao"
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def obter_elemento_seguro(lista, idx, padrao=None):\n    try:\n        return lista[idx]\n    except IndexError:\n        return padrao",
+          "codeSnippet": "def obter_elemento_seguro(lista, idx, padrao=None):\n    try:\n        return lista[idx]\n    except IndexError:\n        return padrao"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. try: return lista[idx]",
+            "2. except IndexError: return padrao"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["try", "index-error"]
+    },
+    {
+      "id": "c11_e09",
+      "number": 9,
+      "title": "Re-lançando Exceções (Reraise)",
+      "description": "Registre uma exceção em log e re-lance-a com 'raise'.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Re-lancemento de Exceção",
+      "instructions": "Crie 'processar_com_log(funcao)' que no except adicione 'Erro capturado' na lista global 'logs' e em seguida faça 'raise' para propagar a mesma exceção.",
+      "codeSkeleton": "logs = []\n# Implemente processar_com_log abaixo\n",
+      "visibleTestCase": "logs deve conter 'Erro capturado' e a exceção deve ser propagada",
+      "testAssertions": "global logs\nlogs = []\ntry:\n    processar_com_log(lambda: 1/0)\n    assert False, \"Deveria propagar a exceção\"\nexcept ZeroDivisionError:\n    assert logs == [\"Erro capturado\"], \"Log incorreto\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "no except: logs.append(\"Erro capturado\"); raise"
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def processar_com_log(funcao):\n    global logs\n    try:\n        return funcao()\n    except Exception:\n        logs.append(\"Erro capturado\")\n        raise",
+          "codeSnippet": "def processar_com_log(funcao):\n    global logs\n    try:\n        return funcao()\n    except Exception:\n        logs.append(\"Erro capturado\")\n        raise"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Faça logs.append e execute raise sem argumentos"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["raise", "log"]
+    },
+    {
+      "id": "c11_e10",
+      "number": 10,
+      "title": "Leitor de Configurações Resiliente",
+      "description": "Combine dicionários, casting e exceções para ler parâmetros de configuração com segurança.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Resiliência Integrada",
+      "instructions": "Crie 'ler_porta(config_dict)' que busque a chave \"porta\" no dicionário, converta para int e valide se está entre 1 e 65535. Se a chave não existir, a conversão falhar ou for inválida, retorne a porta padrão 8080.",
+      "codeSkeleton": "# Implemente ler_porta abaixo\n",
+      "visibleTestCase": "ler_porta({'porta': '80'}) deve ser 80 e ler_porta({'porta': 'invalida'}) 8080",
+      "testAssertions": "assert ler_porta({\"porta\": \"80\"}) == 80, \"Porta válida incorreta\"\nassert ler_porta({\"porta\": \"invalida\"}) == 8080, \"Porta padrão incorreta\"\nassert ler_porta({}) == 8080, \"Dicionário vazio incorreto\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "try: porta = int(config_dict[\"porta\"]); if 1 <= porta <= 65535: return porta except: return 8080"
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def ler_porta(config_dict):\n    try:\n        porta = int(config_dict.get(\"porta\"))\n        if 1 <= porta <= 65535:\n            return porta\n    except (ValueError, TypeError):\n        pass\n    return 8080",
+          "codeSnippet": "def ler_porta(config_dict):\n    try:\n        porta = int(config_dict.get(\"porta\"))\n        if 1 <= porta <= 65535:\n            return porta\n    except (ValueError, TypeError):\n        pass\n    return 8080"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Tente converter int(config_dict.get('porta'))",
+            "2. Valide o intervalo 1 a 65535",
+            "3. Retorne 8080 no except/fallback"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "resiliência"]
     }
   ]
 }

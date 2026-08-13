@@ -1,24 +1,88 @@
 {
   "id": "chapter_8",
   "number": 8,
-  "title": "Capítulo 8",
-  "subtitle": "Conteúdo em desenvolvimento para o capítulo 8",
-  "icon": "BookOpen",
-  "color": "emerald",
+  "title": "Dicionários e Conjuntos",
+  "subtitle": "Estruturas chave-valor e conjuntos matemáticos",
+  "icon": "Database",
+  "color": "orange",
   "estimatedMinutes": 15,
   "exerciseBatteryId": "battery_ch8",
-  "prerequisites": [
-    "chapter_7"
-  ],
+  "prerequisites": ["chapter_7"],
   "sections": [
     {
       "id": "ch8_sec1",
-      "title": "1. Introdução ao Capítulo 8",
+      "title": "1. Dicionários em Python (Estruturas Chave-Valor)",
       "order": 1,
       "content": [
         {
           "type": "text",
-          "content": "Em breve: conteúdo interativo do capítulo 8."
+          "content": "Enquanto listas acessam elementos por números de índice (0, 1, 2...), dicionários associam valores a **chaves com nome** entre chaves `{}`."
+        },
+        {
+          "type": "analogy",
+          "title": "O Fichário de Cadastro",
+          "emoji": "🗂️",
+          "content": "Pense num fichário de escritório: cada ficha tem uma aba com o nome do cliente (a Chave) e dentro da ficha ficam os dados (o Valor)."
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "aluno = {\n    \"nome\": \"Carlos\",\n    \"idade\": 22,\n    \"curso\": \"Ciência da Computação\"\n}\n\n# Acessando por chave\nprint(aluno[\"nome\"])  # 'Carlos'"
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "content": "💡 **Acesso Seguro com .get()**: Acessar uma chave inexistente com `aluno[\"cpf\"]` causa `KeyError`. Usar `aluno.get(\"cpf\")` retorna `None` com segurança sem travar o programa!"
+        }
+      ]
+    },
+    {
+      "id": "ch8_sec2",
+      "title": "2. Métodos e Iteração em Dicionários",
+      "order": 2,
+      "content": [
+        {
+          "type": "text",
+          "content": "Podemos iterar sobre as chaves, valores ou ambos simultaneamente usando o método `.items()`."
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "precos = {\"maçã\": 4.50, \"banana\": 3.00, \"uva\": 7.00}\n\nfor produto, preco in precos.items():\n    print(f\"O item {produto} custa R$ {preco:.2f}\")"
+        },
+        {
+          "type": "quiz",
+          "question": "Qual método de dicionário permite iterar recebendo simultaneamente a chave e o valor em cada passo?",
+          "options": [
+            ".keys()",
+            ".values()",
+            ".items()",
+            ".pairs()"
+          ],
+          "correctIndex": 2,
+          "explanation": "O método .items() retorna tuplas de pares (chave, valor) prontas para iteração."
+        }
+      ]
+    },
+    {
+      "id": "ch8_sec3",
+      "title": "3. Conjuntos (sets) e Operações Matemáticas",
+      "order": 3,
+      "content": [
+        {
+          "type": "text",
+          "content": "Conjuntos (`set`) são coleções não ordenadas de elementos **únicos** (sem duplicatas!). Eles realizam operações da teoria dos conjuntos como união (`|`) e intersecção (`&`)."
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "a = {1, 2, 3, 4}\nb = {3, 4, 5, 6}\n\nprint(a | b) # União: {1, 2, 3, 4, 5, 6}\nprint(a & b) # Intersecção: {3, 4}"
+        },
+        {
+          "type": "interactive_code",
+          "code": "emails_raw = [\"a@b.com\", \"c@d.com\", \"a@b.com\"]\nemails_unicos = set(emails_raw)\nprint(f\"Total sem duplicatas: {len(emails_unicos)}\")",
+          "editable": true,
+          "runnable": true
         }
       ]
     }

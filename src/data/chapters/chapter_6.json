@@ -1,24 +1,93 @@
 {
   "id": "chapter_6",
   "number": 6,
-  "title": "Capítulo 6",
-  "subtitle": "Conteúdo em desenvolvimento para o capítulo 6",
-  "icon": "BookOpen",
-  "color": "emerald",
+  "title": "Funções: Organizando o Código",
+  "subtitle": "Criando blocos reutilizáveis com def e return",
+  "icon": "Zap",
+  "color": "purple",
   "estimatedMinutes": 15,
   "exerciseBatteryId": "battery_ch6",
-  "prerequisites": [
-    "chapter_5"
-  ],
+  "prerequisites": ["chapter_5"],
   "sections": [
     {
       "id": "ch6_sec1",
-      "title": "1. Introdução ao Capítulo 6",
+      "title": "1. Criando Funções com def",
       "order": 1,
       "content": [
         {
           "type": "text",
-          "content": "Em breve: conteúdo interativo do capítulo 6."
+          "content": "Conforme nossos programas crescem, precisamos evitar a repetição de código. Funções são blocos de código nomeados que executam uma tarefa específica e podem ser chamados várias vezes."
+        },
+        {
+          "type": "analogy",
+          "title": "O Botão no Painel de Controle",
+          "emoji": "🔘",
+          "content": "Criar uma função é como fabricar um botão no painel de controle. Você monta a fiação uma única vez com `def`, e depois basta 'apertar o botão' (chamar a função) sempre que precisar!"
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "def saudar():\n    print(\"Olá! Seja bem-vindo ao PyLingo!\")\n\n# Chamando a função\nsaudar()\nsaudar()"
+        },
+        {
+          "type": "quiz",
+          "question": "Qual palavra reservada em Python é usada para definir uma nova função?",
+          "options": [
+            "function",
+            "func",
+            "def",
+            "create"
+          ],
+          "correctIndex": 2,
+          "explanation": "Em Python, funções são definidas usando a palavra reservada 'def'."
+        }
+      ]
+    },
+    {
+      "id": "ch6_sec2",
+      "title": "2. Parâmetros e Argumentos Padrão",
+      "order": 2,
+      "content": [
+        {
+          "type": "text",
+          "content": "Funções podem receber dados de entrada através de **parâmetros**. Também podemos definir valores padrão para parâmetros opcionais!"
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "def boas_vindas(nome, curso=\"Python\"):\n    print(f\"Olá, {nome}! Bem-vindo ao curso de {curso}.\")\n\nboas_vindas(\"Carlos\")              # Usa o padrão 'Python'\nboas_vindas(\"Mariana\", \"JavaScript\") # Sobrescreve para 'JavaScript'"
+        },
+        {
+          "type": "callout",
+          "variant": "pythonic",
+          "content": "🐍 **Modo Pythônico**: Parâmetros com valores padrão (`curso=\"Python\"`) devem vir SEMPRE DEPOIS dos parâmetros obrigatórios na definição da função!"
+        }
+      ]
+    },
+    {
+      "id": "ch6_sec3",
+      "title": "3. Retornando Valores com return",
+      "order": 3,
+      "content": [
+        {
+          "type": "text",
+          "content": "Uma função não serve apenas para exibir textos na tela. O comando `return` envia um valor calculado de volta para quem chamou a função."
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "def somar(a, b):\n    return a + b\n\nresultado = somar(10, 20)\nprint(f\"O resultado da soma é {resultado}\")"
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "content": "⚠️ **Atenção**: O comando `return` encerra a execução da função imediatamente! Qualquer linha de código abaixo de um `return` dentro da função será ignorada."
+        },
+        {
+          "type": "interactive_code",
+          "code": "def calcular_imc(peso, altura):\n    return peso / (altura ** 2)\n\nimc = calcular_imc(70, 1.75)\nprint(f\"IMC calculado: {imc:.2f}\")",
+          "editable": true,
+          "runnable": true
         }
       ]
     }

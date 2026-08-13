@@ -5,35 +5,265 @@
     {
       "id": "c12_e01",
       "number": 1,
-      "title": "Exercício Demonstrativo Cap 12",
-      "description": "Exercício prático do Capítulo 12",
-      "difficulty": "Fácil",
-      "xpReward": 10,
-      "concept": "Conceito Principal",
-      "instructions": "Exiba 'Capitulo 12' na tela usando print()",
-      "codeSkeleton": "# Escreva seu código abaixo\n",
-      "visibleTestCase": "Saída deve conter: Capitulo 12",
-      "testAssertions": "import sys\noutput = sys.stdout.getvalue().strip()\nassert \"Capitulo 12\" in output\n",
+      "title": "MiniGit Etapa 1: Objeto Commit",
+      "description": "Crie o modelo de dados de um Commit com id, mensagem e arquivos.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Modelo de Commit",
+      "instructions": "Crie a classe 'Commit(id_commit, mensagem, arquivos)' armazenando os 3 atributos. Faça self.arquivos ser uma cópia da lista passada.",
+      "codeSkeleton": "# Crie a classe Commit abaixo\n",
+      "visibleTestCase": "c = Commit(1, 'Initial commit', ['main.py']); c.id_commit deve ser 1",
+      "testAssertions": "c = Commit(1, \"Initial commit\", [\"main.py\"])\nassert c.id_commit == 1 and c.mensagem == \"Initial commit\" and c.arquivos == [\"main.py\"], \"Atributos incorretos\"\n",
       "hints": {
         "level1": {
-          "title": "💡 Intuição",
-          "content": "Use o print()"
+          "title": "💡 Intuição Lógica",
+          "content": "self.id_commit = id_commit; self.mensagem = mensagem; self.arquivos = list(arquivos)"
         },
         "level2": {
-          "title": "🐍 Recurso",
-          "content": "print(\"Capitulo 12\")"
+          "title": "🐍 Recurso Python",
+          "content": "class Commit:\n    def __init__(self, id_commit, mensagem, arquivos):\n        self.id_commit = id_commit\n        self.mensagem = mensagem\n        self.arquivos = list(arquivos)",
+          "codeSnippet": "class Commit:\n    def __init__(self, id_commit, mensagem, arquivos):\n        self.id_commit = id_commit\n        self.mensagem = mensagem\n        self.arquivos = list(arquivos)"
         },
         "level3": {
-          "title": "🗺️ Passo a Passo",
+          "title": "🗺️ Passo a Passo do Algoritmo",
           "steps": [
-            "1. Escreva print(\"Capitulo 12\")"
+            "1. Crie o __init__ recebendo id_commit, mensagem, arquivos",
+            "2. Faça self.arquivos = list(arquivos)"
           ],
           "xpPenaltyPercent": 10
         }
       },
-      "tags": [
-        "demo"
-      ]
+      "tags": ["minigit", "commit"],
+      "legacyId": "f6_l1"
+    },
+    {
+      "id": "c12_e02",
+      "number": 2,
+      "title": "MiniGit Etapa 2: Área de Staging",
+      "description": "Crie a classe Repositorio e implemente a adição de arquivos ao Staging.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Staging Area",
+      "instructions": "Crie 'Repositorio' com self.staging = [] e self.commits = []. Adicione 'add(self, arquivo)' que adicione o arquivo ao staging se ele ainda não estiver lá.",
+      "codeSkeleton": "# Crie a classe Repositorio com add abaixo\n",
+      "visibleTestCase": "r = Repositorio(); r.add('index.py'); r.staging deve ser ['index.py']",
+      "testAssertions": "r = Repositorio()\nr.add(\"index.py\")\nr.add(\"index.py\")\nassert r.staging == [\"index.py\"], \"Não deve duplicar arquivos no staging\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "if arquivo not in self.staging: self.staging.append(arquivo)"
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "class Repositorio:\n    def __init__(self):\n        self.staging = []\n        self.commits = []\n    def add(self, arquivo):\n        if arquivo not in self.staging:\n            self.staging.append(arquivo)",
+          "codeSnippet": "class Repositorio:\n    def __init__(self):\n        self.staging = []\n        self.commits = []\n    def add(self, arquivo):\n        if arquivo not in self.staging:\n            self.staging.append(arquivo)"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. No add: se arquivo não estiver em self.staging, append"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["minigit", "staging"]
+    },
+    {
+      "id": "c12_e03",
+      "number": 3,
+      "title": "MiniGit Etapa 3: Efetuando o Commit",
+      "description": "Implemente o método commit(mensagem) que cria o objeto Commit e limpa o Staging.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Ação de Commit",
+      "instructions": "No Repositorio, crie 'commit(self, mensagem)'. Se staging estiver vazio, lance ValueError(\"Nada para commitar\"). Senão crie um Commit(id_commit=len(self.commits)+1, mensagem, self.staging), adicione a self.commits e limpe self.staging = [].",
+      "codeSkeleton": "class Commit:\n    def __init__(self, id_commit, mensagem, arquivos):\n        self.id_commit = id_commit\n        self.mensagem = mensagem\n        self.arquivos = list(arquivos)\n\n# Atualize a classe Repositorio com o método commit abaixo\n",
+      "visibleTestCase": "Commita arquivos do staging, esvaziando staging e adicionando em commits",
+      "testAssertions": "r = Repositorio()\nr.add(\"app.py\")\nr.commit(\"v1.0\")\nassert len(r.commits) == 1 and len(r.staging) == 0, \"Commit não limpou o staging\"\ntry:\n    r.commit(\"vendedor\")\n    assert False, \"Deveria lançar ValueError\"\nexcept ValueError:\n    pass\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Se not self.staging -> raise ValueError. Senão crie c = Commit(...), self.commits.append(c) e self.staging.clear()."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "class Repositorio:\n    def __init__(self):\n        self.staging = []\n        self.commits = []\n    def add(self, arquivo):\n        if arquivo not in self.staging:\n            self.staging.append(arquivo)\n    def commit(self, mensagem):\n        if not self.staging:\n            raise ValueError(\"Nada para commitar\")\n        novo = Commit(len(self.commits) + 1, mensagem, self.staging)\n        self.commits.append(novo)\n        self.staging = []\n        return novo",
+          "codeSnippet": "class Repositorio:\n    def __init__(self):\n        self.staging = []\n        self.commits = []\n    def add(self, arquivo):\n        if arquivo not in self.staging:\n            self.staging.append(arquivo)\n    def commit(self, mensagem):\n        if not self.staging:\n            raise ValueError(\"Nada para commitar\")\n        novo = Commit(len(self.commits) + 1, mensagem, self.staging)\n        self.commits.append(novo)\n        self.staging = []\n        return novo"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Teste se self.staging está vazio",
+            "2. Crie o Commit e limpe o staging"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["minigit", "commit-method"]
+    },
+    {
+      "id": "c12_e04",
+      "number": 4,
+      "title": "MiniGit Etapa 4: Histórico de Commits (Log)",
+      "description": "Implemente o método log() para visualizar o histórico de commits.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Visualização de Log",
+      "instructions": "No Repositorio, crie 'log(self)' que retorne uma lista de strings f\"commit {c.id_commit}: {c.mensagem}\" para cada commit.",
+      "codeSkeleton": "# Adicione o método log na classe Repositorio abaixo\n",
+      "visibleTestCase": "log() deve retornar ['commit 1: Primeiro commit']",
+      "testAssertions": "r = Repositorio()\nr.add(\"a.py\")\nr.commit(\"Primeiro commit\")\nassert r.log() == [\"commit 1: Primeiro commit\"], f\"Recebido {r.log()}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "return [f\"commit {c.id_commit}: {c.mensagem}\" for c in self.commits]"
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def log(self):\n    return [f\"commit {c.id_commit}: {c.mensagem}\" for c in self.commits]",
+          "codeSnippet": "def log(self):\n    return [f\"commit {c.id_commit}: {c.mensagem}\" for c in self.commits]"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. return [f\"commit {c.id_commit}: {c.mensagem}\" for c in self.commits]"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["minigit", "log"]
+    },
+    {
+      "id": "c12_e05",
+      "number": 5,
+      "title": "MiniGit Etapa 5: Reversão de Commit (Checkout)",
+      "description": "Implemente o método checkout(id_commit) para inspecionar um commit passado.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Reversão e Busca de Commit",
+      "instructions": "No Repositorio, crie 'checkout(self, id_commit)' que busque e retorne a lista de arquivos do commit com o id informado, ou None se não existir.",
+      "codeSkeleton": "# Adicione checkout na classe Repositorio abaixo\n",
+      "visibleTestCase": "checkout(1) deve retornar a lista de arquivos do commit 1",
+      "testAssertions": "r = Repositorio()\nr.add(\"a.py\")\nr.commit(\"v1\")\nassert r.checkout(1) == [\"a.py\"], \"Checkout incorreto\"\nassert r.checkout(99) is None, \"Checkout inexistente deve ser None\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Itere em self.commits. Se c.id_commit == id_commit return c.arquivos. Senão return None."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def checkout(self, id_commit):\n    for c in self.commits:\n        if c.id_commit == id_commit:\n            return c.arquivos\n    return None",
+          "codeSnippet": "def checkout(self, id_commit):\n    for c in self.commits:\n        if c.id_commit == id_commit:\n            return c.arquivos\n    return None"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. for c in self.commits:",
+            "2. if c.id_commit == id_commit: return c.arquivos",
+            "3. return None"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["minigit", "checkout"]
+    },
+    {
+      "id": "c12_e06",
+      "number": 6,
+      "title": "MiniGit Etapa 6: Status da Área de Trabalho",
+      "description": "Implemente o método status() para visualizar o estado atual.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Status do Repositório",
+      "instructions": "No Repositorio, crie 'status(self)' retornando o dicionário: {\"staged\": len(self.staging), \"total_commits\": len(self.commits)}.",
+      "codeSkeleton": "# Adicione o método status no Repositorio abaixo\n",
+      "visibleTestCase": "status() deve retornar {'staged': 1, 'total_commits': 0}",
+      "testAssertions": "r = Repositorio()\nr.add(\"x.py\")\nassert r.status() == {\"staged\": 1, \"total_commits\": 0}, f\"Recebido {r.status()}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "return {\"staged\": len(self.staging), \"total_commits\": len(self.commits)}"
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def status(self):\n    return {\"staged\": len(self.staging), \"total_commits\": len(self.commits)}",
+          "codeSnippet": "def status(self):\n    return {\"staged\": len(self.staging), \"total_commits\": len(self.commits)}"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Retorne o dicionário com as contagens de staging e commits"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["minigit", "status"]
+    },
+    {
+      "id": "c12_e07",
+      "number": 7,
+      "title": "MiniGit Etapa 7: Desfazendo Staging (Reset)",
+      "description": "Implemente o método reset(arquivo) para remover um item do staging.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Remoção do Staging",
+      "instructions": "No Repositorio, crie 'reset(self, arquivo)' que remova o arquivo do staging se ele estiver presente (retornando True), ou retorne False se não estiver.",
+      "codeSkeleton": "# Adicione o método reset no Repositorio abaixo\n",
+      "visibleTestCase": "r.reset('x.py') deve remover de staging e retornar True",
+      "testAssertions": "r = Repositorio()\nr.add(\"x.py\")\nassert r.reset(\"x.py\") is True and len(r.staging) == 0, \"Reset falhou\"\nassert r.reset(\"x.py\") is False, \"Reset duplo falhou\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "if arquivo in self.staging: self.staging.remove(arquivo); return True else return False"
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def reset(self, arquivo):\n    if arquivo in self.staging:\n        self.staging.remove(arquivo)\n        return True\n    return False",
+          "codeSnippet": "def reset(self, arquivo):\n    if arquivo in self.staging:\n        self.staging.remove(arquivo)\n        return True\n    return False"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. if arquivo em self.staging: remove e retorne True",
+            "2. return False"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["minigit", "reset"]
+    },
+    {
+      "id": "c12_e08",
+      "number": 8,
+      "title": "MiniGit Final: O Gran Finale Pythônico",
+      "description": "Monte a aplicação completa do MiniGit e valide todo o ciclo de vida.",
+      "difficulty": "Difícil",
+      "xpReward": 50,
+      "concept": "Aplicação MiniGit Integrada Completa",
+      "instructions": "Crie a classe completa 'MiniGit' que integre todos os recursos anteriores (add, commit, log, checkout, status, reset) e adicione o método 'executar_script(comandos)' que leia uma lista de comandos em formato ('ADD', 'file.py') ou ('COMMIT', 'msg') e retorne o status final.",
+      "codeSkeleton": "# Construa a classe completa MiniGit abaixo\n",
+      "visibleTestCase": "Executa o ciclo completo de add, commit e retorna o status final",
+      "testAssertions": "g = MiniGit()\nres = g.executar_script([(\"ADD\", \"app.py\"), (\"COMMIT\", \"v1\")])\nassert res[\"total_commits\"] == 1, \"MiniGit final falhou\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Combine a estrutura completa da classe Repositorio na classe MiniGit e processe as tuplas de comandos."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "class Commit:\n    def __init__(self, id_commit, mensagem, arquivos):\n        self.id_commit = id_commit\n        self.mensagem = mensagem\n        self.arquivos = list(arquivos)\n\nclass MiniGit:\n    def __init__(self):\n        self.staging = []\n        self.commits = []\n    def add(self, arq):\n        if arq not in self.staging: self.staging.append(arq)\n    def commit(self, msg):\n        if not self.staging: raise ValueError()\n        c = Commit(len(self.commits)+1, msg, self.staging)\n        self.commits.append(c)\n        self.staging = []\n    def status(self):\n        return {\"staged\": len(self.staging), \"total_commits\": len(self.commits)}\n    def executar_script(self, comandos):\n        for cmd, arg in comandos:\n            if cmd == \"ADD\": self.add(arg)\n            elif cmd == \"COMMIT\": self.commit(arg)\n        return self.status()",
+          "codeSnippet": "class Commit:\n    def __init__(self, id_commit, mensagem, arquivos):\n        self.id_commit = id_commit\n        self.mensagem = mensagem\n        self.arquivos = list(arquivos)\n\nclass MiniGit:\n    def __init__(self):\n        self.staging = []\n        self.commits = []\n    def add(self, arq):\n        if arq not in self.staging: self.staging.append(arq)\n    def commit(self, msg):\n        if not self.staging: raise ValueError()\n        c = Commit(len(self.commits)+1, msg, self.staging)\n        self.commits.append(c)\n        self.staging = []\n    def status(self):\n        return {\"staged\": len(self.staging), \"total_commits\": len(self.commits)}\n    def executar_script(self, comandos):\n        for cmd, arg in comandos:\n            if cmd == \"ADD\": self.add(arg)\n            elif cmd == \"COMMIT\": self.commit(arg)\n        return self.status()"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Monte a classe MiniGit com todos os métodos",
+            "2. Processe as tuplas de comando no método executar_script e retorne self.status()"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "minigit", "projeto-final"]
     }
   ]
 }

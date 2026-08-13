@@ -5,35 +5,335 @@
     {
       "id": "c10_e01",
       "number": 1,
-      "title": "Exercício Demonstrativo Cap 10",
-      "description": "Exercício prático do Capítulo 10",
-      "difficulty": "Fácil",
-      "xpReward": 10,
-      "concept": "Conceito Principal",
-      "instructions": "Exiba 'Capitulo 10' na tela usando print()",
-      "codeSkeleton": "# Escreva seu código abaixo\n",
-      "visibleTestCase": "Saída deve conter: Capitulo 10",
-      "testAssertions": "import sys\noutput = sys.stdout.getvalue().strip()\nassert \"Capitulo 10\" in output\n",
+      "title": "Busca Binária Iterativa",
+      "description": "Implemente a busca binária numa lista ordenada.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Busca Binária O(log n)",
+      "instructions": "Crie a função 'busca_binaria(lista, alvo)' que retorne o índice do alvo na lista ordenada, ou -1 se não encontrar.",
+      "codeSkeleton": "# Implemente busca_binaria abaixo\n",
+      "visibleTestCase": "busca_binaria([10, 20, 30, 40, 50], 40) deve retornar o índice 3",
+      "testAssertions": "assert busca_binaria([10, 20, 30, 40, 50], 40) == 3, \"Índice incorreto\"\nassert busca_binaria([10, 20, 30], 99) == -1, \"Deveria retornar -1\"\n",
       "hints": {
         "level1": {
-          "title": "💡 Intuição",
-          "content": "Use o print()"
+          "title": "💡 Intuição Lógica",
+          "content": "Calcule meio = (inicio + fim) // 2 a cada passo."
         },
         "level2": {
-          "title": "🐍 Recurso",
-          "content": "print(\"Capitulo 10\")"
+          "title": "🐍 Recurso Python",
+          "content": "def busca_binaria(lista, alvo):\n    i, f = 0, len(lista) - 1\n    while i <= f:\n        m = (i + f) // 2\n        if lista[m] == alvo: return m\n        elif lista[m] < alvo: i = m + 1\n        else: f = m - 1\n    return -1",
+          "codeSnippet": "def busca_binaria(lista, alvo):\n    i, f = 0, len(lista) - 1\n    while i <= f:\n        m = (i + f) // 2\n        if lista[m] == alvo: return m\n        elif lista[m] < alvo: i = m + 1\n        else: f = m - 1\n    return -1"
         },
         "level3": {
-          "title": "🗺️ Passo a Passo",
+          "title": "🗺️ Passo a Passo do Algoritmo",
           "steps": [
-            "1. Escreva print(\"Capitulo 10\")"
+            "1. Defina i = 0 e f = len(lista) - 1",
+            "2. Enquanto i <= f, calcule m = (i + f) // 2"
           ],
           "xpPenaltyPercent": 10
         }
       },
-      "tags": [
-        "demo"
-      ]
+      "tags": ["busca-binária", "algoritmos"],
+      "legacyId": "f5_l1"
+    },
+    {
+      "id": "c10_e02",
+      "number": 2,
+      "title": "Ordenação Bubble Sort",
+      "description": "Implemente o algoritmo de ordenação Bubble Sort sem usar .sort() nativo.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Bubble Sort O(n²)",
+      "instructions": "Crie a função 'bubble_sort(arr)' que ordene a lista in-place e a retorne. Não utilize .sort() ou sorted().",
+      "codeSkeleton": "# Implemente bubble_sort sem utilizar .sort() nativo abaixo\n",
+      "visibleTestCase": "bubble_sort([5, 1, 4, 2]) deve retornar [1, 2, 4, 5]",
+      "testAssertions": "assert bubble_sort([5, 1, 4, 2]) == [1, 2, 4, 5], \"Ordenação incorreta\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Compare elementos adjacentes arr[j] > arr[j+1] e faça o swap."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def bubble_sort(arr):\n    n = len(arr)\n    for i in range(n):\n        for j in range(0, n - i - 1):\n            if arr[j] > arr[j + 1]:\n                arr[j], arr[j + 1] = arr[j + 1], arr[j]\n    return arr",
+          "codeSnippet": "def bubble_sort(arr):\n    n = len(arr)\n    for i in range(n):\n        for j in range(0, n - i - 1):\n            if arr[j] > arr[j + 1]:\n                arr[j], arr[j + 1] = arr[j + 1], arr[j]\n    return arr"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Loops aninhados para percorrer pares",
+            "2. Swap arr[j], arr[j+1] = arr[j+1], arr[j]"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["bubble-sort", "algoritmos"],
+      "legacyId": "f5_l2"
+    },
+    {
+      "id": "c10_e03",
+      "number": 3,
+      "title": "Estrutura de Pilha (Stack LIFO)",
+      "description": "Crie uma classe Pilha com métodos push, pop e topo.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Pilha LIFO",
+      "instructions": "Crie a classe 'Pilha' com métodos 'empilhar(item)', 'desempilhar()' (retorna e remove o topo), e 'esta_vazia()'.",
+      "codeSkeleton": "# Crie a classe Pilha abaixo\n",
+      "visibleTestCase": "p = Pilha(); p.empilhar(10); p.desempilhar() deve ser 10",
+      "testAssertions": "p = Pilha()\np.empilhar(10)\nassert p.desempilhar() == 10, \"Desempilhar incorreto\"\nassert p.esta_vazia() is True, \"Deveria estar vazia\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Use uma lista interna self._itens. empilhar faz append, desempilhar faz pop."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "class Pilha:\n    def __init__(self):\n        self._itens = []\n    def empilhar(self, item):\n        self._itens.append(item)\n    def desempilhar(self):\n        return self._itens.pop()\n    def esta_vazia(self):\n        return len(self._itens) == 0",
+          "codeSnippet": "class Pilha:\n    def __init__(self):\n        self._itens = []\n    def empilhar(self, item):\n        self._itens.append(item)\n    def desempilhar(self):\n        return self._itens.pop()\n    def esta_vazia(self):\n        return len(self._itens) == 0"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Crie self._itens = []",
+            "2. Implemente empilhar, desempilhar e esta_vazia"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["pilha", "stack"],
+      "legacyId": "f5_l3"
+    },
+    {
+      "id": "c10_e04",
+      "number": 4,
+      "title": "Estrutura de Fila (Queue FIFO)",
+      "description": "Crie uma classe Fila com enfileirar (push no fim) e desenfileirar (pop do início).",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Fila FIFO",
+      "instructions": "Crie 'Fila' com 'enfileirar(item)' e 'desenfileirar()' (remove e retorna o primeiro elemento self._itens.pop(0)).",
+      "codeSkeleton": "# Crie a classe Fila abaixo\n",
+      "visibleTestCase": "f = Fila(); f.enfileirar('A'); f.enfileirar('B'); f.desenfileirar() deve ser 'A'",
+      "testAssertions": "f = Fila()\nf.enfileirar(\"A\")\nf.enfileirar(\"B\")\nassert f.desenfileirar() == \"A\", \"Fila FIFO incorreta\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "desenfileirar deve remover do início: self._itens.pop(0)."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "class Fila:\n    def __init__(self):\n        self._itens = []\n    def enfileirar(self, item):\n        self._itens.append(item)\n    def desenfileirar(self):\n        return self._itens.pop(0)",
+          "codeSnippet": "class Fila:\n    def __init__(self):\n        self._itens = []\n    def enfileirar(self, item):\n        self._itens.append(item)\n    def desenfileirar(self):\n        return self._itens.pop(0)"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Implemente enfileirar com append e desenfileirar com pop(0)"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["fila", "queue"]
+    },
+    {
+      "id": "c10_e05",
+      "number": 5,
+      "title": "Validador de Parênteses Balanceados (Pilha)",
+      "description": "Verifique se uma expressão de texto possui parênteses () perfeitamente fechados usando Pilha.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Aplicação Prática de Pilha",
+      "instructions": "Crie 'parenteses_balanceados(expressao)' retornando True se os parênteses '(' e ')' estiverem corretos.",
+      "codeSkeleton": "# Implemente parenteses_balanceados usando pilha abaixo\n",
+      "visibleTestCase": "parenteses_balanceados('((a+b)*c)') deve ser True",
+      "testAssertions": "assert parenteses_balanceados(\"((a+b)*c)\") is True, \"Deveria ser True\"\nassert parenteses_balanceados(\"((a+b)\") is False, \"Deveria ser False\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Empilhe em '(' e desempilhe em ')'. Se tentar desempilhar pilha vazia ou restar itens ao fim, é invalido."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def parenteses_balanceados(expressao):\n    pilha = []\n    for char in expressao:\n        if char == '(':\n            pilha.append(char)\n        elif char == ')':\n            if not pilha: return False\n            pilha.pop()\n    return len(pilha) == 0",
+          "codeSnippet": "def parenteses_balanceados(expressao):\n    pilha = []\n    for char in expressao:\n        if char == '(':\n            pilha.append(char)\n        elif char == ')':\n            if not pilha: return False\n            pilha.pop()\n    return len(pilha) == 0"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Itere pelos caracteres",
+            "2. '(' empilha, ')' desempilha",
+            "3. Retorne len(pilha) == 0"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "pilha", "expressões"]
+    },
+    {
+      "id": "c10_e06",
+      "number": 6,
+      "title": "Quick Sort Recursivo",
+      "description": "Implemente a ordenação rápida (Quick Sort) usando o conceito de Dividir e Conquistar.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Quick Sort O(n log n)",
+      "instructions": "Crie 'quick_sort(arr)' que escolha um pivô e divida em sublistas menores, iguais e maiores recursivamente.",
+      "codeSkeleton": "# Implemente quick_sort abaixo\n",
+      "visibleTestCase": "quick_sort([3, 6, 8, 10, 1, 2, 1]) deve retornar [1, 1, 2, 3, 6, 8, 10]",
+      "testAssertions": "assert quick_sort([3, 6, 8, 10, 1, 2, 1]) == [1, 1, 2, 3, 6, 8, 10], \"Quick sort incorreto\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Caso base: len(arr) <= 1 return arr. Senão escolha pivô = arr[0]."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def quick_sort(arr):\n    if len(arr) <= 1: return arr\n    pivo = arr[len(arr) // 2]\n    menores = [x for x in arr if x < pivo]\n    iguais = [x for x in arr if x == pivo]\n    maiores = [x for x in arr if x > pivo]\n    return quick_sort(menores) + iguais + quick_sort(maiores)",
+          "codeSnippet": "def quick_sort(arr):\n    if len(arr) <= 1: return arr\n    pivo = arr[len(arr) // 2]\n    menores = [x for x in arr if x < pivo]\n    iguais = [x for x in arr if x == pivo]\n    maiores = [x for x in arr if x > pivo]\n    return quick_sort(menores) + iguais + quick_sort(maiores)"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Implemente o pivô e compreensões de lista",
+            "2. Retorne quick_sort(menores) + iguais + quick_sort(maiores)"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "quick-sort"]
+    },
+    {
+      "id": "c10_e07",
+      "number": 7,
+      "title": "Busca do K-ésimo Maior Elemento",
+      "description": "Encontre o k-ésimo maior elemento de uma lista não ordenada.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Seleção em Algoritmos",
+      "instructions": "Crie 'kesimo_maior(arr, k)' que ordene a lista em ordem decrescente e retorne o item no índice k-1.",
+      "codeSkeleton": "# Implemente kesimo_maior abaixo\n",
+      "visibleTestCase": "kesimo_maior([3, 2, 1, 5, 6, 4], 2) deve retornar 5 (segundo maior)",
+      "testAssertions": "assert kesimo_maior([3, 2, 1, 5, 6, 4], 2) == 5, f\"Esperado 5, recebido {kesimo_maior([3, 2, 1, 5, 6, 4], 2)}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Ordene reverso com sorted(arr, reverse=True) e pegue [k-1]."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def kesimo_maior(arr, k):\n    return sorted(arr, reverse=True)[k - 1]",
+          "codeSnippet": "def kesimo_maior(arr, k):\n    return sorted(arr, reverse=True)[k - 1]"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva return sorted(arr, reverse=True)[k - 1]"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["algoritmos", "k-maior"]
+    },
+    {
+      "id": "c10_e08",
+      "number": 8,
+      "title": "Mesclar Duas Listas Ordenadas (Merge)",
+      "description": "Intercale duas listas já ordenadas mantendo o resultado ordenado $O(n+m)$.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Algoritmo de Intercalação",
+      "instructions": "Crie 'intercalar_ordenadas(l1, l2)' que retorne a fusão ordenada de l1 e l2 em tempo linear.",
+      "codeSkeleton": "# Implemente intercalar_ordenadas abaixo\n",
+      "visibleTestCase": "intercalar_ordenadas([1, 3, 5], [2, 4, 6]) deve retornar [1, 2, 3, 4, 5, 6]",
+      "testAssertions": "assert intercalar_ordenadas([1, 3, 5], [2, 4, 6]) == [1, 2, 3, 4, 5, 6], \"Merge incorreto\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Use ponteiros i e j avançando na lista que tiver o menor elemento."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def intercalar_ordenadas(l1, l2):\n    res = []\n    i = j = 0\n    while i < len(l1) and j < len(l2):\n        if l1[i] <= l2[j]:\n            res.append(l1[i]); i += 1\n        else:\n            res.append(l2[j]); j += 1\n    res.extend(l1[i:])\n    res.extend(l2[j:])\n    return res",
+          "codeSnippet": "def intercalar_ordenadas(l1, l2):\n    res = []\n    i = j = 0\n    while i < len(l1) and j < len(l2):\n        if l1[i] <= l2[j]:\n            res.append(l1[i]); i += 1\n        else:\n            res.append(l2[j]); j += 1\n    res.extend(l1[i:])\n    res.extend(l2[j:])\n    return res"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Implemente o loop com dois ponteiros i e j"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "merge"]
+    },
+    {
+      "id": "c10_e09",
+      "number": 9,
+      "title": "Algoritmo Two Sum O(n) com Dicionário",
+      "description": "Encontre dois índices em uma lista que somam um valor alvo em tempo $O(n)$.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Two Sum O(n)",
+      "instructions": "Crie 'two_sum(nums, target)' retornando a tupla de índices (i, j) tais que nums[i] + nums[j] == target.",
+      "codeSkeleton": "# Implemente two_sum usando dicionário de complemento abaixo\n",
+      "visibleTestCase": "two_sum([2, 7, 11, 15], 9) deve retornar (0, 1)",
+      "testAssertions": "assert two_sum([2, 7, 11, 15], 9) == (0, 1), f\"Recebido {two_sum([2, 7, 11, 15], 9)}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Guarde complemento = target - num num dicionário mapa[num] = idx."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def two_sum(nums, target):\n    mapa = {}\n    for i, num in enumerate(nums):\n        comp = target - num\n        if comp in mapa:\n            return (mapa[comp], i)\n        mapa[num] = i",
+          "codeSnippet": "def two_sum(nums, target):\n    mapa = {}\n    for i, num in enumerate(nums):\n        comp = target - num\n        if comp in mapa:\n            return (mapa[comp], i)\n        mapa[num] = i"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Itere com enumerate",
+            "2. Verifique se comp está no mapa"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "two-sum"],
+      "legacyId": "f11_l2"
+    },
+    {
+      "id": "c10_e10",
+      "number": 10,
+      "title": "Compactador de Strings RLE (Run-Length Encoding)",
+      "description": "Comprima sequências repetidas em contagens (ex: AAABBC -> A3B2C1).",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Algoritmo de Compressão RLE",
+      "instructions": "Crie 'compactar_rle(texto)' que retorne a string compactada com a contagem consecutiva de caracteres.",
+      "codeSkeleton": "# Implemente compactar_rle abaixo\n",
+      "visibleTestCase": "compactar_rle('AAABBC') deve retornar 'A3B2C1'",
+      "testAssertions": "assert compactar_rle(\"AAABBC\") == \"A3B2C1\", f\"Recebido {compactar_rle('AAABBC')}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Percorra os caracteres contando repetidos consecutivos."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def compactar_rle(texto):\n    if not texto: return \"\"\n    res = []\n    atual = texto[0]\n    count = 1\n    for char in texto[1:]:\n        if char == atual:\n            count += 1\n        else:\n            res.append(f\"{atual}{count}\")\n            atual = char\n            count = 1\n    res.append(f\"{atual}{count}\")\n    return \"\".join(res)",
+          "codeSnippet": "def compactar_rle(texto):\n    if not texto: return \"\"\n    res = []\n    atual = texto[0]\n    count = 1\n    for char in texto[1:]:\n        if char == atual:\n            count += 1\n        else:\n            res.append(f\"{atual}{count}\")\n            atual = char\n            count = 1\n    res.append(f\"{atual}{count}\")\n    return \"\".join(res)"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Itere comparando char com atual",
+            "2. Junte com ''.join(res)"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "compressão", "rle"],
+      "legacyId": "f10_l1"
     }
   ]
 }

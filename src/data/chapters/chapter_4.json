@@ -1,24 +1,110 @@
 {
   "id": "chapter_4",
   "number": 4,
-  "title": "Capítulo 4",
-  "subtitle": "Conteúdo em desenvolvimento para o capítulo 4",
-  "icon": "BookOpen",
-  "color": "emerald",
+  "title": "Condicionais: if, elif, else",
+  "subtitle": "Tomada de decisão e caminhos alternativos",
+  "icon": "GitFork",
+  "color": "violet",
   "estimatedMinutes": 15,
   "exerciseBatteryId": "battery_ch4",
-  "prerequisites": [
-    "chapter_3"
-  ],
+  "prerequisites": ["chapter_3"],
   "sections": [
     {
       "id": "ch4_sec1",
-      "title": "1. Introdução ao Capítulo 4",
+      "title": "1. O Bloco if e a Sagrada Indentação",
       "order": 1,
       "content": [
         {
           "type": "text",
-          "content": "Em breve: conteúdo interativo do capítulo 4."
+          "content": "Programas tomam caminhos diferentes com base em condições. Em Python, a estrutura `if` executa um bloco de código APENAS se a condição for verdadeira (`True`)."
+        },
+        {
+          "type": "analogy",
+          "title": "A Bifurcação na Estrada",
+          "emoji": "🛣️",
+          "content": "Imagine dirigir numa estrada: se o sinal estiver vermelho, você pisa no freio. Caso contrário, você continua em frente. É o comando `if` decidindo o caminho!"
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "temperatura = 32\n\nif temperatura > 30:\n    print(\"Está um dia muito quente!\")\n    print(\"Beba bastante água!\")"
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "content": "⚠️ **Sagrada Indentação**: Em Python, o bloco de código dentro do `if` DEVE ser recuado com 4 espaços (ou 1 Tab). Se não recuar, o Python dará `IndentationError`!"
+        },
+        {
+          "type": "interactive_code",
+          "code": "pontos = 120\nif pontos >= 100:\n    print(\"🏆 Parabéns! Você subiu de nível!\")",
+          "editable": true,
+          "runnable": true
+        },
+        {
+          "type": "quiz",
+          "question": "O que acontece se você esquecer de indentar as linhas abaixo do comando if em Python?",
+          "options": [
+            "O código executa normalmente",
+            "O Python lança um IndentationError",
+            "O bloco é ignorado silenciosamente",
+            "O programa entra em loop infinito"
+          ],
+          "correctIndex": 1,
+          "explanation": "Em Python, o recuo de 4 espaços (indentação) define onde um bloco começa e termina. Sem recuo, o interpretador lança IndentationError!"
+        }
+      ]
+    },
+    {
+      "id": "ch4_sec2",
+      "title": "2. Estruturas Completas: if, elif, else",
+      "order": 2,
+      "content": [
+        {
+          "type": "text",
+          "content": "Quando temos mais de duas opções, usamos `elif` (abreviação de *else if*). O Python avalia cada condição em ordem e executa apenas a primeira que for verdadeira!"
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "nota = 8.5\n\nif nota >= 9.0:\n    print(\"Desempenho: Excelente!\")\nelif nota >= 7.0:\n    print(\"Desempenho: Aprovado!\")\nelif nota >= 5.0:\n    print(\"Desempenho: Recuperação!\")\nelse:\n    print(\"Desempenho: Reprovado!\")"
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "content": "💡 **Dica de Desempenho**: O `else` é o caso padrão final: se nenhuma condição anterior for satisfeita, o código dentro do `else` será executado obrigatoriamente."
+        },
+        {
+          "type": "quiz",
+          "question": "No exemplo acima, se nota for igual a 7.5, qual mensagem será exibida no console?",
+          "options": [
+            "Desempenho: Excelente!",
+            "Desempenho: Aprovado!",
+            "Desempenho: Recuperação!",
+            "Desempenho: Reprovado!"
+          ],
+          "correctIndex": 1,
+          "explanation": "7.5 não é >= 9.0 (primeiro if falha), mas é >= 7.0 (primeiro elif passa!), então exibe 'Desempenho: Aprovado!'."
+        }
+      ]
+    },
+    {
+      "id": "ch4_sec3",
+      "title": "3. Pattern Matching com match-case (Python 3.10+)",
+      "order": 3,
+      "content": [
+        {
+          "type": "text",
+          "content": "A partir do Python 3.10, temos o comando `match-case`, ideal para comparar uma variável contra múltiplos valores fixos (semelhante ao switch/case de outras linguagens)."
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "comando = \"start\"\n\nmatch comando:\n    case \"start\":\n        print(\"Iniciando o sistema...\")\n    case \"stop\":\n        print(\"Parando o sistema...\")\n    case _:\n        print(\"Comando desconhecido!\")"
+        },
+        {
+          "type": "callout",
+          "variant": "pythonic",
+          "content": "🐍 **Modo Pythônico**: O sublinhado `_` no `case _:` funciona como o `else` padrão do match-case para capturar qualquer valor não listado nos casos anteriores!"
         }
       ]
     }

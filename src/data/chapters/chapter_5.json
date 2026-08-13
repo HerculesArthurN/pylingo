@@ -1,24 +1,110 @@
 {
   "id": "chapter_5",
   "number": 5,
-  "title": "Capítulo 5",
-  "subtitle": "Conteúdo em desenvolvimento para o capítulo 5",
-  "icon": "BookOpen",
-  "color": "emerald",
-  "estimatedMinutes": 15,
+  "title": "Repetições: for e while",
+  "subtitle": "Domando loops e iterações controladas",
+  "icon": "Repeat",
+  "color": "amber",
+  "estimatedMinutes": 18,
   "exerciseBatteryId": "battery_ch5",
-  "prerequisites": [
-    "chapter_4"
-  ],
+  "prerequisites": ["chapter_4"],
   "sections": [
     {
       "id": "ch5_sec1",
-      "title": "1. Introdução ao Capítulo 5",
+      "title": "1. O Loop for e a Função range()",
       "order": 1,
       "content": [
         {
           "type": "text",
-          "content": "Em breve: conteúdo interativo do capítulo 5."
+          "content": "Repetir tarefas manualmente é desgastante. Na programação, usamos loops para executar um bloco de código várias vezes automaticamente."
+        },
+        {
+          "type": "analogy",
+          "title": "A Esteira Rolante",
+          "emoji": "🔄",
+          "content": "Um loop `for` é como uma esteira rolante de fábrica: para cada item que passa pela esteira, o robô (seu código) realiza uma ação!"
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "# range(5) gera uma sequência de 0 até 4 (5 números!)\nfor i in range(5):\n    print(f\"Execução número {i}\")"
+        },
+        {
+          "type": "callout",
+          "variant": "tip",
+          "content": "💡 **A Função range()**: `range(inicio, fim, passo)`.\nEx: `range(1, 10, 2)` gera a sequência de ímpares: `1, 3, 5, 7, 9` (o valor `fim` nunca é incluído!)."
+        },
+        {
+          "type": "interactive_code",
+          "code": "soma = 0\nfor n in range(1, 6):\n    soma += n\nprint(f\"Soma de 1 a 5 = {soma}\")",
+          "editable": true,
+          "runnable": true
+        },
+        {
+          "type": "quiz",
+          "question": "Quantas vezes a instrução print() será executada em: for x in range(3, 8)?",
+          "options": [
+            "8 vezes",
+            "5 vezes (para os valores 3, 4, 5, 6, 7)",
+            "3 vezes",
+            "6 vezes"
+          ],
+          "correctIndex": 1,
+          "explanation": "range(3, 8) gera a sequência 3, 4, 5, 6, 7 (o limite superior 8 é exclusivo!). O total de execuções é 8 - 3 = 5."
+        }
+      ]
+    },
+    {
+      "id": "ch5_sec2",
+      "title": "2. O Loop while e Condições de Parada",
+      "order": 2,
+      "content": [
+        {
+          "type": "text",
+          "content": "Quando não sabemos antecipadamente quantas vezes precisamos repetir uma tarefa (por exemplo, esperar o usuário acertar a senha), usamos o `while`."
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "contador = 3\n\nwhile contador > 0:\n    print(f\"Contagem regressiva: {contador}\")\n    contador -= 1  # Subtrai 1 para evitar loop infinito!\n\nprint(\"🚀 Lançar!\")"
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "content": "⚠️ **Perigo do Loop Infinito**: No `while`, se você esquecer de atualizar a variável de controle (`contador -= 1`), a condição será sempre verdadeira e o programa travará!"
+        },
+        {
+          "type": "quiz",
+          "question": "Qual é a principal diferença entre o loop for e o loop while?",
+          "options": [
+            "for é mais rápido que while",
+            "for é usado quando sabemos o número de iterações; while repete ENQUANTO uma condição for True",
+            "while só funciona com números inteiros",
+            "Não existe diferença prática"
+          ],
+          "correctIndex": 1,
+          "explanation": "O loop for itera sobre sequências ou intervalos definidos, enquanto o while repete enquanto a condição permanecer True."
+        }
+      ]
+    },
+    {
+      "id": "ch5_sec3",
+      "title": "3. Controle de Repetição: break, continue e enumerate()",
+      "order": 3,
+      "content": [
+        {
+          "type": "text",
+          "content": "Podemos alterar o fluxo normal dos loops usando comandos de controle especiais:"
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "# break: interrompe o loop imediatamente\nfor n in range(10):\n    if n == 5:\n        break\n    print(n)  # Imprime de 0 a 4\n\n# continue: pula para a próxima iteração\nfor n in range(5):\n    if n == 2:\n        continue\n    print(n)  # Imprime 0, 1, 3, 4 (pula o 2!)"
+        },
+        {
+          "type": "callout",
+          "variant": "pythonic",
+          "content": "🐍 **Modo Pythônico**: A função `enumerate()` permite iterar sobre uma lista recebendo simultaneamente o índice e o valor do item: `for idx, item in enumerate(lista):`!"
         }
       ]
     }

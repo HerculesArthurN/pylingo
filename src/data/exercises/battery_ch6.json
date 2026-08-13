@@ -5,35 +5,399 @@
     {
       "id": "c6_e01",
       "number": 1,
-      "title": "Exercício Demonstrativo Cap 6",
-      "description": "Exercício prático do Capítulo 6",
+      "title": "Sua Primeira Função de Saudação",
+      "description": "Defina uma função simples sem parâmetros usando def.",
       "difficulty": "Fácil",
       "xpReward": 10,
-      "concept": "Conceito Principal",
-      "instructions": "Exiba 'Capitulo 6' na tela usando print()",
-      "codeSkeleton": "# Escreva seu código abaixo\n",
-      "visibleTestCase": "Saída deve conter: Capitulo 6",
-      "testAssertions": "import sys\noutput = sys.stdout.getvalue().strip()\nassert \"Capitulo 6\" in output\n",
+      "concept": "Declaração de Função def",
+      "instructions": "Crie uma função chamada 'obter_saudacao()' que retorne a string \"Olá, Python!\".",
+      "codeSkeleton": "# Defina obter_saudacao abaixo\n",
+      "visibleTestCase": "obter_saudacao() deve retornar 'Olá, Python!'",
+      "testAssertions": "assert 'obter_saudacao' in locals() or 'obter_saudacao' in globals(), \"Função 'obter_saudacao' não encontrada.\"\nassert obter_saudacao() == \"Olá, Python!\", f\"Esperado 'Olá, Python!', recebido '{obter_saudacao()}'\"\n",
       "hints": {
         "level1": {
-          "title": "💡 Intuição",
-          "content": "Use o print()"
+          "title": "💡 Intuição Lógica",
+          "content": "Use def obter_saudacao(): e retorne o texto."
         },
         "level2": {
-          "title": "🐍 Recurso",
-          "content": "print(\"Capitulo 6\")"
+          "title": "🐍 Recurso Python",
+          "content": "def obter_saudacao():\n    return \"Olá, Python!\"",
+          "codeSnippet": "def obter_saudacao():\n    return \"Olá, Python!\""
         },
         "level3": {
-          "title": "🗺️ Passo a Passo",
+          "title": "🗺️ Passo a Passo do Algoritmo",
           "steps": [
-            "1. Escreva print(\"Capitulo 6\")"
+            "1. Escreva def obter_saudacao():",
+            "2. Indente return \"Olá, Python!\""
           ],
           "xpPenaltyPercent": 10
         }
       },
-      "tags": [
-        "demo"
-      ]
+      "tags": ["funções", "def", "return"]
+    },
+    {
+      "id": "c6_e02",
+      "number": 2,
+      "title": "Função Dobrar Número",
+      "description": "Passe parâmetros de entrada para uma função.",
+      "difficulty": "Fácil",
+      "xpReward": 10,
+      "concept": "Parâmetros e return",
+      "instructions": "Crie uma função 'dobro(n)' que receba o número n e retorne n * 2.",
+      "codeSkeleton": "# Defina a função dobro abaixo\n",
+      "visibleTestCase": "dobro(7) deve retornar 14",
+      "testAssertions": "assert dobro(7) == 14, f\"Esperado 14, recebido {dobro(7)}\"\nassert dobro(0) == 0, f\"Esperado 0, recebido {dobro(0)}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "A função deve aceitar o parâmetro n e retornar n * 2."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def dobro(n):\n    return n * 2",
+          "codeSnippet": "def dobro(n):\n    return n * 2"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva def dobro(n):",
+            "2. Indente return n * 2"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["funções", "parâmetros"]
+    },
+    {
+      "id": "c6_e03",
+      "number": 3,
+      "title": "Calculadora de Área de Retângulo",
+      "description": "Passe múltiplos parâmetros para uma função.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Múltiplos Parâmetros",
+      "instructions": "Crie a função 'area_retangulo(largura, altura)' que retorne largura * altura.",
+      "codeSkeleton": "# Defina area_retangulo abaixo\n",
+      "visibleTestCase": "area_retangulo(5, 4) deve retornar 20",
+      "testAssertions": "assert area_retangulo(5, 4) == 20, f\"Esperado 20, recebido {area_retangulo(5, 4)}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Multiplique largura por altura dentro de return."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def area_retangulo(largura, altura):\n    return largura * altura",
+          "codeSnippet": "def area_retangulo(largura, altura):\n    return largura * altura"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva def area_retangulo(largura, altura):",
+            "2. Indente return largura * altura"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["funções", "área"]
+    },
+    {
+      "id": "c6_e04",
+      "number": 4,
+      "title": "Parâmetro com Valor Padrão",
+      "description": "Defina valores padrões para parâmetros opcionais.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Valores Padrão de Parâmetros",
+      "instructions": "Crie a função 'cumprimentar(nome, titulo=\"Sr.(a)\")' que retorne f\"Olá, {titulo} {nome}!\".",
+      "codeSkeleton": "# Defina cumprimentar abaixo\n",
+      "visibleTestCase": "cumprimentar('Silva') deve retornar 'Olá, Sr.(a) Silva!'",
+      "testAssertions": "assert cumprimentar(\"Silva\") == \"Olá, Sr.(a) Silva!\", f\"Recebido '{cumprimentar('Silva')}'\"\nassert cumprimentar(\"Ana\", \"Dra.\") == \"Olá, Dra. Ana!\", f\"Recebido '{cumprimentar('Ana', 'Dra.')}'\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Coloque titulo=\"Sr.(a)\" na assinatura da função."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def cumprimentar(nome, titulo=\"Sr.(a)\"):\n    return f\"Olá, {titulo} {nome}!\"",
+          "codeSnippet": "def cumprimentar(nome, titulo=\"Sr.(a)\"):\n    return f\"Olá, {titulo} {nome}!\""
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva def cumprimentar(nome, titulo=\"Sr.(a)\"):",
+            "2. Indente return f\"Olá, {titulo} {nome}!\""
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["funções", "valor-padrão"]
+    },
+    {
+      "id": "c6_e05",
+      "number": 5,
+      "title": "Verificador de Número Par com Função",
+      "description": "Retorne booleanos True ou False diretamente de funções.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Funções Booleanas",
+      "instructions": "Crie a função 'eh_par(numero)' que retorne True se o número for par, senão False.",
+      "codeSkeleton": "# Defina eh_par abaixo\n",
+      "visibleTestCase": "eh_par(10) deve retornar True e eh_par(7) deve retornar False",
+      "testAssertions": "assert eh_par(10) is True, \"eh_par(10) deve ser True\"\nassert eh_par(7) is False, \"eh_par(7) deve ser False\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Retorne o teste de igualdade numero % 2 == 0."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def eh_par(numero):\n    return numero % 2 == 0",
+          "codeSnippet": "def eh_par(numero):\n    return numero % 2 == 0"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva def eh_par(numero):",
+            "2. Indente return numero % 2 == 0"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["funções", "booleano"]
+    },
+    {
+      "id": "c6_e06",
+      "number": 6,
+      "title": "Encontrar o Maior de Três Números",
+      "description": "Utilize condicionais dentro de uma função para identificar o maior valor.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Lógica Interna em Função",
+      "instructions": "Crie a função 'maior_de_tres(a, b, c)' que retorne o maior valor entre a, b e c (use max() ou condicionais).",
+      "codeSkeleton": "# Defina maior_de_tres abaixo\n",
+      "visibleTestCase": "maior_de_tres(10, 45, 23) deve retornar 45",
+      "testAssertions": "assert maior_de_tres(10, 45, 23) == 45, f\"Esperado 45, recebido {maior_de_tres(10, 45, 23)}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Você pode usar a função nativa max(a, b, c)."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def maior_de_tres(a, b, c):\n    return max(a, b, c)",
+          "codeSnippet": "def maior_de_tres(a, b, c):\n    return max(a, b, c)"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva def maior_de_tres(a, b, c):",
+            "2. Indente return max(a, b, c)"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["funções", "max"]
+    },
+    {
+      "id": "c6_e07",
+      "number": 7,
+      "title": "Média de uma Lista com Função",
+      "description": "Passe coleções (listas) como argumento de funções.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Parâmetro tipo Lista",
+      "instructions": "Crie a função 'calcular_media(lista_numeros)' que retorne sum(lista_numeros) / len(lista_numeros). Se a lista estiver vazia, retorne 0.0.",
+      "codeSkeleton": "# Defina calcular_media abaixo\n",
+      "visibleTestCase": "calcular_media([10, 20, 30]) deve retornar 20.0",
+      "testAssertions": "assert calcular_media([10, 20, 30]) == 20.0, f\"Recebido {calcular_media([10, 20, 30])}\"\nassert calcular_media([]) == 0.0, f\"Recebido {calcular_media([])}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Verifique se a lista está vazia com if not lista_numeros: return 0.0."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def calcular_media(lista_numeros):\n    if not lista_numeros:\n        return 0.0\n    return sum(lista_numeros) / len(lista_numeros)",
+          "codeSnippet": "def calcular_media(lista_numeros):\n    if not lista_numeros:\n        return 0.0\n    return sum(lista_numeros) / len(lista_numeros)"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Teste se lista_numeros está vazia",
+            "2. Retorne sum(lista_numeros) / len(lista_numeros)"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["funções", "lista"]
+    },
+    {
+      "id": "c6_e08",
+      "number": 8,
+      "title": "Somatório Flexível com *args",
+      "description": "*args permite que uma função receba qualquer quantidade de argumentos numéricos.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Parâmetro *args",
+      "instructions": "Crie a função 'somar_todos(*numeros)' que receba qualquer quantidade de números e retorne sum(numeros).",
+      "codeSkeleton": "# Defina somar_todos com *args abaixo\n",
+      "visibleTestCase": "somar_todos(1, 2, 3, 4) deve retornar 10",
+      "testAssertions": "assert somar_todos(1, 2, 3, 4) == 10, f\"Esperado 10, recebido {somar_todos(1, 2, 3, 4)}\"\nassert somar_todos(5, 5) == 10, f\"Esperado 10, recebido {somar_todos(5, 5)}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "O asterisco *args agrupa os argumentos numa tupla."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def somar_todos(*numeros):\n    return sum(numeros)",
+          "codeSnippet": "def somar_todos(*numeros):\n    return sum(numeros)"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva def somar_todos(*numeros):",
+            "2. Indente return sum(numeros)"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["args", "flexível"]
+    },
+    {
+      "id": "c6_e09",
+      "number": 9,
+      "title": "Inversor de Frases",
+      "description": "Processe strings e retorne resultados formatados a partir de funções.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Processamento de Texto",
+      "instructions": "Crie a função 'inverter_texto(texto)' que retorne a string invertida (use slicing [::-1]).",
+      "codeSkeleton": "# Defina inverter_texto abaixo\n",
+      "visibleTestCase": "inverter_texto('Python') deve retornar 'nohtyP'",
+      "testAssertions": "assert inverter_texto(\"Python\") == \"nohtyP\", f\"Esperado 'nohtyP', recebido '{inverter_texto('Python')}'\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Slicing com passo -1 inverte o texto: texto[::-1]."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def inverter_texto(texto):\n    return texto[::-1]",
+          "codeSnippet": "def inverter_texto(texto):\n    return texto[::-1]"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva def inverter_texto(texto):",
+            "2. Indente return texto[::-1]"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["slicing", "string"]
+    },
+    {
+      "id": "c6_e10",
+      "number": 10,
+      "title": "Validador de Senha Forte",
+      "description": "Crie uma função de validação de regras de segurança.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Função Validadora Completa",
+      "instructions": "Crie a função 'senha_forte(senha)' que retorne True se a senha tiver pelo menos 8 caracteres (len >= 8) E contiver pelo menos um número (any(char.isdigit() for char in senha)), senão False.",
+      "codeSkeleton": "# Defina a função senha_forte abaixo\n",
+      "visibleTestCase": "senha_forte('PyLingo123') deve retornar True e senha_forte('abc') False",
+      "testAssertions": "assert senha_forte(\"PyLingo123\") is True, \"PyLingo123 deve ser True\"\nassert senha_forte(\"PyLingo\") is False, \"PyLingo sem números deve ser False\"\nassert senha_forte(\"1234567\") is False, \"1234567 com len < 8 deve ser False\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Verifique o comprimento com len() e verifique se há dígitos com isdigit()."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def senha_forte(senha):\n    tem_tamanho = len(senha) >= 8\n    tem_numero = any(c.isdigit() for c in senha)\n    return tem_tamanho and tem_numero",
+          "codeSnippet": "def senha_forte(senha):\n    tem_tamanho = len(senha) >= 8\n    tem_numero = any(c.isdigit() for c in senha)\n    return tem_tamanho and tem_numero"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Teste len(senha) >= 8",
+            "2. Teste se contém número com isdigit()",
+            "3. Retorne a combinação com and"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "segurança", "validador"]
+    },
+    {
+      "id": "c6_e11",
+      "number": 11,
+      "title": "Função Fatorial Recursiva",
+      "description": "Funções recursivas chamam a si mesmas para resolver subproblemas.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Recursão",
+      "instructions": "Crie a função 'fatorial_recursivo(n)' que retorne 1 se n <= 1, senão n * fatorial_recursivo(n - 1).",
+      "codeSkeleton": "# Defina fatorial_recursivo abaixo\n",
+      "visibleTestCase": "fatorial_recursivo(5) deve retornar 120",
+      "testAssertions": "assert fatorial_recursivo(5) == 120, f\"Esperado 120, recebido {fatorial_recursivo(5)}\"\nassert fatorial_recursivo(1) == 1, f\"Esperado 1, recebido {fatorial_recursivo(1)}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "O caso base é n <= 1 returning 1. O caso recursivo é n * fatorial_recursivo(n - 1)."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def fatorial_recursivo(n):\n    if n <= 1:\n        return 1\n    return n * fatorial_recursivo(n - 1)",
+          "codeSnippet": "def fatorial_recursivo(n):\n    if n <= 1:\n        return 1\n    return n * fatorial_recursivo(n - 1)"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Se n <= 1 return 1",
+            "2. Retorne n * fatorial_recursivo(n - 1)"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["recursão", "fatorial"]
+    },
+    {
+      "id": "c6_e12",
+      "number": 12,
+      "title": "Calculadora de Preço Final com Imposto e Desconto",
+      "description": "Crie uma função paramétrica complexa para calcular preços finais de e-commerce.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Função Paramétrica de Negócio",
+      "instructions": "Crie 'calcular_preco_final(preco_base, desconto_pct=0.0, imposto_pct=0.0)' que aplique primeiro o desconto e depois adicione o imposto ao resultado.",
+      "codeSkeleton": "# Defina calcular_preco_final abaixo\n",
+      "visibleTestCase": "calcular_preco_final(100.0, 0.10, 0.05) deve retornar 94.5 (100 -> 90 -> +5% = 94.5)",
+      "testAssertions": "assert abs(calcular_preco_final(100.0, 0.10, 0.05) - 94.5) < 0.01, \"Cálculo incorreto\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "com_desconto = preco_base * (1 - desconto_pct); final = com_desconto * (1 + imposto_pct)."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "def calcular_preco_final(preco_base, desconto_pct=0.0, imposto_pct=0.0):\n    com_desconto = preco_base * (1 - desconto_pct)\n    return com_desconto * (1 + imposto_pct)",
+          "codeSnippet": "def calcular_preco_final(preco_base, desconto_pct=0.0, imposto_pct=0.0):\n    com_desconto = preco_base * (1 - desconto_pct)\n    return com_desconto * (1 + imposto_pct)"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. com_desconto = preco_base * (1 - desconto_pct)",
+            "2. return com_desconto * (1 + imposto_pct)"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "e-commerce", "cálculo"]
     }
   ]
 }

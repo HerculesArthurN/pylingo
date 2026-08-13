@@ -1,24 +1,83 @@
 {
   "id": "chapter_11",
   "number": 11,
-  "title": "Capítulo 11",
-  "subtitle": "Conteúdo em desenvolvimento para o capítulo 11",
-  "icon": "BookOpen",
-  "color": "emerald",
-  "estimatedMinutes": 15,
+  "title": "Tratamento de Erros",
+  "subtitle": "try/except, exceções personalizadas e resiliência",
+  "icon": "ShieldAlert",
+  "color": "red",
+  "estimatedMinutes": 12,
   "exerciseBatteryId": "battery_ch11",
-  "prerequisites": [
-    "chapter_10"
-  ],
+  "prerequisites": ["chapter_10"],
   "sections": [
     {
       "id": "ch11_sec1",
-      "title": "1. Introdução ao Capítulo 11",
+      "title": "1. Exceções e o Bloco try / except",
       "order": 1,
       "content": [
         {
           "type": "text",
-          "content": "Em breve: conteúdo interativo do capítulo 11."
+          "content": "Erros em tempo de execução (como dividir por zero ou tentar ler um número a partir de uma letra) são chamados de **Exceções**. Sem tratamento, eles interrompem o programa imediatamente!"
+        },
+        {
+          "type": "analogy",
+          "title": "A Rede de Proteção do Trapezista",
+          "emoji": "🎪",
+          "content": "O bloco `try` é o trapezista dando um salto arriscado no ar. O bloco `except` é a rede de proteção estendida embaixo: se o trapezista cair (ocorrer um erro), a rede amortece e o espetáculo continua!"
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "try:\n    resultado = 10 / 0\nexcept ZeroDivisionError:\n    print(\"❌ Erro: Não é possível dividir por zero!\")"
+        },
+        {
+          "type": "quiz",
+          "question": "O que acontece se uma exceção ocorrer dentro do bloco try em Python?",
+          "options": [
+            "O computador desliga",
+            "A execução dentro do try é interrompida e o controle passa para o bloco except correspondente",
+            "O erro é ignorado e o programa continua a linha seguinte dentro do try",
+            "O Python reinicia o programa do início"
+          ],
+          "correctIndex": 1,
+          "explanation": "Ao ocorrer um erro no bloco try, o Python pula imediatamente para o bloco except correspondente para tratar a exceção."
+        }
+      ]
+    },
+    {
+      "id": "ch11_sec2",
+      "title": "2. Blocos else e finally",
+      "order": 2,
+      "content": [
+        {
+          "type": "text",
+          "content": "- `else`: Executa APENAS se **nenhum** erro tiver ocorrido no `try`.\n- `finally`: Executa SEMPRE no final, independentemente de ter ocorrido erro ou não (ideal para fechar arquivos ou conexões)."
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "try:\n    num = int(\"42\")\nexcept ValueError:\n    print(\"Erro de conversão!\")\nelse:\n    print(f\"Sucesso! O número é {num}\")\nfinally:\n    print(\"Operação finalizada.\")"
+        }
+      ]
+    },
+    {
+      "id": "ch11_sec3",
+      "title": "3. Lançando Exceções com raise",
+      "order": 3,
+      "content": [
+        {
+          "type": "text",
+          "content": "Você também pode provocar e lançar suas próprias exceções usando o comando `raise` quando regras de negócio forem violadas."
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "def validar_idade(idade):\n    if idade < 0:\n        raise ValueError(\"A idade não pode ser negativa!\")\n    return True"
+        },
+        {
+          "type": "interactive_code",
+          "code": "def sacar(saldo, valor):\n    if valor > saldo:\n        raise ValueError(\"Saldo insuficiente!\")\n    return saldo - valor\n\ntry:\n    sacar(50, 100)\nexcept ValueError as err:\n    print(f\"Capturado: {err}\")",
+          "editable": true,
+          "runnable": true
         }
       ]
     }

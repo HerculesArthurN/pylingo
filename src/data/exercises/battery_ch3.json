@@ -5,35 +5,332 @@
     {
       "id": "c3_e01",
       "number": 1,
-      "title": "Exercício Demonstrativo Cap 3",
-      "description": "Exercício prático do Capítulo 3",
+      "title": "Verificando a Maioridade",
+      "description": "Operadores de comparação (>=) retornam um booleano True ou False.",
       "difficulty": "Fácil",
       "xpReward": 10,
-      "concept": "Conceito Principal",
-      "instructions": "Exiba 'Capitulo 3' na tela usando print()",
-      "codeSkeleton": "# Escreva seu código abaixo\n",
-      "visibleTestCase": "Saída deve conter: Capitulo 3",
-      "testAssertions": "import sys\noutput = sys.stdout.getvalue().strip()\nassert \"Capitulo 3\" in output\n",
+      "concept": "Operador >=",
+      "instructions": "Dada a idade = 20, crie a variável 'eh_maior' que receba o resultado de (idade >= 18).",
+      "codeSkeleton": "idade = 20\n# Crie a variável eh_maior abaixo\n",
+      "visibleTestCase": "eh_maior deve ser igual a True",
+      "testAssertions": "assert 'eh_maior' in locals() or 'eh_maior' in globals(), \"Variável 'eh_maior' não encontrada.\"\nassert eh_maior is True, f\"Esperado True, recebido {eh_maior}\"\n",
       "hints": {
         "level1": {
-          "title": "💡 Intuição",
-          "content": "Use o print()"
+          "title": "💡 Intuição Lógica",
+          "content": "Compare idade com 18 usando o operador >=."
         },
         "level2": {
-          "title": "🐍 Recurso",
-          "content": "print(\"Capitulo 3\")"
+          "title": "🐍 Recurso Python",
+          "content": "eh_maior = idade >= 18",
+          "codeSnippet": "eh_maior = idade >= 18"
         },
         "level3": {
-          "title": "🗺️ Passo a Passo",
+          "title": "🗺️ Passo a Passo do Algoritmo",
           "steps": [
-            "1. Escreva print(\"Capitulo 3\")"
+            "1. Escreva eh_maior =",
+            "2. Faça a comparação idade >= 18"
           ],
           "xpPenaltyPercent": 10
         }
       },
-      "tags": [
-        "demo"
-      ]
+      "tags": ["comparação", "booleano"]
+    },
+    {
+      "id": "c3_e02",
+      "number": 2,
+      "title": "Verificando Diferença",
+      "description": "O operador != testa se dois valores são diferentes.",
+      "difficulty": "Fácil",
+      "xpReward": 10,
+      "concept": "Operador !=",
+      "instructions": "Dadas senha_digitada = \"1234\" e senha_correta = \"4321\", crie a variável 'senha_incorreta' comparando se são diferentes.",
+      "codeSkeleton": "senha_digitada = \"1234\"\nsenha_correta = \"4321\"\n# Crie senha_incorreta abaixo\n",
+      "visibleTestCase": "senha_incorreta deve ser igual a True",
+      "testAssertions": "assert senha_incorreta is True, f\"Esperado True, recebido {senha_incorreta}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Verifique se as senhas são diferentes usando !=."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "senha_incorreta = senha_digitada != senha_correta",
+          "codeSnippet": "senha_incorreta = senha_digitada != senha_correta"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva senha_incorreta =",
+            "2. Coloque a comparação com !="
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["comparação", "diferença"]
+    },
+    {
+      "id": "c3_e03",
+      "number": 3,
+      "title": "Validação de Acesso (and)",
+      "description": "O operador lógicos 'and' exige que ambas as condições sejam verdadeiras.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Operador and",
+      "instructions": "Dadas possui_token = True e usuario_ativo = True, crie a variável 'acesso_permitido' combinando as duas com 'and'.",
+      "codeSkeleton": "possui_token = True\nusuario_ativo = True\n# Crie acesso_permitido abaixo\n",
+      "visibleTestCase": "acesso_permitido deve ser igual a True",
+      "testAssertions": "assert acesso_permitido is True, f\"Esperado True, recebido {acesso_permitido}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Use 'and' entre as duas variáveis booleanas."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "acesso_permitido = possui_token and usuario_ativo",
+          "codeSnippet": "acesso_permitido = possui_token and usuario_ativo"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva acesso_permitido =",
+            "2. Faça possui_token and usuario_ativo"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["lógico", "and"]
+    },
+    {
+      "id": "c3_e04",
+      "number": 4,
+      "title": "Desconto Estudante ou Idoso (or)",
+      "description": "O operador lógico 'or' exige que ao menos uma condição seja verdadeira.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Operador or",
+      "instructions": "Dadas eh_estudante = False e eh_idoso = True, crie a variável 'tem_desconto' usando 'or'.",
+      "codeSkeleton": "eh_estudante = False\neh_idoso = True\n# Crie tem_desconto abaixo\n",
+      "visibleTestCase": "tem_desconto deve ser igual a True",
+      "testAssertions": "assert tem_desconto is True, f\"Esperado True, recebido {tem_desconto}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Se ao menos uma for verdadeira, o operador 'or' retorna True."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "tem_desconto = eh_estudante or eh_idoso",
+          "codeSnippet": "tem_desconto = eh_estudante or eh_idoso"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva tem_desconto =",
+            "2. Combine eh_estudante or eh_idoso"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["lógico", "or"]
+    },
+    {
+      "id": "c3_e05",
+      "number": 5,
+      "title": "Invertendo com not",
+      "description": "O operador 'not' inverte um valor booleano.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Operador not",
+      "instructions": "Dado chovendo = False, crie a variável 'ensolarado' com o valor invertido de chovendo.",
+      "codeSkeleton": "chovendo = False\n# Crie ensolarado com not chovendo abaixo\n",
+      "visibleTestCase": "ensolarado deve ser igual a True",
+      "testAssertions": "assert ensolarado is True, f\"Esperado True, recebido {ensolarado}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Aplique 'not' antes de chovendo."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "ensolarado = not chovendo",
+          "codeSnippet": "ensolarado = not chovendo"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva ensolarado =",
+            "2. Coloque not chovendo"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["lógico", "not"]
+    },
+    {
+      "id": "c3_e06",
+      "number": 6,
+      "title": "Intervalo Numérico Compreendido",
+      "description": "Podemos verificar se um número está em um intervalo combinando > e < com and.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Validação de Intervalo",
+      "instructions": "Dado nota = 8.5, crie a variável 'nota_valida' testando se a nota está entre 0.0 e 10.0 (inclusivo).",
+      "codeSkeleton": "nota = 8.5\n# Crie nota_valida testando se nota >= 0 e nota <= 10 abaixo\n",
+      "visibleTestCase": "nota_valida deve ser igual a True",
+      "testAssertions": "assert nota_valida is True, f\"Esperado True, recebido {nota_valida}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Testes de intervalo em Python podem ser feitos com: (nota >= 0 and nota <= 10) ou 0 <= nota <= 10."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "nota_valida = 0 <= nota <= 10",
+          "codeSnippet": "nota_valida = 0 <= nota <= 10"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva nota_valida =",
+            "2. Faça (nota >= 0 and nota <= 10)"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["intervalo", "comparação"]
+    },
+    {
+      "id": "c3_e07",
+      "number": 7,
+      "title": "Número Par ou Ímpar com Módulo",
+      "description": "Um número inteiro é par se o resto da sua divisão por 2 (n % 2) for igual a 0.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Módulo % e Igualdade ==",
+      "instructions": "Dado numero = 42, crie a variável 'eh_par' que receba o booleano de (numero % 2 == 0).",
+      "codeSkeleton": "numero = 42\n# Crie eh_par abaixo\n",
+      "visibleTestCase": "eh_par deve ser igual a True",
+      "testAssertions": "assert eh_par is True, f\"Esperado True, recebido {eh_par}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "O resto de 42 / 2 é 0, então 42 % 2 == 0 é True."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "eh_par = numero % 2 == 0",
+          "codeSnippet": "eh_par = numero % 2 == 0"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva eh_par =",
+            "2. Calcule (numero % 2 == 0)"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["par", "módulo"]
+    },
+    {
+      "id": "c3_e08",
+      "number": 8,
+      "title": "Expressão Ternária Pythônica",
+      "description": "A atribuição ternária permite escolher entre dois valores em 1 linha.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Expressão Ternária Inline",
+      "instructions": "Dado saldo = 150.0, crie a variável 'situacao' recebendo \"Positivo\" se saldo >= 0 else \"Negativo\".",
+      "codeSkeleton": "saldo = 150.0\n# Crie situacao usando expressão ternária abaixo\n",
+      "visibleTestCase": "situacao deve ser igual a 'Positivo'",
+      "testAssertions": "assert situacao == \"Positivo\", f\"Esperado 'Positivo', recebido '{situacao}'\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Use o formato: 'Positivo' if saldo >= 0 else 'Negativo'"
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "situacao = \"Positivo\" if saldo >= 0 else \"Negativo\"",
+          "codeSnippet": "situacao = \"Positivo\" if saldo >= 0 else \"Negativo\""
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva situacao =",
+            "2. Digite \"Positivo\" if saldo >= 0 else \"Negativo\""
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["ternário", "pythonic"]
+    },
+    {
+      "id": "c3_e09",
+      "number": 9,
+      "title": "Verificando Ano Bissexto",
+      "description": "Um ano é bissexto se for divisível por 4 (ano % 4 == 0) AND não divisível por 100 (ano % 100 != 0) OR divisível por 400 (ano % 400 == 0).",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Expressão Composta de Bissexto",
+      "instructions": "Dado ano = 2024, crie a variável 'eh_bissexto' testando se (ano % 4 == 0 and ano % 100 != 0) or (ano % 400 == 0).",
+      "codeSkeleton": "ano = 2024\n# Calcule eh_bissexto abaixo\n",
+      "visibleTestCase": "eh_bissexto para 2024 deve ser True",
+      "testAssertions": "assert eh_bissexto is True, f\"Esperado True para 2024, recebido {eh_bissexto}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Combine os testes de resto com and e or entre parênteses."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "eh_bissexto = (ano % 4 == 0 and ano % 100 != 0) or (ano % 400 == 0)",
+          "codeSnippet": "eh_bissexto = (ano % 4 == 0 and ano % 100 != 0) or (ano % 400 == 0)"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva eh_bissexto =",
+            "2. Coloque a expressão (ano % 4 == 0 and ano % 100 != 0) or (ano % 400 == 0)"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "bissexto", "lógica"]
+    },
+    {
+      "id": "c3_e10",
+      "number": 10,
+      "title": "Avaliador de Crédito",
+      "description": "Combine renda, score e histórico para aprovação de crédito.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Regra de Negócio com Operadores",
+      "instructions": "Dadas renda = 4500, score = 720, com_restricao = False, crie 'credito_aprovado' que será True se (renda >= 3000 and score >= 700) and not com_restricao.",
+      "codeSkeleton": "renda = 4500\nscore = 720\ncom_restricao = False\n# Calcule credito_aprovado abaixo\n",
+      "visibleTestCase": "credito_aprovado deve ser igual a True",
+      "testAssertions": "assert credito_aprovado is True, f\"Esperado True, recebido {credito_aprovado}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Verifique a renda e o score e certifique-se de que NÃO tem restrição (not com_restricao)."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "credito_aprovado = (renda >= 3000 and score >= 700) and not com_restricao",
+          "codeSnippet": "credito_aprovado = (renda >= 3000 and score >= 700) and not com_restricao"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva credito_aprovado =",
+            "2. Monte a expressão combinando renda, score e not com_restricao"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "crédito", "regras"]
     }
   ]
 }

@@ -1,24 +1,103 @@
 {
   "id": "chapter_7",
   "number": 7,
-  "title": "Capítulo 7",
-  "subtitle": "Conteúdo em desenvolvimento para o capítulo 7",
-  "icon": "BookOpen",
-  "color": "emerald",
+  "title": "Listas e Tuplas",
+  "subtitle": "Coleções ordenadas, slicing e métodos nativos",
+  "icon": "List",
+  "color": "teal",
   "estimatedMinutes": 15,
   "exerciseBatteryId": "battery_ch7",
-  "prerequisites": [
-    "chapter_6"
-  ],
+  "prerequisites": ["chapter_6"],
   "sections": [
     {
       "id": "ch7_sec1",
-      "title": "1. Introdução ao Capítulo 7",
+      "title": "1. Criando e Fatiando Listas (Slicing)",
       "order": 1,
       "content": [
         {
           "type": "text",
-          "content": "Em breve: conteúdo interativo do capítulo 7."
+          "content": "Listas em Python são coleções ordenadas e mutáveis capazes de armazenar múltiplos elementos entre colchetes `[]`."
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "frutas = [\"maçã\", \"banana\", \"uva\", \"laranja\"]\n\n# Acesso por índice (começa no ZERO!)\nprint(frutas[0])   # 'maçã'\nprint(frutas[-1])  # 'laranja' (último item!)\n\n# Fatiamento (Slicing: [inicio:fim_exclusivo])\nprint(frutas[1:3]) # ['banana', 'uva']"
+        },
+        {
+          "type": "callout",
+          "variant": "pythonic",
+          "content": "🐍 **Modo Pythônico**: Índices negativos (`-1`, `-2`) funcionam de trás para frente! `frutas[-1]` acessa o último elemento da lista sem precisar saber o tamanho com `len()`."
+        }
+      ]
+    },
+    {
+      "id": "ch7_sec2",
+      "title": "2. Métodos Nativos de Listas",
+      "order": 2,
+      "content": [
+        {
+          "type": "text",
+          "content": "Como as listas são mutáveis, podemos adicionar, remover e ordenar elementos a qualquer momento usando métodos nativos."
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "numeros = [3, 1, 4]\n\nnumeros.append(2)  # Adiciona ao final: [3, 1, 4, 2]\nnumeros.sort()     # Ordena em ordem crescente: [1, 2, 3, 4]\nultimo = numeros.pop() # Remove e retorna o último: 4"
+        },
+        {
+          "type": "quiz",
+          "question": "Qual método de lista adiciona um novo item ao FINAL da coleção?",
+          "options": [
+            ".add()",
+            ".insert()",
+            ".append()",
+            ".push()"
+          ],
+          "correctIndex": 2,
+          "explanation": "Em Python, o método .append() é usado para adicionar elementos ao final de uma lista."
+        }
+      ]
+    },
+    {
+      "id": "ch7_sec3",
+      "title": "3. Tuplas e Imutabilidade",
+      "order": 3,
+      "content": [
+        {
+          "type": "text",
+          "content": "Tuplas são coleções semelhantes a listas, porém **imutáveis** (não podem ser alteradas após a criação). São definidas entre parênteses `()`."
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "coordenadas = (23.5505, -46.6333) # Latitude e Longitude\n\n# Acesso por índice funciona:\nprint(coordenadas[0]) # 23.5505\n\n# Modificar gera TypeError!\n# coordenadas[0] = 0  ❌ ERRO!"
+        },
+        {
+          "type": "callout",
+          "variant": "note",
+          "content": "💡 **Por que usar tuplas?**: Tuplas são mais leves na memória, mais rápidas de processar e protegem dados contra alterações acidentais."
+        }
+      ]
+    },
+    {
+      "id": "ch7_sec4",
+      "title": "4. Compreensão de Listas (List Comprehension)",
+      "order": 4,
+      "content": [
+        {
+          "type": "text",
+          "content": "A compreensão de listas é um recurso elegante do Python para criar novas listas a partir de coleções existentes em apenas uma linha!"
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "# Forma tradicional\nquadrados = []\nfor x in range(5):\n    quadrados.append(x ** 2)\n\n# Modo Pythônico (List Comprehension)\nquadrados = [x ** 2 for x in range(5)] # [0, 1, 4, 9, 16]"
+        },
+        {
+          "type": "interactive_code",
+          "code": "numeros = [1, 2, 3, 4, 5, 6]\npares = [n for n in numeros if n % 2 == 0]\nprint(f\"Apenas pares: {pares}\")",
+          "editable": true,
+          "runnable": true
         }
       ]
     }

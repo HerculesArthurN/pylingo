@@ -5,35 +5,408 @@
     {
       "id": "c4_e01",
       "number": 1,
-      "title": "Exercício Demonstrativo Cap 4",
-      "description": "Exercício prático do Capítulo 4",
+      "title": "Verificador de Temperatura",
+      "description": "Use if/else para tomar decisões simples com base em um valor.",
       "difficulty": "Fácil",
       "xpReward": 10,
-      "concept": "Conceito Principal",
-      "instructions": "Exiba 'Capitulo 4' na tela usando print()",
-      "codeSkeleton": "# Escreva seu código abaixo\n",
-      "visibleTestCase": "Saída deve conter: Capitulo 4",
-      "testAssertions": "import sys\noutput = sys.stdout.getvalue().strip()\nassert \"Capitulo 4\" in output\n",
+      "concept": "if e else Simples",
+      "instructions": "Dada a temperatura = 35, crie a variável 'status' que deve receber \"Quente\" se temperatura > 30, senão \"Agradável\".",
+      "codeSkeleton": "temperatura = 35\n# Crie a estrutura if/else abaixo para definir status\n",
+      "visibleTestCase": "status deve ser igual a 'Quente'",
+      "testAssertions": "assert status == \"Quente\", f\"Esperado 'Quente', recebido '{status}'\"\n",
       "hints": {
         "level1": {
-          "title": "💡 Intuição",
-          "content": "Use o print()"
+          "title": "💡 Intuição Lógica",
+          "content": "Se temperatura > 30 define status = 'Quente', else status = 'Agradável'."
         },
         "level2": {
-          "title": "🐍 Recurso",
-          "content": "print(\"Capitulo 4\")"
+          "title": "🐍 Recurso Python",
+          "content": "if temperatura > 30:\n    status = \"Quente\"\nelse:\n    status = \"Agradável\"",
+          "codeSnippet": "if temperatura > 30:\n    status = \"Quente\"\nelse:\n    status = \"Agradável\""
         },
         "level3": {
-          "title": "🗺️ Passo a Passo",
+          "title": "🗺️ Passo a Passo do Algoritmo",
           "steps": [
-            "1. Escreva print(\"Capitulo 4\")"
+            "1. Escreva if temperatura > 30:",
+            "2. Indente e coloque status = \"Quente\"",
+            "3. Coloque else: e indente status = \"Agradável\""
           ],
           "xpPenaltyPercent": 10
         }
       },
-      "tags": [
-        "demo"
-      ]
+      "tags": ["if", "else"]
+    },
+    {
+      "id": "c4_e02",
+      "number": 2,
+      "title": "Classificador de Idades",
+      "description": "Use elif para testar múltiplas faixas etárias.",
+      "difficulty": "Fácil",
+      "xpReward": 10,
+      "concept": "Estrutura if/elif/else",
+      "instructions": "Dada a idade = 15, defina a variável 'categoria': \"Criança\" se idade < 12, \"Jovem\" se idade < 18, senão \"Adulto\".",
+      "codeSkeleton": "idade = 15\n# Defina categoria usando if/elif/else abaixo\n",
+      "visibleTestCase": "categoria deve ser igual a 'Jovem'",
+      "testAssertions": "assert categoria == \"Jovem\", f\"Esperado 'Jovem', recebido '{categoria}'\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Testes em sequência: if idade < 12, elif idade < 18, else Adulto."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "if idade < 12:\n    categoria = \"Criança\"\nelif idade < 18:\n    categoria = \"Jovem\"\nelse:\n    categoria = \"Adulto\"",
+          "codeSnippet": "if idade < 12:\n    categoria = \"Criança\"\nelif idade < 18:\n    categoria = \"Jovem\"\nelse:\n    categoria = \"Adulto\""
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Teste if idade < 12",
+            "2. Teste elif idade < 18",
+            "3. Defina else para Adulto"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["if", "elif", "else"]
+    },
+    {
+      "id": "c4_e03",
+      "number": 3,
+      "title": "Aprovação por Nota e Frequência",
+      "description": "Combine condições com and em blocos condicionais.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Condicionais com and",
+      "instructions": "Dadas nota = 8.0 e frequencia = 80 (porcentagem), crie 'aprovado' = True se nota >= 7.0 e frequencia >= 75, senão False.",
+      "codeSkeleton": "nota = 8.0\nfrequencia = 80\n# Defina aprovado abaixo\n",
+      "visibleTestCase": "aprovado deve ser igual a True",
+      "testAssertions": "assert aprovado is True, f\"Esperado True, recebido {aprovado}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Verifique ambas as condições com and."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "if nota >= 7.0 and frequencia >= 75:\n    aprovado = True\nelse:\n    aprovado = False",
+          "codeSnippet": "if nota >= 7.0 and frequencia >= 75:\n    aprovado = True\nelse:\n    aprovado = False"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva if nota >= 7.0 and frequencia >= 75:",
+            "2. Defina aprovado = True",
+            "3. No else, aprovado = False"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["if", "and"]
+    },
+    {
+      "id": "c4_e04",
+      "number": 4,
+      "title": "Calculadora de Desconto de Compra",
+      "description": "Calcule valores de desconto com base no total da compra.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Cálculo Condicional",
+      "instructions": "Dado o valor_compra = 250.0, se valor_compra >= 200.0 dê 10% de desconto (desconto = 0.10 * valor_compra), senão 0. Armazene em 'desconto'.",
+      "codeSkeleton": "valor_compra = 250.0\n# Calcule a variável desconto abaixo\n",
+      "visibleTestCase": "desconto deve ser igual a 25.0",
+      "testAssertions": "assert desconto == 25.0, f\"Esperado 25.0, recebido {desconto}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Multiplique por 0.10 se a compra for >= 200.0."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "if valor_compra >= 200.0:\n    desconto = valor_compra * 0.10\nelse:\n    desconto = 0.0",
+          "codeSnippet": "if valor_compra >= 200.0:\n    desconto = valor_compra * 0.10\nelse:\n    desconto = 0.0"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Verifique if valor_compra >= 200.0:",
+            "2. Calcule desconto = valor_compra * 0.10",
+            "3. Senão desconto = 0.0"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["if", "cálculo"]
+    },
+    {
+      "id": "c4_e05",
+      "number": 5,
+      "title": "Sinal de Trânsito com match-case",
+      "description": "Use match-case para lidar com opções fixas.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Sintaxe match-case",
+      "instructions": "Dado o sinal = \"verde\", crie 'acao': \"Avançar\" se \"verde\", \"Atenção\" se \"amarelo\", \"Parar\" se \"vermelho\".",
+      "codeSkeleton": "sinal = \"verde\"\n# Crie acao com if/elif/else ou match-case abaixo\n",
+      "visibleTestCase": "acao deve ser igual a 'Avançar'",
+      "testAssertions": "assert acao == \"Avançar\", f\"Esperado 'Avançar', recebido '{acao}'\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Você pode usar match sinal com case 'verde' ou if/elif."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "if sinal == \"verde\": acao = \"Avançar\"\nelif sinal == \"amarelo\": acao = \"Atenção\"\nelse: acao = \"Parar\"",
+          "codeSnippet": "if sinal == \"verde\":\n    acao = \"Avançar\"\nelif sinal == \"amarelo\":\n    acao = \"Atenção\"\nelse:\n    acao = \"Parar\""
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva a estrutura para testar verde, amarelo ou outros",
+            "2. Atribua 'Avançar' para verde"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["match-case", "condicionais"]
+    },
+    {
+      "id": "c4_e06",
+      "number": 6,
+      "title": "Verificador de Número Positivo, Negativo ou Zero",
+      "description": "Classifique um número numérico em três categorias.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Classificação Numérica",
+      "instructions": "Dado num = -7, crie 'sinal_num' com \"Positivo\" se num > 0, \"Negativo\" se num < 0, senão \"Zero\".",
+      "codeSkeleton": "num = -7\n# Defina sinal_num abaixo\n",
+      "visibleTestCase": "sinal_num deve ser igual a 'Negativo'",
+      "testAssertions": "assert sinal_num == \"Negativo\", f\"Esperado 'Negativo', recebido '{sinal_num}'\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Verifique se é maior que zero, menor que zero ou igual a zero."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "if num > 0: sinal_num = \"Positivo\"\nelif num < 0: sinal_num = \"Negativo\"\nelse: sinal_num = \"Zero\"",
+          "codeSnippet": "if num > 0:\n    sinal_num = \"Positivo\"\nelif num < 0:\n    sinal_num = \"Negativo\"\nelse:\n    sinal_num = \"Zero\""
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Se num > 0: Positivo",
+            "2. Se num < 0: Negativo",
+            "3. Senão: Zero"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["if", "números"]
+    },
+    {
+      "id": "c4_e07",
+      "number": 7,
+      "title": "Calculadora de Frete por Região",
+      "description": "Atribua tarifas de frete de acordo com a sigla do estado.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Validação de Strings em Condicionais",
+      "instructions": "Dado estado = \"SP\", se estado == \"SP\" frete = 10.0, elif estado == \"RJ\" frete = 15.0, senão frete = 25.0. Armazene em 'frete'.",
+      "codeSkeleton": "estado = \"SP\"\n# Calcule a variável frete abaixo\n",
+      "visibleTestCase": "frete para SP deve ser 10.0",
+      "testAssertions": "assert frete == 10.0, f\"Esperado 10.0, recebido {frete}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Compare a variável estado contra 'SP' e 'RJ'."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "if estado == \"SP\": frete = 10.0\nelif estado == \"RJ\": frete = 15.0\nelse: frete = 25.0",
+          "codeSnippet": "if estado == \"SP\":\n    frete = 10.0\nelif estado == \"RJ\":\n    frete = 15.0\nelse:\n    frete = 25.0"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. if estado == 'SP': frete = 10.0",
+            "2. elif estado == 'RJ': frete = 15.0",
+            "3. else: frete = 25.0"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["frete", "if"]
+    },
+    {
+      "id": "c4_e08",
+      "number": 8,
+      "title": "Triângulos: Equilátero, Isósceles ou Escaleno",
+      "description": "Classifique um triângulo com base nos tamanhos dos 3 lados.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Lógica Composta de Triângulos",
+      "instructions": "Dados a = 5, b = 5, c = 5, defina 'tipo_triangulo': \"Equilátero\" se a == b == c, \"Isósceles\" se a == b or a == c or b == c, senão \"Escaleno\".",
+      "codeSkeleton": "a = 5\nb = 5\nc = 5\n# Defina tipo_triangulo abaixo\n",
+      "visibleTestCase": "tipo_triangulo deve ser igual a 'Equilátero'",
+      "testAssertions": "assert tipo_triangulo == \"Equilátero\", f\"Esperado 'Equilátero', recebido '{tipo_triangulo}'\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Equilátero tem os 3 lados iguais (a == b == c)."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "if a == b == c:\n    tipo_triangulo = \"Equilátero\"\nelif a == b or a == c or b == c:\n    tipo_triangulo = \"Isósceles\"\nelse:\n    tipo_triangulo = \"Escaleno\"",
+          "codeSnippet": "if a == b == c:\n    tipo_triangulo = \"Equilátero\"\nelif a == b or a == c or b == c:\n    tipo_triangulo = \"Isósceles\"\nelse:\n    tipo_triangulo = \"Escaleno\""
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Teste a == b == c -> Equilátero",
+            "2. Teste a == b or a == c or b == c -> Isósceles",
+            "3. Else -> Escaleno"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "geometria"]
+    },
+    {
+      "id": "c4_e09",
+      "number": 9,
+      "title": "Calculadora de Imposto Renda Simplificada",
+      "description": "Calcule a alíquota de imposto de renda por faixa salarial.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Cálculo por Faixa de Renda",
+      "instructions": "Dado salario = 3500.0, se salario <= 2000.0 imposto = 0.0, elif salario <= 4000.0 imposto = salario * 0.075, senão imposto = salario * 0.15. Armazene em 'imposto'.",
+      "codeSkeleton": "salario = 3500.0\n# Calcule a variável imposto abaixo\n",
+      "visibleTestCase": "imposto para 3500.0 deve ser 262.5",
+      "testAssertions": "assert imposto == 262.5, f\"Esperado 262.5, recebido {imposto}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "3500.0 se encaixa na faixa <= 4000.0 (multiplica por 0.075)."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "if salario <= 2000.0:\n    imposto = 0.0\nelif salario <= 4000.0:\n    imposto = salario * 0.075\nelse:\n    imposto = salario * 0.15",
+          "codeSnippet": "if salario <= 2000.0:\n    imposto = 0.0\nelif salario <= 4000.0:\n    imposto = salario * 0.075\nelse:\n    imposto = salario * 0.15"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Teste <= 2000",
+            "2. Teste <= 4000 (multiplica por 0.075)",
+            "3. Else (multiplica por 0.15)"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "imposto", "cálculo"]
+    },
+    {
+      "id": "c4_e10",
+      "number": 10,
+      "title": "Simulador de IMC com Diagnóstico",
+      "description": "Retorne o diagnóstico em texto com base no IMC.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Diagnóstico de Saúde por Faixas",
+      "instructions": "Dado imc = 24.5, crie 'diagnostico': \"Abaixo do peso\" se imc < 18.5, \"Peso normal\" se imc < 25.0, \"Sobrepeso\" se imc < 30.0, senão \"Obesidade\".",
+      "codeSkeleton": "imc = 24.5\n# Defina diagnostico abaixo\n",
+      "visibleTestCase": "diagnostico para 24.5 deve ser 'Peso normal'",
+      "testAssertions": "assert diagnostico == \"Peso normal\", f\"Esperado 'Peso normal', recebido '{diagnostico}'\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "24.5 é menor que 25.0, logo é 'Peso normal'."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "if imc < 18.5: diagnostico = \"Abaixo do peso\"\nelif imc < 25.0: diagnostico = \"Peso normal\"\nelif imc < 30.0: diagnostico = \"Sobrepeso\"\nelse: diagnostico = \"Obesidade\"",
+          "codeSnippet": "if imc < 18.5:\n    diagnostico = \"Abaixo do peso\"\nelif imc < 25.0:\n    diagnostico = \"Peso normal\"\nelif imc < 30.0:\n    diagnostico = \"Sobrepeso\"\nelse:\n    diagnostico = \"Obesidade\""
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Teste < 18.5",
+            "2. Teste < 25.0",
+            "3. Teste < 30.0",
+            "4. Else"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["imc", "saúde"]
+    },
+    {
+      "id": "c4_e11",
+      "number": 11,
+      "title": "Validador de Ano Bissexto com if Aninhado",
+      "description": "Estruture a lógica do ano bissexto usando if/else aninhados.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Condicionais Aninhadas",
+      "instructions": "Dado ano = 2000, defina 'bissexto_aninhado' = True se for divisível por 4 (se divisível por 100 deve ser divisível por 400), senão False.",
+      "codeSkeleton": "ano = 2000\n# Defina bissexto_aninhado usando condicionais aninhadas abaixo\n",
+      "visibleTestCase": "bissexto_aninhado para 2000 deve ser True",
+      "testAssertions": "assert bissexto_aninhado is True, f\"Esperado True, recebido {bissexto_aninhado}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "2000 é divisível por 400, logo é bissexto."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "if ano % 4 == 0:\n    if ano % 100 == 0:\n        bissexto_aninhado = (ano % 400 == 0)\n    else:\n        bissexto_aninhado = True\nelse:\n    bissexto_aninhado = False",
+          "codeSnippet": "if ano % 4 == 0:\n    if ano % 100 == 0:\n        bissexto_aninhado = (ano % 400 == 0)\n    else:\n        bissexto_aninhado = True\nelse:\n    bissexto_aninhado = False"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Aninhe os blocos de teste de módulo por 4, 100 e 400"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["aninhamento", "desafio"]
+    },
+    {
+      "id": "c4_e12",
+      "number": 12,
+      "title": "Sistema de Autenticação com Múltiplas Etapas",
+      "description": "Crie um validador de login que verifica usuário, senha e status de conta ativada.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Validador de Sistema Completo",
+      "instructions": "Dados user_input = \"admin\", pass_input = \"1234\", active = True, crie 'login_status': \"Sucesso\" se user_input == \"admin\" e pass_input == \"1234\" e active, \"Conta Inativa\" se active for False (com user e pass corretos), senão \"Credenciais Inválidas\".",
+      "codeSkeleton": "user_input = \"admin\"\npass_input = \"1234\"\nactive = True\n# Defina login_status abaixo\n",
+      "visibleTestCase": "login_status deve ser 'Sucesso'",
+      "testAssertions": "assert login_status == \"Sucesso\", f\"Esperado 'Sucesso', recebido '{login_status}'\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Testes em ordem: primeiro verifique se as credenciais estão corretas. Se estiverem, verifique se a conta está ativa."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "if user_input == \"admin\" and pass_input == \"1234\":\n    if active:\n        login_status = \"Sucesso\"\n    else:\n        login_status = \"Conta Inativa\"\nelse:\n    login_status = \"Credenciais Inválidas\"",
+          "codeSnippet": "if user_input == \"admin\" and pass_input == \"1234\":\n    if active:\n        login_status = \"Sucesso\"\n    else:\n        login_status = \"Conta Inativa\"\nelse:\n    login_status = \"Credenciais Inválidas\""
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Teste se user e pass batem",
+            "2. Se baterem, se active -> Sucesso, senão -> Conta Inativa",
+            "3. Se não baterem -> Credenciais Inválidas"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "login", "segurança"]
     }
   ]
 }

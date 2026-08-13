@@ -5,35 +5,399 @@
     {
       "id": "c9_e01",
       "number": 1,
-      "title": "Exercício Demonstrativo Cap 9",
-      "description": "Exercício prático do Capítulo 9",
+      "title": "Sua Primeira Classe",
+      "description": "Crie uma classe com o método construtor __init__.",
       "difficulty": "Fácil",
       "xpReward": 10,
-      "concept": "Conceito Principal",
-      "instructions": "Exiba 'Capitulo 9' na tela usando print()",
-      "codeSkeleton": "# Escreva seu código abaixo\n",
-      "visibleTestCase": "Saída deve conter: Capitulo 9",
-      "testAssertions": "import sys\noutput = sys.stdout.getvalue().strip()\nassert \"Capitulo 9\" in output\n",
+      "concept": "Classe e __init__",
+      "instructions": "Crie a classe 'Pessoa' que no __init__(self, nome) defina self.nome = nome.",
+      "codeSkeleton": "# Crie a classe Pessoa abaixo\n",
+      "visibleTestCase": "Pessoa('Ana').nome deve ser 'Ana'",
+      "testAssertions": "assert Pessoa(\"Ana\").nome == \"Ana\", \"Nome incorreto\"\n",
       "hints": {
         "level1": {
-          "title": "💡 Intuição",
-          "content": "Use o print()"
+          "title": "💡 Intuição Lógica",
+          "content": "class Pessoa:\n    def __init__(self, nome):\n        self.nome = nome"
         },
         "level2": {
-          "title": "🐍 Recurso",
-          "content": "print(\"Capitulo 9\")"
+          "title": "🐍 Recurso Python",
+          "content": "class Pessoa:\n    def __init__(self, nome):\n        self.nome = nome",
+          "codeSnippet": "class Pessoa:\n    def __init__(self, nome):\n        self.nome = nome"
         },
         "level3": {
-          "title": "🗺️ Passo a Passo",
+          "title": "🗺️ Passo a Passo do Algoritmo",
           "steps": [
-            "1. Escreva print(\"Capitulo 9\")"
+            "1. Escreva class Pessoa:",
+            "2. Indente def __init__(self, nome):",
+            "3. Indente self.nome = nome"
           ],
           "xpPenaltyPercent": 10
         }
       },
-      "tags": [
-        "demo"
-      ]
+      "tags": ["poo", "classe"],
+      "legacyId": "f4_l1"
+    },
+    {
+      "id": "c9_e02",
+      "number": 2,
+      "title": "Método de Instância",
+      "description": "Adicione métodos que realizam ações com o objeto.",
+      "difficulty": "Fácil",
+      "xpReward": 10,
+      "concept": "Métodos em Classes",
+      "instructions": "Na classe 'Retangulo' com __init__(self, largura, altura), adicione o método 'area(self)' que retorne self.largura * self.altura.",
+      "codeSkeleton": "# Crie a classe Retangulo com o método area abaixo\n",
+      "visibleTestCase": "Retangulo(4, 5).area() deve retornar 20",
+      "testAssertions": "assert Retangulo(4, 5).area() == 20, f\"Recebido {Retangulo(4, 5).area()}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "def area(self): return self.largura * self.altura"
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "class Retangulo:\n    def __init__(self, largura, altura):\n        self.largura = largura\n        self.altura = altura\n    def area(self):\n        return self.largura * self.altura",
+          "codeSnippet": "class Retangulo:\n    def __init__(self, largura, altura):\n        self.largura = largura\n        self.altura = altura\n    def area(self):\n        return self.largura * self.altura"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Crie o __init__ com largura e altura",
+            "2. Crie o método area(self) retornando o produto"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["poo", "método"],
+      "legacyId": "f4_l2"
+    },
+    {
+      "id": "c9_e03",
+      "number": 3,
+      "title": "Encapsulamento de Saldo",
+      "description": "Utilize convenções de atributos protegidos (_saldo).",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Encapsulamento com _atributo",
+      "instructions": "Crie a classe 'Conta' com self._saldo = saldo no __init__. Adicione 'obter_saldo(self)' retornando self._saldo.",
+      "codeSkeleton": "# Crie a classe Conta abaixo\n",
+      "visibleTestCase": "Conta(100.0).obter_saldo() deve ser 100.0",
+      "testAssertions": "assert Conta(100.0).obter_saldo() == 100.0, \"Obter saldo incorreto\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Defina self._saldo no construtor."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "class Conta:\n    def __init__(self, saldo):\n        self._saldo = saldo\n    def obter_saldo(self):\n        return self._saldo",
+          "codeSnippet": "class Conta:\n    def __init__(self, saldo):\n        self._saldo = saldo\n    def obter_saldo(self):\n        return self._saldo"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Defina self._saldo no __init__",
+            "2. Retorne self._saldo no método"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["poo", "encapsulamento"],
+      "legacyId": "f4_l3"
+    },
+    {
+      "id": "c9_e04",
+      "number": 4,
+      "title": "Herança de Classes (super())",
+      "description": "Herde características de uma classe pai usando super().",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Herança e super()",
+      "instructions": "Dada a classe 'Veiculo(nome)', crie a subclasse 'Carro(Veiculo)' com __init__(self, nome, portas), chamando super().__init__(nome).",
+      "codeSkeleton": "class Veiculo:\n    def __init__(self, nome):\n        self.nome = nome\n\n# Crie a subclasse Carro herdeira de Veiculo abaixo\n",
+      "visibleTestCase": "c = Carro('Golf', 4); c.nome deve ser 'Golf' e c.portas 4",
+      "testAssertions": "c = Carro(\"Golf\", 4)\nassert c.nome == \"Golf\" and c.portas == 4, f\"Valores incorretos: nome={c.nome}, portas={c.portas}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "class Carro(Veiculo): chamando super().__init__(nome)."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "class Carro(Veiculo):\n    def __init__(self, nome, portas):\n        super().__init__(nome)\n        self.portas = portas",
+          "codeSnippet": "class Carro(Veiculo):\n    def __init__(self, nome, portas):\n        super().__init__(nome)\n        self.portas = portas"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva class Carro(Veiculo):",
+            "2. Chame super().__init__(nome)",
+            "3. Defina self.portas = portas"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["poo", "herança"],
+      "legacyId": "f4_l4"
+    },
+    {
+      "id": "c9_e05",
+      "number": 5,
+      "title": "Sobrescrita de Métodos (Override)",
+      "description": "Reescreva métodos da classe pai nas subclasses.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Polimorfismo e Override",
+      "instructions": "Dada a classe 'Animal' com falar(self) -> 'Som', crie 'Cachorro(Animal)' com falar(self) -> 'Au!'.",
+      "codeSkeleton": "class Animal:\n    def falar(self):\n        return \"Som\"\n\n# Crie a subclasse Cachorro sobrescrevendo falar() abaixo\n",
+      "visibleTestCase": "Cachorro().falar() deve retornar 'Au!'",
+      "testAssertions": "assert Cachorro().falar() == \"Au!\", \"Som de Cachorro incorreto\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Redefina def falar(self): return \"Au!\" em Cachorro."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "class Cachorro(Animal):\n    def falar(self):\n        return \"Au!\"",
+          "codeSnippet": "class Cachorro(Animal):\n    def falar(self):\n        return \"Au!\""
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva class Cachorro(Animal):",
+            "2. Redefina def falar(self): return \"Au!\""
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["poo", "override"]
+    },
+    {
+      "id": "c9_e06",
+      "number": 6,
+      "title": "Método de Representação __str__",
+      "description": "Defina a representação em texto amigável do objeto.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Método Especial __str__",
+      "instructions": "Na classe 'Livro(titulo, autor)', adicione __str__(self) retornando f\"{self.titulo} por {self.autor}\".",
+      "codeSkeleton": "# Crie a classe Livro com __str__ abaixo\n",
+      "visibleTestCase": "str(Livro('1984', 'Orwell')) deve ser '1984 por Orwell'",
+      "testAssertions": "assert str(Livro(\"1984\", \"Orwell\")) == \"1984 por Orwell\", \"__str__ incorreto\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "def __str__(self): return f\"{self.titulo} por {self.autor}\""
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "class Livro:\n    def __init__(self, titulo, autor):\n        self.titulo = titulo\n        self.autor = autor\n    def __str__(self):\n        return f\"{self.titulo} por {self.autor}\"",
+          "codeSnippet": "class Livro:\n    def __init__(self, titulo, autor):\n        self.titulo = titulo\n        self.autor = autor\n    def __str__(self):\n        return f\"{self.titulo} por {self.autor}\""
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Implemente __str__(self) retornando f-string"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["poo", "str"]
+    },
+    {
+      "id": "c9_e07",
+      "number": 7,
+      "title": "Carrinho de Compras com Objetos",
+      "description": "Manipule coleções de objetos dentro de uma classe.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Composição de Objetos",
+      "instructions": "Crie a classe 'Carrinho' com self.itens = [] no __init__. Adicione 'adicionar(self, item)' e 'total_itens(self)' retornando len(self.itens).",
+      "codeSkeleton": "# Crie a classe Carrinho abaixo\n",
+      "visibleTestCase": "c = Carrinho(); c.adicionar('maçã'); c.total_itens() deve ser 1",
+      "testAssertions": "c = Carrinho()\nc.adicionar(\"maçã\")\nassert c.total_itens() == 1, \"Total de itens incorreto\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "self.itens.append(item) em adicionar."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "class Carrinho:\n    def __init__(self):\n        self.itens = []\n    def adicionar(self, item):\n        self.itens.append(item)\n    def total_itens(self):\n        return len(self.itens)",
+          "codeSnippet": "class Carrinho:\n    def __init__(self):\n        self.itens = []\n    def adicionar(self, item):\n        self.itens.append(item)\n    def total_itens(self):\n        return len(self.itens)"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Crie self.itens = []",
+            "2. Adicione os métodos adicionar e total_itens"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["poo", "composição"]
+    },
+    {
+      "id": "c9_e08",
+      "number": 8,
+      "title": "Contador de Instâncias (Atributo de Classe)",
+      "description": "Utilize atributos de classe compartilhados por todas as instâncias.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Atributo de Classe",
+      "instructions": "Crie a classe 'Usuario' com atributo de classe total_usuarios = 0. No __init__, incremente Usuario.total_usuarios += 1.",
+      "codeSkeleton": "# Crie a classe Usuario com atributo de classe total_usuarios abaixo\n",
+      "visibleTestCase": "Criar 2 objetos Usuario deve fazer Usuario.total_usuarios == 2",
+      "testAssertions": "Usuario.total_usuarios = 0\nu1 = Usuario()\nu2 = Usuario()\nassert Usuario.total_usuarios == 2, f\"Esperado 2, recebido {Usuario.total_usuarios}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Declare total_usuarios = 0 fora do __init__ dentro da classe."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "class Usuario:\n    total_usuarios = 0\n    def __init__(self):\n        Usuario.total_usuarios += 1",
+          "codeSnippet": "class Usuario:\n    total_usuarios = 0\n    def __init__(self):\n        Usuario.total_usuarios += 1"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Declare total_usuarios = 0",
+            "2. No __init__, faça Usuario.total_usuarios += 1"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["poo", "atributo-classe"]
+    },
+    {
+      "id": "c9_e09",
+      "number": 9,
+      "title": "Comparador de Objetos com __eq__",
+      "description": "Sobrescreva o operador de igualdade == para objetos.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Método Especial __eq__",
+      "instructions": "Na classe 'Ponto(x, y)', adicione __eq__(self, outro) retornando True se self.x == outro.x e self.y == outro.y.",
+      "codeSkeleton": "# Crie Ponto com __eq__ abaixo\n",
+      "visibleTestCase": "Ponto(1, 2) == Ponto(1, 2) deve retornar True",
+      "testAssertions": "assert Ponto(1, 2) == Ponto(1, 2), \"Pontos iguais devem ser True\"\nassert not (Ponto(1, 2) == Ponto(2, 1)), \"Pontos diferentes devem ser False\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "def __eq__(self, outro): return self.x == outro.x and self.y == outro.y"
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "class Ponto:\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n    def __eq__(self, outro):\n        return self.x == outro.x and self.y == outro.y",
+          "codeSnippet": "class Ponto:\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n    def __eq__(self, outro):\n        return self.x == outro.x and self.y == outro.y"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Implemente __eq__(self, outro) comparando x e y"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["poo", "eq"]
+    },
+    {
+      "id": "c9_e10",
+      "number": 10,
+      "title": "Sistema Bancário Completo (Saque e Depósito)",
+      "description": "Construa uma classe de conta com validação de saldo insuficiente.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Regras de Negócio em Objeto",
+      "instructions": "Crie a classe 'ContaBancaria(saldo_inicial)': métodos 'depositar(valor)', 'sacar(valor)' (retorna True se saldo >= valor e deduz, senão False sem deduzir) e 'saldo' (retorna o saldo).",
+      "codeSkeleton": "# Crie ContaBancaria abaixo\n",
+      "visibleTestCase": "c = ContaBancaria(100); c.sacar(150) deve retornar False e manter saldo 100",
+      "testAssertions": "c = ContaBancaria(100.0)\nassert c.sacar(150.0) is False and c.saldo() == 100.0, \"Saque indevido permitido\"\nassert c.sacar(40.0) is True and c.saldo() == 60.0, \"Saque válido falhou\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "No sacar, verifique se self._saldo >= valor antes de subtrair."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "class ContaBancaria:\n    def __init__(self, saldo_inicial=0.0):\n        self._saldo = saldo_inicial\n    def depositar(self, valor):\n        self._saldo += valor\n    def sacar(self, valor):\n        if self._saldo >= valor:\n            self._saldo -= valor\n            return True\n        return False\n    def saldo(self):\n        return self._saldo",
+          "codeSnippet": "class ContaBancaria:\n    def __init__(self, saldo_inicial=0.0):\n        self._saldo = saldo_inicial\n    def depositar(self, valor):\n        self._saldo += valor\n    def sacar(self, valor):\n        if self._saldo >= valor:\n            self._saldo -= valor\n            return True\n        return False\n    def saldo(self):\n        return self._saldo"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Implemente __init__, depositar, sacar e saldo"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "banco", "poo"]
+    },
+    {
+      "id": "c9_e11",
+      "number": 11,
+      "title": "Polimorfismo com Lista de Formas",
+      "description": "Execute o mesmo método em objetos de classes diferentes.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Polimorfismo",
+      "instructions": "Crie 'Quadrado(lado)' com area() e 'Circulo(raio)' com area() (3.14 * raio**2). Crie 'total_areas(formas)' que retorne a soma das áreas de uma lista de formas.",
+      "codeSkeleton": "# Crie Quadrado, Circulo e a função total_areas abaixo\n",
+      "visibleTestCase": "total_areas([Quadrado(2), Circulo(1)]) deve ser 4 + 3.14 = 7.14",
+      "testAssertions": "assert abs(total_areas([Quadrado(2), Circulo(1)]) - 7.14) < 0.01, \"Cálculo incorreto\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "total_areas faz sum(f.area() for f in formas)."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "class Quadrado:\n    def __init__(self, lado):\n        self.lado = lado\n    def area(self):\n        return self.lado ** 2\n\nclass Circulo:\n    def __init__(self, raio):\n        self.raio = raio\n    def area(self):\n        return 3.14 * (self.raio ** 2)\n\ndef total_areas(formas):\n    return sum(f.area() for f in formas)",
+          "codeSnippet": "class Quadrado:\n    def __init__(self, lado):\n        self.lado = lado\n    def area(self):\n        return self.lado ** 2\n\nclass Circulo:\n    def __init__(self, raio):\n        self.raio = raio\n    def area(self):\n        return 3.14 * (self.raio ** 2)\n\ndef total_areas(formas):\n    return sum(f.area() for f in formas)"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Implemente as duas classes e a função sum"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "polimorfismo"]
+    },
+    {
+      "id": "c9_e12",
+      "number": 12,
+      "title": "Propriedade @property e Setter",
+      "description": "Utilize o decorador @property para criar getters e setters pythônicos.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Decorador @property",
+      "instructions": "Crie 'Temperatura(celsius)' com @property celsius retornando self._celsius, e @celsius.setter que impeça valores menores que -273.15 (lançando ValueError).",
+      "codeSkeleton": "# Crie Temperatura com @property celsius abaixo\n",
+      "visibleTestCase": "Temperatura(25).celsius deve ser 25",
+      "testAssertions": "t = Temperatura(25)\nassert t.celsius == 25, \"Celsius incorreto\"\ntry:\n    t.celsius = -300\n    assert False, \"Deveria lançar ValueError\"\nexcept ValueError:\n    pass\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Use @property para celsius e @celsius.setter para o validador."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "class Temperatura:\n    def __init__(self, celsius):\n        self.celsius = celsius\n    @property\n    def celsius(self):\n        return self._celsius\n    @celsius.setter\n    def celsius(self, valor):\n        if valor < -273.15:\n            raise ValueError(\"Temperatura abaixo do zero absoluto!\")\n        self._celsius = valor",
+          "codeSnippet": "class Temperatura:\n    def __init__(self, celsius):\n        self.celsius = celsius\n    @property\n    def celsius(self):\n        return self._celsius\n    @celsius.setter\n    def celsius(self, valor):\n        if valor < -273.15:\n            raise ValueError(\"Temperatura abaixo do zero absoluto!\")\n        self._celsius = valor"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Implemente @property e @celsius.setter"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["property", "decorador"]
     }
   ]
 }

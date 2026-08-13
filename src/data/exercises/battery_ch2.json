@@ -5,35 +5,333 @@
     {
       "id": "c2_e01",
       "number": 1,
-      "title": "Exercício Demonstrativo Cap 2",
-      "description": "Exercício prático do Capítulo 2",
+      "title": "Boas-Vindas Personalizadas",
+      "description": "f-strings permitem intercalar texto fixo com valores de variáveis de forma limpa e direta.",
       "difficulty": "Fácil",
       "xpReward": 10,
-      "concept": "Conceito Principal",
-      "instructions": "Exiba 'Capitulo 2' na tela usando print()",
-      "codeSkeleton": "# Escreva seu código abaixo\n",
-      "visibleTestCase": "Saída deve conter: Capitulo 2",
-      "testAssertions": "import sys\noutput = sys.stdout.getvalue().strip()\nassert \"Capitulo 2\" in output\n",
+      "concept": "f-string Básica",
+      "instructions": "Dada a variável usuario = \"Maria\", crie uma variável chamada 'mensagem' com o valor de f\"Bem-vindo, {usuario}!\"",
+      "codeSkeleton": "usuario = \"Maria\"\n# Crie a variável mensagem usando f-string abaixo\n",
+      "visibleTestCase": "mensagem deve ser igual a 'Bem-vindo, Maria!'",
+      "testAssertions": "assert 'mensagem' in locals() or 'mensagem' in globals(), \"Variável 'mensagem' não encontrada.\"\nassert mensagem == \"Bem-vindo, Maria!\", f\"Esperado 'Bem-vindo, Maria!', recebido: '{mensagem}'\"\n",
       "hints": {
         "level1": {
-          "title": "💡 Intuição",
-          "content": "Use o print()"
+          "title": "💡 Intuição Lógica",
+          "content": "Use a letra 'f' antes das aspas para ativar a f-string."
         },
         "level2": {
-          "title": "🐍 Recurso",
-          "content": "print(\"Capitulo 2\")"
+          "title": "🐍 Recurso Python",
+          "content": "Insira o nome da variável entre chaves: f\"Texto {usuario}!\"",
+          "codeSnippet": "mensagem = f\"Bem-vindo, {usuario}!\""
         },
         "level3": {
-          "title": "🗺️ Passo a Passo",
+          "title": "🗺️ Passo a Passo do Algoritmo",
           "steps": [
-            "1. Escreva print(\"Capitulo 2\")"
+            "1. Escreva mensagem =",
+            "2. Coloque f\"Bem-vindo, {usuario}!\""
           ],
           "xpPenaltyPercent": 10
         }
       },
-      "tags": [
-        "demo"
-      ]
+      "tags": ["f-string", "string"]
+    },
+    {
+      "id": "c2_e02",
+      "number": 2,
+      "title": "Dobro do Número",
+      "description": "Para realizar operações numéricas com valores lidos, convertemos a String para inteiro usando int().",
+      "difficulty": "Fácil",
+      "xpReward": 10,
+      "concept": "Casting com int()",
+      "instructions": "Dada a variável texto = \"15\", crie a variável 'dobro' que contenha o valor numérico convertido multiplicado por 2.",
+      "codeSkeleton": "texto = \"15\"\n# Converta texto para int e calcule o dobro abaixo\n",
+      "visibleTestCase": "dobro deve ser igual ao número 30 (tipo int)",
+      "testAssertions": "assert dobro == 30, f\"Esperado 30, recebido {dobro}\"\nassert type(dobro) == int, \"dobro deve ser um número inteiro\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Converta a string em int primeiro e depois multiplique por 2."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "Em Python: int(texto) * 2",
+          "codeSnippet": "dobro = int(texto) * 2"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva dobro =",
+            "2. Façao casting int(texto) e multiplique por 2"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["casting", "int"]
+    },
+    {
+      "id": "c2_e03",
+      "number": 3,
+      "title": "Calculadora de Idade Futura",
+      "description": "Formatação f-string permite realizar expressões matemáticas diretamente dentro das chaves {}.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Expressões em f-strings",
+      "instructions": "Dada a variável idade = 20, crie uma frase na variável 'frase' que diga: f\"Em 10 anos você terá {idade + 10} anos.\"",
+      "codeSkeleton": "idade = 20\n# Crie a frase abaixo\n",
+      "visibleTestCase": "frase deve ser: 'Em 10 anos você terá 30 anos.'",
+      "testAssertions": "assert frase == \"Em 10 anos você terá 30 anos.\", f\"Recebido '{frase}'\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Você pode somar 10 diretamente dentro das chaves {idade + 10}."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "Expressões são calculadas automaticamente dentro das chaves de uma f-string.",
+          "codeSnippet": "frase = f\"Em 10 anos você terá {idade + 10} anos.\""
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Defina frase =",
+            "2. Escreva f\"Em 10 anos você terá {idade + 10} anos.\""
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["f-string", "expressão"]
+    },
+    {
+      "id": "c2_e04",
+      "number": 4,
+      "title": "Média de Duas Notas",
+      "description": "Valores decimais exigem conversão para float() para não perder os centésimos.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Casting com float()",
+      "instructions": "Dadas n1_str = \"7.5\" e n2_str = \"8.5\", converta ambas para float e crie a variável 'media' com o valor médio.",
+      "codeSkeleton": "n1_str = \"7.5\"\nn2_str = \"8.5\"\n# Calcule a media abaixo\n",
+      "visibleTestCase": "media deve ser igual ao float 8.0",
+      "testAssertions": "assert media == 8.0, f\"Média esperada 8.0, recebido {media}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Converta cada string com float() e divida a soma por 2."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "Use parênteses na soma para garantir a ordem das operações: (float(n1_str) + float(n2_str)) / 2",
+          "codeSnippet": "media = (float(n1_str) + float(n2_str)) / 2"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Converta n1_str e n2_str para float",
+            "2. Somar os dois e dividir por 2",
+            "3. Atribuir o resultado a media"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["float", "média"]
+    },
+    {
+      "id": "c2_e05",
+      "number": 5,
+      "title": "Formatação de Moeda",
+      "description": "Formatação numérica com :.2f permite exibir valores financeiros com 2 casas decimais.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Formatação :.2f",
+      "instructions": "Dado o valor preco = 49.9, crie a variável 'exibicao' contendo f\"Preço: R$ {preco:.2f}\".",
+      "codeSkeleton": "preco = 49.9\n# Crie a variável exibicao abaixo\n",
+      "visibleTestCase": "exibicao deve ser exatamente 'Preço: R$ 49.90'",
+      "testAssertions": "assert exibicao == \"Preço: R$ 49.90\", f\"Esperado 'Preço: R$ 49.90', recebido '{exibicao}'\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "O modificador :.2f adiciona o zero restante no final."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "Use f\"Preço: R$ {preco:.2f}\"",
+          "codeSnippet": "exibicao = f\"Preço: R$ {preco:.2f}\""
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva exibicao =",
+            "2. Coloque o formato f\"Preço: R$ {preco:.2f}\""
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["f-string", "moeda"]
+    },
+    {
+      "id": "c2_e06",
+      "number": 6,
+      "title": "Tamanho do Texto com len()",
+      "description": "A função len() retorna a quantidade de caracteres de uma String.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Função len()",
+      "instructions": "Dada a variável cidade = \"Florianópolis\", crie a variável 'tamanho' com a contagem de caracteres da string.",
+      "codeSkeleton": "cidade = \"Florianópolis\"\n# Crie a variável tamanho abaixo\n",
+      "visibleTestCase": "tamanho deve ser igual a 13",
+      "testAssertions": "assert tamanho == 13, f\"Esperado 13, recebido {tamanho}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Conte os caracteres usando a função nativa len()."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "tamanho = len(cidade)",
+          "codeSnippet": "tamanho = len(cidade)"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva tamanho =",
+            "2. Chame len(cidade)"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["len", "string"]
+    },
+    {
+      "id": "c2_e07",
+      "number": 7,
+      "title": "Texto em Maiúsculas e Minúsculas",
+      "description": "Strings possuem os métodos .upper() e .lower() para transformação de caixa.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Métodos .upper() e .lower()",
+      "instructions": "Dada a variável sigla = \"python\", crie a variável 'maiuscula' que receba o texto em letras maiúsculas.",
+      "codeSkeleton": "sigla = \"python\"\n# Crie a variável maiuscula abaixo\n",
+      "visibleTestCase": "maiuscula deve ser igual a 'PYTHON'",
+      "testAssertions": "assert maiuscula == \"PYTHON\", f\"Esperado 'PYTHON', recebido '{maiuscula}'\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Chame o método .upper() na string sigla."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "maiuscula = sigla.upper()",
+          "codeSnippet": "maiuscula = sigla.upper()"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva maiuscula =",
+            "2. Aplique sigla.upper()"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["string", "upper"]
+    },
+    {
+      "id": "c2_e08",
+      "number": 8,
+      "title": "Removendo Espaços em Branco",
+      "description": "O método .strip() remove espaços extras no início e no final de textos.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Método .strip()",
+      "instructions": "Dado o texto entrada = \"   admin   \", crie a variável 'limpo' que armazene o texto sem espaços nas pontas.",
+      "codeSkeleton": "entrada = \"   admin   \"\n# Crie a variável limpo abaixo\n",
+      "visibleTestCase": "limpo deve ser exatamente 'admin'",
+      "testAssertions": "assert limpo == \"admin\", f\"Esperado 'admin', recebido '{limpo}'\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Limpe os espaços com .strip()."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "limpo = entrada.strip()",
+          "codeSnippet": "limpo = entrada.strip()"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva limpo =",
+            "2. Chame entrada.strip()"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["string", "strip"]
+    },
+    {
+      "id": "c2_e09",
+      "number": 9,
+      "title": "Substituindo Caracteres",
+      "description": "O método .replace(antigo, novo) substitui trechos de uma string.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Método .replace()",
+      "instructions": "Dada a frase = \"Eu amo Java\", crie a variável 'corrigido' substituindo \"Java\" por \"Python\".",
+      "codeSkeleton": "frase = \"Eu amo Java\"\n# Crie a variável corrigido abaixo\n",
+      "visibleTestCase": "corrigido deve ser igual a 'Eu amo Python'",
+      "testAssertions": "assert corrigido == \"Eu amo Python\", f\"Esperado 'Eu amo Python', recebido '{corrigido}'\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Use o método .replace() passando a palavra antiga e a nova palavra."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "corrigido = frase.replace(\"Java\", \"Python\")",
+          "codeSnippet": "corrigido = frase.replace(\"Java\", \"Python\")"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva corrigido =",
+            "2. Aplique frase.replace(\"Java\", \"Python\")"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["string", "replace"]
+    },
+    {
+      "id": "c2_e10",
+      "number": 10,
+      "title": "Gerador de Email Pythônico",
+      "description": "Combine métodos de string e f-strings para construir um formatador automatizado.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Desafio Integrador de Strings",
+      "instructions": "Dados nome = \" Maria \", sobrenome = \" Silva \", crie a variável 'email' que deve conter 'maria.silva@pylingo.com' (sem espaços e em minúsculas).",
+      "codeSkeleton": "nome = \" Maria \"\nsobrenome = \" Silva \"\n# Crie a variável email limpa e formatada abaixo\n",
+      "visibleTestCase": "email deve ser exatamente 'maria.silva@pylingo.com'",
+      "testAssertions": "assert email == \"maria.silva@pylingo.com\", f\"Esperado 'maria.silva@pylingo.com', recebido '{email}'\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Limpe os espaços com .strip(), converta para minúsculas com .lower() e monte o email com f-string."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "n = nome.strip().lower(); s = sobrenome.strip().lower(); email = f\"{n}.{s}@pylingo.com\"",
+          "codeSnippet": "n = nome.strip().lower()\ns = sobrenome.strip().lower()\nemail = f\"{n}.{s}@pylingo.com\""
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Aplique .strip().lower() a nome e sobrenome",
+            "2. Monte com f-string: f\"{n}.{s}@pylingo.com\""
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "string", "f-string"]
     }
   ]
 }

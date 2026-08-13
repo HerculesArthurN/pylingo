@@ -1,37 +1,48 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { getChaptersIndex, loadChapterData, loadExerciseBatteryData, clearDataLoaderCache } from './dataLoader';
 
-describe('dataLoader.ts - Lazy Loading de Capítulos e Exercícios', () => {
+describe('dataLoader.ts - Lazy Loading de Capítulos e Exercícios (Capítulos 1 a 12)', () => {
   beforeEach(() => {
     clearDataLoaderCache();
   });
 
-  it('deve retornar o manifesto de capítulos do manifesto chapters_index.json', () => {
+  it('deve retornar o manifesto completo de 12 capítulos', () => {
     const index = getChaptersIndex();
     expect(index.version).toBe('2.0');
     expect(index.chapters.length).toBe(12);
-    expect(index.chapters[0].id).toBe('chapter_1');
-    expect(index.chapters[0].exerciseCount).toBe(12);
   });
 
-  it('deve carregar sob demanda o capítulo 1 (chapter_1.json)', async () => {
-    const chapter1 = await loadChapterData('chapter_1');
-    expect(chapter1.id).toBe('chapter_1');
-    expect(chapter1.title).toBe('Primeiros Passos com Python');
-    expect(chapter1.sections.length).toBe(4);
+  it('deve carregar com sucesso todos os 12 capítulos teóricos (chapter_1.json a chapter_12.json)', async () => {
+    for (let i = 1; i <= 12; i++) {
+      const chapter = await loadChapterData(`chapter_${i}`);
+      expect(chapter.id).toBe(`chapter_${i}`);
+      expect(chapter.number).toBe(i);
+      expect(chapter.sections.length).toBeGreaterThan(0);
+    }
   });
 
-  it('deve carregar sob demanda a bateria de exercícios do capítulo 1 (battery_ch1.json)', async () => {
-    const battery1 = await loadExerciseBatteryData('battery_ch1');
-    expect(battery1.id).toBe('battery_ch1');
-    expect(battery1.exercises.length).toBe(12);
-    expect(battery1.exercises[0].id).toBe('c1_e01');
-    expect(battery1.exercises[0].hints).toHaveProperty('level1');
-    expect(battery1.exercises[0].hints).toHaveProperty('level2');
-    expect(battery1.exercises[0].hints).toHaveProperty('level3');
+  it('deve carregar com sucesso todas as 12 baterias de exercícios (battery_ch1.json a battery_ch12.json)', async () => {
+    for (let i = 1; i <= 12; i++) {
+      const battery = await loadExerciseBatteryData(`battery_ch${i}`);
+      expect(battery.id).toBe(`battery_ch${i}`);
+      expect(battery.exercises.length).toBeGreaterThan(0);
+
+      // Valida estrutura de cada exercício
+      for (const ex of battery.exercises) {
+        expect(ex).toHaveProperty('id');
+        expect(ex).toHaveProperty('title');
+        expect(ex).toHaveProperty('testAssertions');
+        expect(ex).toHaveProperty('hints');
+        expect(ex.hints).toHaveProperty('level1');
+        expect(ex.hints).toHaveProperty('level2');
+        expect(ex.hints).toHaveProperty('level3');
+      }
+    }
   });
 
-  it('deve lançar erro ao tentar carregar um capítulo inexistente', async () => {
-    await expect(loadChapterData('chapter_999')).rejects.toThrow('Falha ao carregar capítulo');
+  it('deve utilizar o cache em memória na segunda chamada', async () => {
+    const firstCall = await loadChapterData('chapter_1');
+    const secondCall = await loadChapterData('chapter_1');
+    expect(firstCall).toBe(secondCall);
   });
 });

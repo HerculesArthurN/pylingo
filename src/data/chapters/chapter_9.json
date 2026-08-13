@@ -1,24 +1,88 @@
 {
   "id": "chapter_9",
   "number": 9,
-  "title": "Capítulo 9",
-  "subtitle": "Conteúdo em desenvolvimento para o capítulo 9",
-  "icon": "BookOpen",
-  "color": "emerald",
-  "estimatedMinutes": 15,
+  "title": "POO: Classes e Objetos",
+  "subtitle": "Abstração, encapusameto e herança pythônica",
+  "icon": "Box",
+  "color": "rose",
+  "estimatedMinutes": 20,
   "exerciseBatteryId": "battery_ch9",
-  "prerequisites": [
-    "chapter_8"
-  ],
+  "prerequisites": ["chapter_8"],
   "sections": [
     {
       "id": "ch9_sec1",
-      "title": "1. Introdução ao Capítulo 9",
+      "title": "1. O que é Programação Orientada a Objetos?",
       "order": 1,
       "content": [
         {
           "type": "text",
-          "content": "Em breve: conteúdo interativo do capítulo 9."
+          "content": "A Programação Orientada a Objetos (POO) é um paradigma que modela elementos do mundo real como objetos de código com atributos (características) e métodos (ações)."
+        },
+        {
+          "type": "analogy",
+          "title": "A Planta Arquitetônica e a Casa",
+          "emoji": "📐",
+          "content": "Uma **Classe** é como a planta arquitetônica de uma casa. O **Objeto** é a casa física construída a partir dessa planta! Você pode construir 10 casas (objetos) usando uma única planta (classe)."
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "class Carro:\n    def __init__(self, modelo, cor):\n        self.modelo = modelo # Atributo\n        self.cor = cor       # Atributo\n\n# Instanciando objetos\nmeu_carro = Carro(\"Fusca\", \"Azul\")\nprint(meu_carro.modelo) # 'Fusca'"
+        },
+        {
+          "type": "callout",
+          "variant": "pythonic",
+          "content": "🐍 **O Mágico __init__ e self**: `__init__` é o método construtor chamado automaticamente na criação do objeto. `self` representa a própria instância do objeto sendo configurada!"
+        }
+      ]
+    },
+    {
+      "id": "ch9_sec2",
+      "title": "2. Métodos de Instância",
+      "order": 2,
+      "content": [
+        {
+          "type": "text",
+          "content": "Métodos são funções declaradas dentro da classe que operam sobre os dados do próprio objeto."
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "class ContaBancaria:\n    def __init__(self, titular, saldo=0.0):\n        self.titular = titular\n        self.saldo = saldo\n\n    def depositar(self, valor):\n        self.saldo += valor\n        return self.saldo\n\nconta = ContaBancaria(\"Ana\", 100.0)\nconta.depositar(50.0)\nprint(f\"Saldo atual: R$ {conta.saldo:.2f}\") # 150.00"
+        },
+        {
+          "type": "interactive_code",
+          "code": "class Cachorro:\n    def __init__(self, nome):\n        self.nome = nome\n    def latir(self):\n        return f\"{self.nome} diz: Au Au!\"\n\npet = Cachorro(\"Rex\")\nprint(pet.latir())",
+          "editable": true,
+          "runnable": true
+        }
+      ]
+    },
+    {
+      "id": "ch9_sec3",
+      "title": "3. Herança e super()",
+      "order": 3,
+      "content": [
+        {
+          "type": "text",
+          "content": "Herança permite criar novas classes baseadas em classes existentes, reaproveitando código e estendendo comportamentos."
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "class Animal:\n    def __init__(self, nome):\n        self.nome = nome\n\nclass Gato(Animal):\n    def miar(self):\n        return f\"{self.nome} faz Miau!\"\n\nbichano = Gato(\"Mingau\")\nprint(bichano.miar())"
+        },
+        {
+          "type": "quiz",
+          "question": "Como uma classe filha chama o método __init__ da classe mãe em Python?",
+          "options": [
+            "parent.__init__()",
+            "super().__init__()",
+            "base.__init__()",
+            "this.__init__()"
+          ],
+          "correctIndex": 1,
+          "explanation": "Usamos super().__init__() para invocar o construtor da classe pai/mãe."
         }
       ]
     }

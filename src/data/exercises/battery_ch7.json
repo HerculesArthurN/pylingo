@@ -5,35 +5,393 @@
     {
       "id": "c7_e01",
       "number": 1,
-      "title": "Exercício Demonstrativo Cap 7",
-      "description": "Exercício prático do Capítulo 7",
+      "title": "Acessando Elementos por Índice",
+      "description": "Acesse o primeiro e o último elemento de uma lista usando índices.",
       "difficulty": "Fácil",
       "xpReward": 10,
-      "concept": "Conceito Principal",
-      "instructions": "Exiba 'Capitulo 7' na tela usando print()",
-      "codeSkeleton": "# Escreva seu código abaixo\n",
-      "visibleTestCase": "Saída deve conter: Capitulo 7",
-      "testAssertions": "import sys\noutput = sys.stdout.getvalue().strip()\nassert \"Capitulo 7\" in output\n",
+      "concept": "Indexação em Listas",
+      "instructions": "Dada notas = [8.5, 9.0, 7.5, 10.0], crie a variável 'primeira_nota' com notas[0] e 'ultima_nota' com notas[-1].",
+      "codeSkeleton": "notas = [8.5, 9.0, 7.5, 10.0]\n# Crie primeira_nota e ultima_nota abaixo\n",
+      "visibleTestCase": "primeira_nota deve ser 8.5 e ultima_nota deve ser 10.0",
+      "testAssertions": "assert primeira_nota == 8.5, f\"primeira_nota esperada 8.5, recebida {primeira_nota}\"\nassert ultima_nota == 10.0, f\"ultima_nota esperada 10.0, recebida {ultima_nota}\"\n",
       "hints": {
         "level1": {
-          "title": "💡 Intuição",
-          "content": "Use o print()"
+          "title": "💡 Intuição Lógica",
+          "content": "notas[0] pega o primeiro item e notas[-1] o último."
         },
         "level2": {
-          "title": "🐍 Recurso",
-          "content": "print(\"Capitulo 7\")"
+          "title": "🐍 Recurso Python",
+          "content": "primeira_nota = notas[0]\nultima_nota = notas[-1]",
+          "codeSnippet": "primeira_nota = notas[0]\nultima_nota = notas[-1]"
         },
         "level3": {
-          "title": "🗺️ Passo a Passo",
+          "title": "🗺️ Passo a Passo do Algoritmo",
           "steps": [
-            "1. Escreva print(\"Capitulo 7\")"
+            "1. primeira_nota = notas[0]",
+            "2. ultima_nota = notas[-1]"
           ],
           "xpPenaltyPercent": 10
         }
       },
-      "tags": [
-        "demo"
-      ]
+      "tags": ["lista", "índice"],
+      "legacyId": "f3_l1"
+    },
+    {
+      "id": "c7_e02",
+      "number": 2,
+      "title": "Adicionando Elementos com append()",
+      "description": "Utilize o método .append() para alterar a lista.",
+      "difficulty": "Fácil",
+      "xpReward": 10,
+      "concept": "Método .append()",
+      "instructions": "Dada a lista linguagens = [\"Python\", \"C++\"], adicione o texto \"JavaScript\" ao final da lista usando .append().",
+      "codeSkeleton": "linguagens = [\"Python\", \"C++\"]\n# Adicione 'JavaScript' usando .append() abaixo\n",
+      "visibleTestCase": "linguagens deve conter ['Python', 'C++', 'JavaScript']",
+      "testAssertions": "assert linguagens == [\"Python\", \"C++\", \"JavaScript\"], f\"Recebido {linguagens}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Chame linguagens.append(\"JavaScript\")."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "linguagens.append(\"JavaScript\")",
+          "codeSnippet": "linguagens.append(\"JavaScript\")"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva linguagens.append(\"JavaScript\")"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["lista", "append"],
+      "legacyId": "f3_l2"
+    },
+    {
+      "id": "c7_e03",
+      "number": 3,
+      "title": "Fatiando Sublistas (Slicing)",
+      "description": "Extraia partes de uma lista usando a sintaxe [inicio:fim].",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Slicing de Listas",
+      "instructions": "Dada numeros = [0, 10, 20, 30, 40, 50], crie a sublista 'meio' com os elementos [10, 20, 30] usando slicing.",
+      "codeSkeleton": "numeros = [0, 10, 20, 30, 40, 50]\n# Crie meio com slicing abaixo\n",
+      "visibleTestCase": "meio deve ser igual a [10, 20, 30]",
+      "testAssertions": "assert meio == [10, 20, 30], f\"Esperado [10, 20, 30], recebido {meio}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "10 está no índice 1 e 30 está no índice 3 (o limite superior deve ser 4!)."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "meio = numeros[1:4]",
+          "codeSnippet": "meio = numeros[1:4]"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva meio = numeros[1:4]"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["slicing", "lista"]
+    },
+    {
+      "id": "c7_e04",
+      "number": 4,
+      "title": "Removendo e Ordenando",
+      "description": "Utilize .pop() para remover e .sort() para ordenar.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Métodos .pop() e .sort()",
+      "instructions": "Dada a lista desordenada = [5, 2, 9, 1], ordene a lista com .sort() e em seguida remova o maior número com .pop(), armazenando-o em 'removido'.",
+      "codeSkeleton": "desordenada = [5, 2, 9, 1]\n# Ordene e faça o pop abaixo\n",
+      "visibleTestCase": "removido deve ser 9 e desordenada deve restar [1, 2, 5]",
+      "testAssertions": "assert desordenada == [1, 2, 5], f\"desordenada esperada [1, 2, 5], recebida {desordenada}\"\nassert removido == 9, f\"removido esperado 9, recebido {removido}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Primeiro desordenada.sort(), depois removido = desordenada.pop()."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "desordenada.sort()\nremovido = desordenada.pop()",
+          "codeSnippet": "desordenada.sort()\nremovido = desordenada.pop()"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Execute desordenada.sort()",
+            "2. Atribua removido = desordenada.pop()"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["sort", "pop"]
+    },
+    {
+      "id": "c7_e05",
+      "number": 5,
+      "title": "Compreensão de Listas Simples",
+      "description": "Crie uma nova lista com os quadrados usando list comprehension.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "List Comprehension Básica",
+      "instructions": "Dada base = [1, 2, 3, 4], crie 'quadrados' com [x ** 2 for x in base].",
+      "codeSkeleton": "base = [1, 2, 3, 4]\n# Crie quadrados usando list comprehension abaixo\n",
+      "visibleTestCase": "quadrados deve ser [1, 4, 9, 16]",
+      "testAssertions": "assert quadrados == [1, 4, 9, 16], f\"Recebido {quadrados}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Sintaxe: [x ** 2 for x in base]"
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "quadrados = [x ** 2 for x in base]",
+          "codeSnippet": "quadrados = [x ** 2 for x in base]"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva quadrados = [x ** 2 for x in base]"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["list-comprehension", "pythonic"],
+      "legacyId": "f3_l4"
+    },
+    {
+      "id": "c7_e06",
+      "number": 6,
+      "title": "Tupla Inalterável",
+      "description": "Acesse valores de uma tupla imutável.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Tupla imutável",
+      "instructions": "Dada a tupla dimensoes = (1920, 1080), crie 'largura' com dimensoes[0] e 'altura' com dimensoes[1].",
+      "codeSkeleton": "dimensoes = (1920, 1080)\n# Crie largura e altura abaixo\n",
+      "visibleTestCase": "largura deve ser 1920 e altura 1080",
+      "testAssertions": "assert largura == 1920, f\"largura esperada 1920, recebida {largura}\"\nassert altura == 1080, f\"altura esperada 1080, recebida {altura}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Acesse tuplas pelos índices 0 e 1."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "largura = dimensoes[0]\naltura = dimensoes[1]",
+          "codeSnippet": "largura = dimensoes[0]\naltura = dimensoes[1]"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. largura = dimensoes[0]",
+            "2. altura = dimensoes[1]"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["tupla"]
+    },
+    {
+      "id": "c7_e07",
+      "number": 7,
+      "title": "List Comprehension com Filtro",
+      "description": "Filtre números maiores que 10 em uma compreensão de listas.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "List Comprehension com if",
+      "instructions": "Dada dados = [5, 12, 8, 20, 3, 15], crie 'maiores' com [x for x in dados if x > 10].",
+      "codeSkeleton": "dados = [5, 12, 8, 20, 3, 15]\n# Crie maiores usando list comprehension com filtro if abaixo\n",
+      "visibleTestCase": "maiores deve ser [12, 20, 15]",
+      "testAssertions": "assert maiores == [12, 20, 15], f\"Recebido {maiores}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Adicione 'if x > 10' no final da list comprehension."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "maiores = [x for x in dados if x > 10]",
+          "codeSnippet": "maiores = [x for x in dados if x > 10]"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva maiores = [x for x in dados if x > 10]"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["list-comprehension", "filtro"]
+    },
+    {
+      "id": "c7_e08",
+      "number": 8,
+      "title": "Desempacotamento de Tupla (Unpacking)",
+      "description": "Atribua os valores de uma tupla diretamente a múltiplas variáveis.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Unpacking Pythônico",
+      "instructions": "Dada ponto = (10, 20, 30), faça o desempacotamento direto 'x, y, z = ponto' em uma única linha.",
+      "codeSkeleton": "ponto = (10, 20, 30)\n# Faça o desempacotamento x, y, z abaixo\n",
+      "visibleTestCase": "x deve ser 10, y deve ser 20, z deve ser 30",
+      "testAssertions": "assert x == 10 and y == 20 and z == 30, f\"Valores: x={x}, y={y}, z={z}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Escreva x, y, z = ponto."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "x, y, z = ponto",
+          "codeSnippet": "x, y, z = ponto"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva x, y, z = ponto"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["unpacking", "tupla"]
+    },
+    {
+      "id": "c7_e09",
+      "number": 9,
+      "title": "Inverter Lista sem Alterar a Original",
+      "description": "Utilize o método reversed() ou slicing [::-1] para criar uma nova lista invertida.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Cópia Invertida",
+      "instructions": "Dada original = [\"A\", \"B\", \"C\"], crie 'copia_invertida' com a versão invertida sem alterar 'original'.",
+      "codeSkeleton": "original = [\"A\", \"B\", \"C\"]\n# Crie copia_invertida abaixo\n",
+      "visibleTestCase": "copia_invertida deve ser ['C', 'B', 'A'] e original mantida ['A', 'B', 'C']",
+      "testAssertions": "assert copia_invertida == [\"C\", \"B\", \"A\"], f\"Recebido {copia_invertida}\"\nassert original == [\"A\", \"B\", \"C\"], \"original não deve ser modificada\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Use original[::-1] ou list(reversed(original))."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "copia_invertida = original[::-1]",
+          "codeSnippet": "copia_invertida = original[::-1]"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva copia_invertida = original[::-1]"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["slicing", "cópia"]
+    },
+    {
+      "id": "c7_e10",
+      "number": 10,
+      "title": "Removendo Duplicatas com Preservação",
+      "description": "Construa uma lista contendo apenas elementos únicos mantendo a ordem inicial.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Eliminação de Duplicatas",
+      "instructions": "Dada repetidos = [1, 2, 2, 3, 4, 4, 1, 5], crie a lista 'unicos' com [1, 2, 3, 4, 5] mantendo a ordem da primeira aparição.",
+      "codeSkeleton": "repetidos = [1, 2, 2, 3, 4, 4, 1, 5]\nunicos = []\n# Preencha unicos sem repetir elementos usando um loop abaixo\n",
+      "visibleTestCase": "unicos deve conter [1, 2, 3, 4, 5]",
+      "testAssertions": "assert unicos == [1, 2, 3, 4, 5], f\"Recebido {unicos}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Itere sobre repetidos e faça append se o item not in unicos."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "for item in repetidos:\n    if item not in unicos:\n        unicos.append(item)",
+          "codeSnippet": "for item in repetidos:\n    if item not in unicos:\n        unicos.append(item)"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. for item in repetidos:",
+            "2. if item not in unicos: unicos.append(item)"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "duplicatas"]
+    },
+    {
+      "id": "c7_e11",
+      "number": 11,
+      "title": "Combinando Listas com zip()",
+      "description": "A função zip() pareia elementos de duas listas correspondentes.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Função zip()",
+      "instructions": "Dadas chaves = [\"nome\", \"idade\"] e valores = [\"Lucas\", 30], use dict(zip(chaves, valores)) ou um loop para criar o dicionário 'resultado'.",
+      "codeSkeleton": "chaves = [\"nome\", \"idade\"]\nvalores = [\"Lucas\", 30]\n# Crie resultado combinando as duas listas abaixo\n",
+      "visibleTestCase": "resultado deve conter {'nome': 'Lucas', 'idade': 30}",
+      "testAssertions": "assert resultado == {\"nome\": \"Lucas\", \"idade\": 30}, f\"Recebido {resultado}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "dict(zip(chaves, valores)) cria o dicionário diretamente."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "resultado = dict(zip(chaves, valores))",
+          "codeSnippet": "resultado = dict(zip(chaves, valores))"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva resultado = dict(zip(chaves, valores))"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["zip", "dicionário"]
+    },
+    {
+      "id": "c7_e12",
+      "number": 12,
+      "title": "Matriz Transposta (List Comprehension Aninhada)",
+      "description": "Inverta linhas por colunas de uma matriz 2x3 para criar uma matriz 3x2.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Transposição de Matrizes",
+      "instructions": "Dada matriz = [[1, 2, 3], [4, 5, 6]], crie 'transposta' com [[1, 4], [2, 5], [3, 6]].",
+      "codeSkeleton": "matriz = [[1, 2, 3], [4, 5, 6]]\n# Crie transposta abaixo\n",
+      "visibleTestCase": "transposta deve ser [[1, 4], [2, 5], [3, 6]]",
+      "testAssertions": "assert transposta == [[1, 4], [2, 5], [3, 6]], f\"Recebido {transposta}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Itere pelas colunas j (0 a 2) e crie linhas com os elementos [matriz[i][j] for i in range(2)]."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "transposta = [[matriz[i][j] for i in range(len(matriz))] for j in range(len(matriz[0]))]",
+          "codeSnippet": "transposta = [[matriz[i][j] for i in range(len(matriz))] for j in range(len(matriz[0]))]"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Use list comprehension aninhada para inverter i e j"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "matriz", "transposta"]
     }
   ]
 }

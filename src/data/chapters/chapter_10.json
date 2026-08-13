@@ -1,24 +1,66 @@
 {
   "id": "chapter_10",
   "number": 10,
-  "title": "Capítulo 10",
-  "subtitle": "Conteúdo em desenvolvimento para o capítulo 10",
-  "icon": "BookOpen",
-  "color": "emerald",
-  "estimatedMinutes": 15,
+  "title": "Algoritmos e Estruturas",
+  "subtitle": "Busca binária, ordenação, pilhas e filas",
+  "icon": "Cpu",
+  "color": "cyan",
+  "estimatedMinutes": 20,
   "exerciseBatteryId": "battery_ch10",
-  "prerequisites": [
-    "chapter_9"
-  ],
+  "prerequisites": ["chapter_9"],
   "sections": [
     {
       "id": "ch10_sec1",
-      "title": "1. Introdução ao Capítulo 10",
+      "title": "1. Busca Binária vs Busca Linear",
       "order": 1,
       "content": [
         {
           "type": "text",
-          "content": "Em breve: conteúdo interativo do capítulo 10."
+          "content": "Procurar um elemento em uma lista desordenada exige checar item por item (Busca Linear $O(n)$). Mas se a lista estiver **ordenada**, podemos usar **Busca Binária** $O(\\log n)$ dividindo a lista pela metade a cada passo!"
+        },
+        {
+          "type": "analogy",
+          "title": "O Dicionário de Papel",
+          "emoji": "📖",
+          "content": "Para achar a palavra 'Python' num dicionário impresso, você não lê da página 1 até a 500. Você abre no meio: se a letra for 'M', você descarta toda a metade esquerda!"
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "def busca_binaria(lista, alvo):\n    inicio = 0\n    fim = len(lista) - 1\n    while inicio <= fim:\n        meio = (inicio + fim) // 2\n        if lista[meio] == alvo:\n            return meio\n        elif lista[meio] < alvo:\n            inicio = meio + 1\n        else:\n            fim = meio - 1\n    return -1"
+        }
+      ]
+    },
+    {
+      "id": "ch10_sec2",
+      "title": "2. Algoritmos de Ordenação (Bubble Sort)",
+      "order": 2,
+      "content": [
+        {
+          "type": "text",
+          "content": "Entender como algoritmos de ordenação funcionam internamente é fundamental para a Ciência da Computação. O **Bubble Sort** compara elementos adjacentes e os troca de posição até ordenar a lista inteira."
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "def bubble_sort(arr):\n    n = len(arr)\n    for i in range(n):\n        for j in range(0, n - i - 1):\n            if arr[j] > arr[j + 1]:\n                arr[j], arr[j + 1] = arr[j + 1], arr[j] # Swap pythônico!\n    return arr"
+        }
+      ]
+    },
+    {
+      "id": "ch10_sec3",
+      "title": "3. Pilhas (LIFO) e Filas (FIFO)",
+      "order": 3,
+      "content": [
+        {
+          "type": "text",
+          "content": "- **Pilha (Stack)**: LIFO (*Last In, First Out*) — o último a entrar é o primeiro a sair (ex: desfazer/Ctrl+Z).\n- **Fila (Queue)**: FIFO (*First In, First Out*) — o primeiro a entrar é o primeiro a sair (ex: fila de impressão)."
+        },
+        {
+          "type": "interactive_code",
+          "code": "# Pilha em Python usando list\npilha = []\npilha.append(\"Página 1\") # Push\npilha.append(\"Página 2\")\nprint(f\"Voltar de: {pilha.pop()}\") # Pop -> 'Página 2'",
+          "editable": true,
+          "runnable": true
         }
       ]
     }

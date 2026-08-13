@@ -5,35 +5,470 @@
     {
       "id": "c5_e01",
       "number": 1,
-      "title": "Exercício Demonstrativo Cap 5",
-      "description": "Exercício prático do Capítulo 5",
+      "title": "Soma de 1 a N com for",
+      "description": "Use um loop for com range() para calcular o somatório de números inteiros.",
       "difficulty": "Fácil",
       "xpReward": 10,
-      "concept": "Conceito Principal",
-      "instructions": "Exiba 'Capitulo 5' na tela usando print()",
-      "codeSkeleton": "# Escreva seu código abaixo\n",
-      "visibleTestCase": "Saída deve conter: Capitulo 5",
-      "testAssertions": "import sys\noutput = sys.stdout.getvalue().strip()\nassert \"Capitulo 5\" in output\n",
+      "concept": "Loop for e range()",
+      "instructions": "Calcule a soma de todos os números inteiros de 1 a 10 (inclusive) usando range(1, 11) e armazene o resultado na variável 'soma'.",
+      "codeSkeleton": "# Crie a variável soma e o loop for abaixo\nsoma = 0\n",
+      "visibleTestCase": "soma deve ser igual a 55",
+      "testAssertions": "assert soma == 55, f\"Esperado 55, recebido {soma}\"\n",
       "hints": {
         "level1": {
-          "title": "💡 Intuição",
-          "content": "Use o print()"
+          "title": "💡 Intuição Lógica",
+          "content": "Itere por range(1, 11) acumulando n em soma (soma += n)."
         },
         "level2": {
-          "title": "🐍 Recurso",
-          "content": "print(\"Capitulo 5\")"
+          "title": "🐍 Recurso Python",
+          "content": "soma = 0\nfor i in range(1, 11):\n    soma += i",
+          "codeSnippet": "soma = 0\nfor i in range(1, 11):\n    soma += i"
         },
         "level3": {
-          "title": "🗺️ Passo a Passo",
+          "title": "🗺️ Passo a Passo do Algoritmo",
           "steps": [
-            "1. Escreva print(\"Capitulo 5\")"
+            "1. Inicialize soma = 0",
+            "2. Escreva for i in range(1, 11):",
+            "3. Indente soma += i"
           ],
           "xpPenaltyPercent": 10
         }
       },
-      "tags": [
-        "demo"
-      ]
+      "tags": ["for", "range"],
+      "legacyId": "f2_l5"
+    },
+    {
+      "id": "c5_e02",
+      "number": 2,
+      "title": "Contagem Regressiva com while",
+      "description": "Utilize o loop while para decrescer uma variável até atingir zero.",
+      "difficulty": "Fácil",
+      "xpReward": 10,
+      "concept": "Loop while",
+      "instructions": "Dado o contador = 5, use um loop while enquanto contador > 0 decrementando 1 a cada passo. Crie a lista 'regressiva' contendo [5, 4, 3, 2, 1].",
+      "codeSkeleton": "contador = 5\nregressiva = []\n# Adicione os números em regressiva usando while abaixo\n",
+      "visibleTestCase": "regressiva deve ser exatamente [5, 4, 3, 2, 1]",
+      "testAssertions": "assert regressiva == [5, 4, 3, 2, 1], f\"Esperado [5, 4, 3, 2, 1], recebido {regressiva}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "No while, faça regressiva.append(contador) e diminua contador -= 1."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "while contador > 0:\n    regressiva.append(contador)\n    contador -= 1",
+          "codeSnippet": "while contador > 0:\n    regressiva.append(contador)\n    contador -= 1"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva while contador > 0:",
+            "2. Façao append(contador) na lista",
+            "3. Reduza contador -= 1"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["while", "lista"]
+    },
+    {
+      "id": "c5_e03",
+      "number": 3,
+      "title": "Tabuada do 7",
+      "description": "Gere a tabuada de multiplicação de um número.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Iteração de Tabuada",
+      "instructions": "Crie a lista 'tabuada' com os resultados da multiplicação de 7 por números de 1 a 10 (7, 14, 21, ..., 70).",
+      "codeSkeleton": "tabuada = []\n# Preencha a lista tabuada com o for abaixo\n",
+      "visibleTestCase": "tabuada deve conter os 10 múltiplos de 7 de 7 a 70",
+      "testAssertions": "assert tabuada == [7, 14, 21, 28, 35, 42, 49, 56, 63, 70], f\"Recebido {tabuada}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Use range(1, 11) multiplicando i * 7."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "for i in range(1, 11):\n    tabuada.append(i * 7)",
+          "codeSnippet": "for i in range(1, 11):\n    tabuada.append(i * 7)"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Crie loop for i in range(1, 11):",
+            "2. tabuada.append(i * 7)"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["for", "tabuada"]
+    },
+    {
+      "id": "c5_e04",
+      "number": 4,
+      "title": "Filtrando Números Pares",
+      "description": "Combine for e if para filtrar elementos de um intervalo.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Filtro em Loop",
+      "instructions": "Crie a lista 'pares' contendo apenas os números pares de 1 a 20 inclusive.",
+      "codeSkeleton": "pares = []\n# Preencha a lista pares abaixo\n",
+      "visibleTestCase": "pares deve conter [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]",
+      "testAssertions": "assert pares == [2, 4, 6, 8, 10, 12, 14, 16, 18, 20], f\"Recebido {pares}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Itere de 1 a 20 e adicione i se i % 2 == 0."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "for i in range(1, 21):\n    if i % 2 == 0:\n        pares.append(i)",
+          "codeSnippet": "for i in range(1, 21):\n    if i % 2 == 0:\n        pares.append(i)"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. for i in range(1, 21):",
+            "2. if i % 2 == 0: pares.append(i)"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["for", "if", "filtro"]
+    },
+    {
+      "id": "c5_e05",
+      "number": 5,
+      "title": "Fatorial com while",
+      "description": "O fatorial de N (N!) é a multiplicação de N por todos os seus antecessores.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Cálculo de Fatorial",
+      "instructions": "Dado n = 5, calcule o fatorial de 5 (5 * 4 * 3 * 2 * 1 = 120) e armazene na variável 'fatorial'.",
+      "codeSkeleton": "n = 5\nfatorial = 1\n# Calcule o fatorial usando enquanto n > 1 abaixo\n",
+      "visibleTestCase": "fatorial deve ser igual a 120",
+      "testAssertions": "assert fatorial == 120, f\"Esperado 120, recebido {fatorial}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Multiplique fatorial por n e reduza n em 1 enquanto n > 1."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "while n > 1:\n    fatorial *= n\n    n -= 1",
+          "codeSnippet": "while n > 1:\n    fatorial *= n\n    n -= 1"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. while n > 1:",
+            "2. fatorial *= n",
+            "3. n -= 1"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["fatorial", "while"]
+    },
+    {
+      "id": "c5_e06",
+      "number": 6,
+      "title": "Interrompendo a Busca com break",
+      "description": "O comando break encerra a execução do loop assim que a meta é atingida.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Comando break",
+      "instructions": "Dada a lista numeros = [10, 25, 42, 99, 105, 30], itere sobre numeros e pare o loop com 'break' assim que encontrar um número > 100. Guarde o número encontrado em 'primeiro_maior'.",
+      "codeSkeleton": "numeros = [10, 25, 42, 99, 105, 30]\nprimeiro_maior = None\n# Encontre o primeiro_maior com break abaixo\n",
+      "visibleTestCase": "primeiro_maior deve ser igual a 105",
+      "testAssertions": "assert primeiro_maior == 105, f\"Esperado 105, recebido {primeiro_maior}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Itere por numeros. Se num > 100, atribua primeiro_maior = num e execute break."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "for num in numeros:\n    if num > 100:\n        primeiro_maior = num\n        break",
+          "codeSnippet": "for num in numeros:\n    if num > 100:\n        primeiro_maior = num\n        break"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. for num in numeros:",
+            "2. if num > 100: primeiro_maior = num; break"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["break", "for"]
+    },
+    {
+      "id": "c5_e07",
+      "number": 7,
+      "title": "Pulando Elementos com continue",
+      "description": "O comando continue pula a iteração atual e avança para a próxima.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Comando continue",
+      "instructions": "Itere de 1 a 10 inclusive e adicione em 'sem_cinco' todos os números EXCETO o número 5 (use continue se n == 5).",
+      "codeSkeleton": "sem_cinco = []\n# Preencha sem_cinco usando continue abaixo\n",
+      "visibleTestCase": "sem_cinco deve ter os números de 1 a 10 exceto o 5",
+      "testAssertions": "assert sem_cinco == [1, 2, 3, 4, 6, 7, 8, 9, 10], f\"Recebido {sem_cinco}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Se n == 5, chame continue antes do append."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "for i in range(1, 11):\n    if i == 5:\n        continue\n    sem_cinco.append(i)",
+          "codeSnippet": "for i in range(1, 11):\n    if i == 5:\n        continue\n    sem_cinco.append(i)"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. for i in range(1, 11):",
+            "2. if i == 5: continue",
+            "3. sem_cinco.append(i)"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["continue", "for"]
+    },
+    {
+      "id": "c5_e08",
+      "number": 8,
+      "title": "Indexando com enumerate()",
+      "description": "enumerate() gera pares (índice, elemento) a cada passo.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Função enumerate()",
+      "instructions": "Dada a lista frutas = [\"maçã\", \"banana\", \"uva\"], use enumerate() para preencher a lista 'formatada' com frases f\"{idx}: {fruta}\".",
+      "codeSkeleton": "frutas = [\"maçã\", \"banana\", \"uva\"]\nformatada = []\n# Use enumerate abaixo\n",
+      "visibleTestCase": "formatada deve ser ['0: maçã', '1: banana', '2: uva']",
+      "testAssertions": "assert formatada == [\"0: maçã\", \"1: banana\", \"2: uva\"], f\"Recebido {formatada}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Use for idx, fruta in enumerate(frutas)."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "for idx, fruta in enumerate(frutas):\n    formatada.append(f\"{idx}: {fruta}\")",
+          "codeSnippet": "for idx, fruta in enumerate(frutas):\n    formatada.append(f\"{idx}: {fruta}\")"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. for idx, fruta in enumerate(frutas):",
+            "2. formatada.append(f\"{idx}: {fruta}\")"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["enumerate", "pythonic"]
+    },
+    {
+      "id": "c5_e09",
+      "number": 9,
+      "title": "Sequência de Fibonacci",
+      "description": "Gere os N primeiros números da sequência de Fibonacci (cada termo é a soma dos dois anteriores).",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Algoritmo de Fibonacci",
+      "instructions": "Gere os primeiros 8 números da sequência de Fibonacci em 'fib': [0, 1, 1, 2, 3, 5, 8, 13].",
+      "codeSkeleton": "fib = [0, 1]\n# Complete os próximos 6 termos da lista fib usando um loop abaixo\n",
+      "visibleTestCase": "fib deve conter exatamente [0, 1, 1, 2, 3, 5, 8, 13]",
+      "testAssertions": "assert fib == [0, 1, 1, 2, 3, 5, 8, 13], f\"Recebido {fib}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "A cada passo, adicione fib[-1] + fib[-2] à lista."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "for _ in range(6):\n    fib.append(fib[-1] + fib[-2])",
+          "codeSnippet": "for _ in range(6):\n    fib.append(fib[-1] + fib[-2])"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Execute um loop de 6 iterações",
+            "2. Adicione fib[-1] + fib[-2]"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "fibonacci"]
+    },
+    {
+      "id": "c5_e10",
+      "number": 10,
+      "title": "Verificador de Número Primo",
+      "description": "Um número primo é divisível apenas por 1 e por ele mesmo.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Algoritmo Primo",
+      "instructions": "Dado num = 17, crie 'eh_primo' = True se num for primo, senão False (testando divisibilidade de 2 até num-1).",
+      "codeSkeleton": "num = 17\neh_primo = True\n# Verifique se num é primo usando um loop abaixo\n",
+      "visibleTestCase": "eh_primo para 17 deve ser True",
+      "testAssertions": "assert eh_primo is True, f\"Esperado True, recebido {eh_primo}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Se num % i == 0 para algum i entre 2 e num-1, ele não é primo."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "for i in range(2, num):\n    if num % i == 0:\n        eh_primo = False\n        break",
+          "codeSnippet": "for i in range(2, num):\n    if num % i == 0:\n        eh_primo = False\n        break"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. for i in range(2, num):",
+            "2. if num % i == 0: eh_primo = False; break"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "primo"]
+    },
+    {
+      "id": "c5_e11",
+      "number": 11,
+      "title": "Contagem de Vogais em uma Frase",
+      "description": "Itere sobre os caracteres de uma string contando determinado grupo.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Iteração de Strings",
+      "instructions": "Dada a frase = \"Python e incrivel\", conte o número de vogais (a, e, i, o, u) e armazene na variável 'total_vogais'.",
+      "codeSkeleton": "frase = \"Python e incrivel\"\ntotal_vogais = 0\nvogais = \"aeiouAEIOU\"\n# Conte as vogais na frase usando um loop abaixo\n",
+      "visibleTestCase": "total_vogais deve ser igual a 6",
+      "testAssertions": "assert total_vogais == 6, f\"Esperado 6, recebido {total_vogais}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Itere por cada letra da frase. Se a letra estiver em vogais, incrementa total_vogais."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "for letra in frase:\n    if letra in vogais:\n        total_vogais += 1",
+          "codeSnippet": "for letra in frase:\n    if letra in vogais:\n        total_vogais += 1"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. for letra in frase:",
+            "2. if letra em vogais: total_vogais += 1"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "string", "contador"]
+    },
+    {
+      "id": "c5_e12",
+      "number": 12,
+      "title": "Invertendo uma Lista Manualmente",
+      "description": "Reordene os elementos de uma lista sem usar o método .reverse() ou slicing [::-1].",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Algoritmo de Inversão",
+      "instructions": "Dada original = [1, 2, 3, 4, 5], crie a nova lista 'invertida' contendo [5, 4, 3, 2, 1] usando um loop.",
+      "codeSkeleton": "original = [1, 2, 3, 4, 5]\ninvertida = []\n# Preencha a lista invertida usando um loop abaixo\n",
+      "visibleTestCase": "invertida deve ser [5, 4, 3, 2, 1]",
+      "testAssertions": "assert invertida == [5, 4, 3, 2, 1], f\"Recebido {invertida}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Itere sobre original em ordem reversa ou insira cada elemento no início da nova lista."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "for item in original:\n    invertida.insert(0, item)",
+          "codeSnippet": "for item in original:\n    invertida.insert(0, item)"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. for item in original:",
+            "2. invertida.insert(0, item)"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "inversão"]
+    },
+    {
+      "id": "c5_e13",
+      "number": 13,
+      "title": "Calculadora de Média de Lista de Números",
+      "description": "Some todos os itens de uma lista e divida pelo total de elementos.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Acumulador e Média",
+      "instructions": "Dada valores = [10.0, 20.0, 30.0, 40.0], use um loop para somar todos os valores e crie 'media_lista' com o resultado.",
+      "codeSkeleton": "valores = [10.0, 20.0, 30.0, 40.0]\n# Calcule media_lista abaixo\n",
+      "visibleTestCase": "media_lista deve ser igual a 25.0",
+      "testAssertions": "assert media_lista == 25.0, f\"Esperado 25.0, recebido {media_lista}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Some os elementos e divida por len(valores)."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "soma = 0.0\nfor v in valores:\n    soma += v\nmedia_lista = soma / len(valores)",
+          "codeSnippet": "soma = 0.0\nfor v in valores:\n    soma += v\nmedia_lista = soma / len(valores)"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Acumule a soma no loop",
+            "2. Divida por len(valores)"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["acumulador", "média"]
+    },
+    {
+      "id": "c5_e14",
+      "number": 14,
+      "title": "Matriz Identidade n x n (Loops Aninhados)",
+      "description": "Construa uma matriz quadrada n x n com 1s na diagonal principal e 0s no restante.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Loops Aninhados",
+      "instructions": "Dado n = 3, crie a 'matriz' [[1,0,0],[0,1,0],[0,0,1]] usando loops aninhados.",
+      "codeSkeleton": "n = 3\nmatriz = []\n# Preencha a matriz 3x3 usando loops aninhados abaixo\n",
+      "visibleTestCase": "matriz deve ser [[1, 0, 0], [0, 1, 0], [0, 0, 1]]",
+      "testAssertions": "assert matriz == [[1, 0, 0], [0, 1, 0], [0, 0, 1]], f\"Recebido {matriz}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Para i de 0 a n-1 e j de 0 a n-1, adicione 1 se i == j senão 0."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "for i in range(n):\n    linha = []\n    for j in range(n):\n        linha.append(1 if i == j else 0)\n    matriz.append(linha)",
+          "codeSnippet": "for i in range(n):\n    linha = []\n    for j in range(n):\n        linha.append(1 if i == j else 0)\n    matriz.append(linha)"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. for i em range(n)",
+            "2. for j em range(n), se i == j adicione 1 senão 0",
+            "3. append linha na matriz"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "matriz", "aninhado"]
     }
   ]
 }

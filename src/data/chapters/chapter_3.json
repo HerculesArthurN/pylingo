@@ -1,24 +1,106 @@
 {
   "id": "chapter_3",
   "number": 3,
-  "title": "Capítulo 3",
-  "subtitle": "Conteúdo em desenvolvimento para o capítulo 3",
-  "icon": "BookOpen",
-  "color": "emerald",
-  "estimatedMinutes": 15,
+  "title": "Operadores e Expressões",
+  "subtitle": "Operadores relacionais, lógicos e precedência",
+  "icon": "Calculator",
+  "color": "indigo",
+  "estimatedMinutes": 12,
   "exerciseBatteryId": "battery_ch3",
-  "prerequisites": [
-    "chapter_2"
-  ],
+  "prerequisites": ["chapter_2"],
   "sections": [
     {
       "id": "ch3_sec1",
-      "title": "1. Introdução ao Capítulo 3",
+      "title": "1. Operadores Relacionais (Comparações)",
       "order": 1,
       "content": [
         {
           "type": "text",
-          "content": "Em breve: conteúdo interativo do capítulo 3."
+          "content": "Para tomar decisões em um programa, primeiro precisamos aprender a comparar valores. Operadores relacionais comparam dois lados e retornam um valor booleano (`True` ou `False`)."
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "a = 10\nb = 20\n\nprint(a == b)  # False (igual a)\nprint(a != b)  # True  (diferente de)\nprint(a < b)   # True  (menor que)\nprint(a >= b)  # False (maior ou igual a)"
+        },
+        {
+          "type": "callout",
+          "variant": "warning",
+          "content": "⚠️ **Cuidado Clássico**: `=` é atribuição (guardar valor numa caixa), enquanto `==` é comparação (verificar se dois valores são iguais)!"
+        },
+        {
+          "type": "quiz",
+          "question": "Qual será o resultado da expressão (10 >= 10)?",
+          "options": [
+            "False",
+            "True",
+            "10",
+            "Error"
+          ],
+          "correctIndex": 1,
+          "explanation": "10 é igual a 10, portanto a condição maior OU igual (>=) é Verdadeira (True)."
+        }
+      ]
+    },
+    {
+      "id": "ch3_sec2",
+      "title": "2. Operadores Lógicos (and, or, not)",
+      "order": 2,
+      "content": [
+        {
+          "type": "text",
+          "content": "Quando precisamos testar múltiplas condições ao mesmo tempo, usamos os operadores lógicos em inglês nativo: `and`, `or`, `not`."
+        },
+        {
+          "type": "analogy",
+          "title": "A Entrevista de Emprego",
+          "emoji": "🔑",
+          "content": "- `and` (E): Exige que TODAS as condições sejam verdadeiras (Ter diploma AND ter experiência).\n- `or` (OU): Exige que PELO MENOS UMA condição seja verdadeira (Saber Python OR saber JavaScript).\n- `not` (NÃO): Inverte o resultado booleano (`not True` vira `False`)."
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "idade = 20\ntem_carteira = True\n\npode_dirigir = (idade >= 18) and tem_carteira\nprint(\"Pode dirigir?\", pode_dirigir)  # True"
+        },
+        {
+          "type": "quiz",
+          "question": "Qual é o resultado da expressão: True or False and False?",
+          "options": [
+            "False",
+            "True",
+            "None",
+            "SyntaxError"
+          ],
+          "correctIndex": 1,
+          "explanation": "Em Python, o operador 'and' tem precedência sobre o 'or'. (False and False) resulta em False. Então True or False resulta em True!"
+        }
+      ]
+    },
+    {
+      "id": "ch3_sec3",
+      "title": "3. Expressão Ternária Pythônica",
+      "order": 3,
+      "content": [
+        {
+          "type": "text",
+          "content": "Em Python, podemos atribuir valores baseados em uma condição em uma única linha usando a expressão ternária inline!"
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "idade = 18\nstatus = \"Maior de idade\" if idade >= 18 else \"Menor de idade\"\nprint(status)",
+          "caption": "Sintaxe: valor_se_verdadeiro if condição else valor_se_falso"
+        },
+        {
+          "type": "callout",
+          "variant": "pythonic",
+          "content": "🐍 **Modo Pythônico**: A expressão ternária em Python lê quase como uma frase em inglês: *'Atribua X se a condição for verdadeira, caso contrário Y'*!"
+        },
+        {
+          "type": "interactive_code",
+          "code": "nota = 8.5\nsituacao = \"Aprovado\" if nota >= 7.0 else \"Recuperação\"\nprint(f\"Situação do aluno: {situacao}\")",
+          "editable": true,
+          "runnable": true
         }
       ]
     }

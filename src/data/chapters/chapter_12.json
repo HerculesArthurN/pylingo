@@ -1,24 +1,71 @@
 {
   "id": "chapter_12",
   "number": 12,
-  "title": "Capítulo 12",
-  "subtitle": "Conteúdo em desenvolvimento para o capítulo 12",
-  "icon": "BookOpen",
-  "color": "emerald",
-  "estimatedMinutes": 15,
+  "title": "Projeto Integrador Guiado",
+  "subtitle": "Construindo uma aplicação Python do zero",
+  "icon": "Award",
+  "color": "yellow",
+  "estimatedMinutes": 30,
   "exerciseBatteryId": "battery_ch12",
-  "prerequisites": [
-    "chapter_11"
-  ],
+  "prerequisites": ["chapter_11"],
   "sections": [
     {
       "id": "ch12_sec1",
-      "title": "1. Introdução ao Capítulo 12",
+      "title": "1. O Desafio Integrador: Criando um MiniGit em Python",
       "order": 1,
       "content": [
         {
           "type": "text",
-          "content": "Em breve: conteúdo interativo do capítulo 12."
+          "content": "Parabéns por chegar até o capítulo final! Agora é o momento de combinar tudo o que você aprendeu — variáveis, condicionais, loops, funções, dicionários, POO e tratamento de erros — para construir uma aplicação completa: o **MiniGit** (um gerenciador de controle de versão simplificado em memória)!"
+        },
+        {
+          "type": "analogy",
+          "title": "A Máquina do Tempo do Código",
+          "emoji": "⏳",
+          "content": "O Git é um sistema que registra fotos (commits) do seu código ao longo do tempo. Nosso MiniGit irá gerenciar a Área de Staging e o Histórico de Commits usando estruturas de dados em Python!"
+        },
+        {
+          "type": "code",
+          "language": "python",
+          "code": "class Commit:\n    def __init__(self, id_commit, mensagem, arquivos):\n        self.id_commit = id_commit\n        self.mensagem = mensagem\n        self.arquivos = arquivos.copy()\n\n    def __str__(self):\n        return f\"[{self.id_commit}] {self.mensagem} ({len(self.arquivos)} arquivo(s))\""
+        }
+      ]
+    },
+    {
+      "id": "ch12_sec2",
+      "title": "2. Estrutura do Sistema MiniGit",
+      "order": 2,
+      "content": [
+        {
+          "type": "text",
+          "content": "O MiniGit terá uma classe `Repositorio` com os métodos principais:"
+        },
+        {
+          "type": "callout",
+          "variant": "note",
+          "content": "1. `adicionar_staging(nome_arquivo)`: Adiciona arquivos à área de preparação.\n2. `commit(mensagem)`: Gera um novo commit contendo os arquivos do staging e esvazia o staging.\n3. `log()`: Retorna o histórico formatado de commits."
+        },
+        {
+          "type": "interactive_code",
+          "code": "class Repositorio:\n    def __init__(self):\n        self.staging = []\n        self.commits = []\n    def add(self, arquivo):\n        self.staging.append(arquivo)\n        return len(self.staging)\n\nrepo = Repositorio()\nrepo.add(\"main.py\")\nprint(f\"Arquivos em staging: {repo.staging}\")",
+          "editable": true,
+          "runnable": true
+        }
+      ]
+    },
+    {
+      "id": "ch12_sec3",
+      "title": "3. Conclusão da Jornada PyLingo",
+      "order": 3,
+      "content": [
+        {
+          "type": "text",
+          "content": "Ao concluir os 8 exercícios desta bateria final, você terá dominado a base sólida da linguagem Python e estará pronto para avançar para desenvolvimento web, ciência de dados ou inteligência artificial!"
+        },
+        {
+          "type": "callout",
+          "variant": "pythonic",
+          "content": "🐍 **O Zen do Python**: *'Simples é melhor que complexo. Prático é melhor que teórico. Agora é melhor que nunca.'*"
         }
       ]
     }

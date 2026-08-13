@@ -5,35 +5,326 @@
     {
       "id": "c8_e01",
       "number": 1,
-      "title": "Exercício Demonstrativo Cap 8",
-      "description": "Exercício prático do Capítulo 8",
+      "title": "Criando seu Primeiro Dicionário",
+      "description": "Crie um dicionário com pares de chave e valor.",
       "difficulty": "Fácil",
       "xpReward": 10,
-      "concept": "Conceito Principal",
-      "instructions": "Exiba 'Capitulo 8' na tela usando print()",
-      "codeSkeleton": "# Escreva seu código abaixo\n",
-      "visibleTestCase": "Saída deve conter: Capitulo 8",
-      "testAssertions": "import sys\noutput = sys.stdout.getvalue().strip()\nassert \"Capitulo 8\" in output\n",
+      "concept": "Dicionário Básico",
+      "instructions": "Crie um dicionário chamado 'livro' com as chaves \"titulo\": \"1984\" e \"autor\": \"George Orwell\".",
+      "codeSkeleton": "# Crie o dicionário livro abaixo\n",
+      "visibleTestCase": "livro['titulo'] deve ser '1984' e livro['autor'] 'George Orwell'",
+      "testAssertions": "assert livro[\"titulo\"] == \"1984\", \"Título incorreto\"\nassert livro[\"autor\"] == \"George Orwell\", \"Autor incorreto\"\n",
       "hints": {
         "level1": {
-          "title": "💡 Intuição",
-          "content": "Use o print()"
+          "title": "💡 Intuição Lógica",
+          "content": "Use a sintaxe com chaves: livro = {\"titulo\": \"1984\", \"autor\": \"George Orwell\"}."
         },
         "level2": {
-          "title": "🐍 Recurso",
-          "content": "print(\"Capitulo 8\")"
+          "title": "🐍 Recurso Python",
+          "content": "livro = {\"titulo\": \"1984\", \"autor\": \"George Orwell\"}",
+          "codeSnippet": "livro = {\"titulo\": \"1984\", \"autor\": \"George Orwell\"}"
         },
         "level3": {
-          "title": "🗺️ Passo a Passo",
+          "title": "🗺️ Passo a Passo do Algoritmo",
           "steps": [
-            "1. Escreva print(\"Capitulo 8\")"
+            "1. Escreva livro = {\"titulo\": \"1984\", \"autor\": \"George Orwell\"}"
           ],
           "xpPenaltyPercent": 10
         }
       },
-      "tags": [
-        "demo"
-      ]
+      "tags": ["dicionário"],
+      "legacyId": "f3_l3"
+    },
+    {
+      "id": "c8_e02",
+      "number": 2,
+      "title": "Acesso Seguro com .get()",
+      "description": "Utilize .get() para evitar exceções ao buscar chaves.",
+      "difficulty": "Fácil",
+      "xpReward": 10,
+      "concept": "Método .get()",
+      "instructions": "Dado usuario = {\"nome\": \"Alice\"}, crie a variável 'email' buscando a chave \"email\" com .get(), retornando \"Não informado\" se não existir.",
+      "codeSkeleton": "usuario = {\"nome\": \"Alice\"}\n# Crie a variável email com .get() abaixo\n",
+      "visibleTestCase": "email deve ser igual a 'Não informado'",
+      "testAssertions": "assert email == \"Não informado\", f\"Esperado 'Não informado', recebido '{email}'\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "usuario.get(\"email\", \"Não informado\")"
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "email = usuario.get(\"email\", \"Não informado\")",
+          "codeSnippet": "email = usuario.get(\"email\", \"Não informado\")"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva email = usuario.get(\"email\", \"Não informado\")"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["get", "dicionário"]
+    },
+    {
+      "id": "c8_e03",
+      "number": 3,
+      "title": "Adicionando e Atualizando Chaves",
+      "description": "Atualize e adicione pares chave-valor num dicionário.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Mutabilidade de Dicionários",
+      "instructions": "Dado perfil = {\"username\": \"dev123\"}, adicione a chave \"nivel\" = 5 e atualize \"username\" = \"dev_senior\".",
+      "codeSkeleton": "perfil = {\"username\": \"dev123\"}\n# Adicione nivel e atualize username abaixo\n",
+      "visibleTestCase": "perfil['nivel'] deve ser 5 e perfil['username'] 'dev_senior'",
+      "testAssertions": "assert perfil[\"nivel\"] == 5, \"Nível deve ser 5\"\nassert perfil[\"username\"] == \"dev_senior\", \"Username deve ser dev_senior\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Atribua perfil[\"nivel\"] = 5 e perfil[\"username\"] = \"dev_senior\"."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "perfil[\"nivel\"] = 5\nperfil[\"username\"] = \"dev_senior\"",
+          "codeSnippet": "perfil[\"nivel\"] = 5\nperfil[\"username\"] = \"dev_senior\""
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. perfil[\"nivel\"] = 5",
+            "2. perfil[\"username\"] = \"dev_senior\""
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["dicionário", "atualização"]
+    },
+    {
+      "id": "c8_e04",
+      "number": 4,
+      "title": "Iterando sobre .items()",
+      "description": "Itere por chaves e valores simultaneamente.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Método .items()",
+      "instructions": "Dado estoque = {\"caneta\": 10, \"caderno\": 5}, crie 'chaves_valores' com strings f\"{k}:{v}\" usando .items().",
+      "codeSkeleton": "estoque = {\"caneta\": 10, \"caderno\": 5}\nchaves_valores = []\n# Preencha chaves_valores usando .items() abaixo\n",
+      "visibleTestCase": "chaves_valores deve conter ['caneta:10', 'caderno:5']",
+      "testAssertions": "assert chaves_valores == [\"caneta:10\", \"caderno:5\"], f\"Recebido {chaves_valores}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "for k, v in estoque.items(): chaves_valores.append(f\"{k}:{v}\")"
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "for k, v in estoque.items():\n    chaves_valores.append(f\"{k}:{v}\")",
+          "codeSnippet": "for k, v in estoque.items():\n    chaves_valores.append(f\"{k}:{v}\")"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. for k, v in estoque.items():",
+            "2. chaves_valores.append(f\"{k}:{v}\")"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["items", "iteração"]
+    },
+    {
+      "id": "c8_e05",
+      "number": 5,
+      "title": "Eliminando Duplicatas com set",
+      "description": "Utilize conjuntos para remover duplicatas instantaneamente.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Tipo set",
+      "instructions": "Dada a lista numeros = [1, 2, 2, 3, 3, 3, 4], crie 'sem_duplicatas' como um set(numeros).",
+      "codeSkeleton": "numeros = [1, 2, 2, 3, 3, 3, 4]\n# Crie sem_duplicatas abaixo\n",
+      "visibleTestCase": "sem_duplicatas deve ser o set {1, 2, 3, 4}",
+      "testAssertions": "assert sem_duplicatas == {1, 2, 3, 4}, f\"Recebido {sem_duplicatas}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "sem_duplicatas = set(numeros)"
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "sem_duplicatas = set(numeros)",
+          "codeSnippet": "sem_duplicatas = set(numeros)"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva sem_duplicatas = set(numeros)"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["set", "duplicatas"]
+    },
+    {
+      "id": "c8_e06",
+      "number": 6,
+      "title": "Intersecção de Conjuntos",
+      "description": "Encontre elementos em comum entre dois conjuntos usando o operador &.",
+      "difficulty": "Médio",
+      "xpReward": 15,
+      "concept": "Intersecção de Sets",
+      "instructions": "Dados grupo_a = {\"Ana\", \"Beto\", \"Carla\"} e grupo_b = {\"Beto\", \"Carla\", \"Diego\"}, crie 'em_comum' com a intersecção grupo_a & grupo_b.",
+      "codeSkeleton": "grupo_a = {\"Ana\", \"Beto\", \"Carla\"}\ngrupo_b = {\"Beto\", \"Carla\", \"Diego\"}\n# Crie em_comum abaixo\n",
+      "visibleTestCase": "em_comum deve conter {'Beto', 'Carla'}",
+      "testAssertions": "assert em_comum == {\"Beto\", \"Carla\"}, f\"Recebido {em_comum}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Use o operador & entre os conjuntos."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "em_comum = grupo_a & grupo_b",
+          "codeSnippet": "em_comum = grupo_a & grupo_b"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva em_comum = grupo_a & grupo_b"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["set", "intersecção"]
+    },
+    {
+      "id": "c8_e07",
+      "number": 7,
+      "title": "Contador de Frequência de Palavras",
+      "description": "Construa um dicionário contador de frequência de elementos.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Contador com Dicionário",
+      "instructions": "Dada a lista palavras = [\"python\", \"java\", \"python\", \"c++\", \"python\"], crie 'contagem' = {\"python\": 3, \"java\": 1, \"c++\": 1} usando um loop.",
+      "codeSkeleton": "palavras = [\"python\", \"java\", \"python\", \"c++\", \"python\"]\ncontagem = {}\n# Preencha o dicionário contagem abaixo\n",
+      "visibleTestCase": "contagem['python'] deve ser 3",
+      "testAssertions": "assert contagem[\"python\"] == 3 and contagem[\"java\"] == 1, f\"Recebido {contagem}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "for p in palavras: contagem[p] = contagem.get(p, 0) + 1"
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "for p in palavras:\n    contagem[p] = contagem.get(p, 0) + 1",
+          "codeSnippet": "for p in palavras:\n    contagem[p] = contagem.get(p, 0) + 1"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. for p in palavras:",
+            "2. contagem[p] = contagem.get(p, 0) + 1"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "frequência"]
+    },
+    {
+      "id": "c8_e08",
+      "number": 8,
+      "title": "Invertendo Chaves e Valores em Dicionário",
+      "description": "Inverta um dicionário trocando chaves por valores.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Inversão de Dicionário",
+      "instructions": "Dado original = {\"a\": 1, \"b\": 2}, crie 'invertido' = {1: \"a\", 2: \"b\"} usando dictionary comprehension {v: k for k, v in original.items()}.",
+      "codeSkeleton": "original = {\"a\": 1, \"b\": 2}\n# Crie invertido abaixo\n",
+      "visibleTestCase": "invertido deve conter {1: 'a', 2: 'b'}",
+      "testAssertions": "assert invertido == {1: \"a\", 2: \"b\"}, f\"Recebido {invertido}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Use comprehension: {v: k for k, v in original.items()}"
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "invertido = {v: k for k, v in original.items()}",
+          "codeSnippet": "invertido = {v: k for k, v in original.items()}"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva invertido = {v: k for k, v in original.items()}"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["dict-comprehension"]
+    },
+    {
+      "id": "c8_e09",
+      "number": 9,
+      "title": "Diferença Simétrica de Conjuntos",
+      "description": "Encontre elementos que pertencem a apenas um dos conjuntos usando ^.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Diferença Simétrica ^",
+      "instructions": "Dados s1 = {1, 2, 3} e s2 = {3, 4, 5}, crie 'exclusivos' com a diferença simétrica s1 ^ s2 ({1, 2, 4, 5}).",
+      "codeSkeleton": "s1 = {1, 2, 3}\ns2 = {3, 4, 5}\n# Crie exclusivos abaixo\n",
+      "visibleTestCase": "exclusivos deve conter {1, 2, 4, 5}",
+      "testAssertions": "assert exclusivos == {1, 2, 4, 5}, f\"Recebido {exclusivos}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "Use o operador ^ entre s1 e s2."
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "exclusivos = s1 ^ s2",
+          "codeSnippet": "exclusivos = s1 ^ s2"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva exclusivos = s1 ^ s2"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["set", "diferença"]
+    },
+    {
+      "id": "c8_e10",
+      "number": 10,
+      "title": "Filtrando Dicionário por Valor Máximo",
+      "description": "Filtre pares chave-valor numéricos com base num limite mínimo.",
+      "difficulty": "Difícil",
+      "xpReward": 25,
+      "concept": "Filtro de Dicionários",
+      "instructions": "Dado notas_alunos = {\"Ana\": 8.5, \"Beto\": 6.0, \"Carla\": 9.5, \"Diego\": 5.0}, crie 'aprovados' contendo apenas os alunos com nota >= 7.0.",
+      "codeSkeleton": "notas_alunos = {\"Ana\": 8.5, \"Beto\": 6.0, \"Carla\": 9.5, \"Diego\": 5.0}\n# Crie aprovados usando dict comprehension abaixo\n",
+      "visibleTestCase": "aprovados deve conter {'Ana': 8.5, 'Carla': 9.5}",
+      "testAssertions": "assert aprovados == {\"Ana\": 8.5, \"Carla\": 9.5}, f\"Recebido {aprovados}\"\n",
+      "hints": {
+        "level1": {
+          "title": "💡 Intuição Lógica",
+          "content": "aprovados = {k: v for k, v in notas_alunos.items() if v >= 7.0}"
+        },
+        "level2": {
+          "title": "🐍 Recurso Python",
+          "content": "aprovados = {k: v for k, v in notas_alunos.items() if v >= 7.0}",
+          "codeSnippet": "aprovados = {k: v for k, v in notas_alunos.items() if v >= 7.0}"
+        },
+        "level3": {
+          "title": "🗺️ Passo a Passo do Algoritmo",
+          "steps": [
+            "1. Escreva aprovados = {k: v for k, v in notas_alunos.items() if v >= 7.0}"
+          ],
+          "xpPenaltyPercent": 10
+        }
+      },
+      "tags": ["desafio", "dict-comprehension"]
     }
   ]
 }
