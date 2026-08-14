@@ -1,13 +1,7 @@
-/**
- * LevelUpModal.tsx
- *
- * Modal fullscreen de celebração exibido ao subir de nível (Bioma Pythonico).
- */
 import React, { useEffect, useMemo, useRef } from 'react';
-import { motion } from 'framer-motion';
 import { Mascot } from './Mascot';
 import { PrimaryButton3D } from './PrimaryButton3D';
-import { biomaSpringTransition } from '../utils/motion';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 interface LevelUpModalProps {
   newLevel: number;
@@ -31,10 +25,9 @@ function getMotivationalMessage(level: number): string {
 const GOLDEN_PARTICLE_COUNT = 18;
 
 const GOLDEN_COLORS = [
-  '#B45309', // bioma-amber
-  '#F59E0B',
-  '#FEF3C7',
-  '#1E5A3B', // bioma-leaf
+  '#F59E0B', // warning/amber
+  '#FCD34D', // light amber
+  '#FFFFFF',
 ] as const;
 
 interface GoldenParticle {
@@ -43,7 +36,6 @@ interface GoldenParticle {
   readonly size: number;
   readonly angle: number;
   readonly distance: number;
-  readonly duration: number;
   readonly delay: number;
 }
 
@@ -53,11 +45,10 @@ function generateGoldenParticles(): readonly GoldenParticle[] {
     return {
       id: i,
       color: GOLDEN_COLORS[Math.floor(Math.random() * GOLDEN_COLORS.length)],
-      size: Math.random() * 6 + 4,
+      size: Math.random() > 0.5 ? 6 : 4,
       angle,
       distance: Math.random() * 120 + 80,
-      duration: Math.random() * 0.8 + 0.8,
-      delay: Math.random() * 0.3 + 0.4,
+      delay: Math.random() * 0.3,
     };
   });
 }
@@ -67,16 +58,11 @@ export const LevelUpModal: React.FC<LevelUpModalProps> = ({
   onContinue,
   playSound,
 }) => {
-  if (newLevel < 2 || !Number.isInteger(newLevel)) {
-    throw new Error(
-      `[LevelUpModal] newLevel deve ser um inteiro >= 2. Recebido: ${newLevel}`
-    );
-  }
-
   const particles = useMemo(() => generateGoldenParticles(), []);
   const message = getMotivationalMessage(newLevel);
-
+  const focusTrapRef = useFocusTrap({ isActive: true, onEscape: onContinue });
   const hasFiredSound = useRef(false);
+
   useEffect(() => {
     if (!hasFiredSound.current) {
       playSound('success');
@@ -86,89 +72,68 @@ export const LevelUpModal: React.FC<LevelUpModalProps> = ({
 
   return (
     <div 
+      ref={focusTrapRef}
       role="dialog"
       aria-modal="true"
-      aria-label="Modal de Subida de Nível"
-      className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-bioma-moss-dark/70"
+      aria-label="Subiu de Nível"
+      className="modal-backdrop"
     >
-      {/* Partículas douradas */}
+      <style>{`
+        @keyframes explode {
+          0% { transform: translate(0, 0) scale(1); opacity: 1; }
+          100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+        }
+      `}</style>
+
+      {/* Partículas */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
         {particles.map((p) => (
-          <motion.div
+          <div
             key={p.id}
-            className="absolute rounded-full"
+            className="absolute shadow-pixel-sm"
             style={{
               width: p.size,
               height: p.size,
               backgroundColor: p.color,
-            }}
-            initial={{ x: 0, y: 0, scale: 1, opacity: 1 }}
-            animate={{
-              x: Math.cos(p.angle) * p.distance,
-              y: Math.sin(p.angle) * p.distance,
-              scale: 0,
-              opacity: 0,
-            }}
-            transition={{
-              duration: p.duration,
-              delay: p.delay,
-              ease: 'easeOut',
+              // @ts-ignore - custom css variable
+              '--tx': `${Math.cos(p.angle) * p.distance}px`,
+              // @ts-ignore
+              '--ty': `${Math.sin(p.angle) * p.distance}px`,
+              animation: `explode 1s ease-out ${p.delay}s forwards`
             }}
           />
         ))}
       </div>
 
-      {/* Card central */}
-      <motion.div
-        className="relative z-10 bg-bioma-card rounded-organic-md border border-bioma-border shadow-warm-md px-8 py-10 mx-4 max-w-md w-full flex flex-col items-center gap-5"
-        initial={{ scale: 0.8, opacity: 0, y: 30 }}
-        animate={{ scale: 1, opacity: 1, y: 0 }}
-        transition={biomaSpringTransition}
-      >
-        {/* Badge / Escudo Dourado */}
-        <motion.div
-          className="flex items-center justify-center w-28 h-28 rounded-full bg-bioma-amber border-4 border-amber-800 shadow-warm-sm"
-          initial={{ scale: 0, rotate: -180 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={biomaSpringTransition}
-        >
-          <span className="text-5xl font-extrabold text-white drop-shadow-md">
+      {/* Main Card */}
+      <div className="relative z-10 bg-base-100 border-2 border-base-900 shadow-brutal px-8 py-10 mx-4 max-w-md w-full flex flex-col items-center gap-5 animate-slide-up">
+        
+        {/* Badge */}
+        <div className="flex items-center justify-center w-28 h-28 bg-warning border-4 border-base-900 shadow-brutal animate-slide-up" style={{ animationDelay: '0.1s' }}>
+          <span className="text-5xl font-pixel text-base-900 drop-shadow-[2px_2px_0_rgba(255,255,255,1)]">
             {newLevel}
           </span>
-        </motion.div>
+        </div>
 
-        {/* Título */}
-        <motion.h2
-          className="text-2xl font-extrabold text-bioma-amber text-center"
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          Nível {newLevel} Desbloqueado!
-        </motion.h2>
+        <h2 className="text-xl font-bold font-pixel tracking-tighter text-center uppercase text-warning mt-2">
+          Nível {newLevel}!
+        </h2>
 
-        {/* Mascote + Mensagem motivacional */}
-        <motion.div
-          className="flex flex-col items-center gap-3"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
+        <div className="flex flex-col items-center gap-3">
           <Mascot mood="happy" size="h-20 w-20" />
-          <p className="text-bioma-bark text-center text-base font-semibold leading-relaxed max-w-xs">
-            {message}
+          <p className="text-base-900 text-center text-sm font-bold font-mono uppercase bg-base-200 border-2 border-base-900 p-3 shadow-pixel-sm">
+            "{message}"
           </p>
-        </motion.div>
+        </div>
 
-        {/* Botão "Incrível!" */}
         <PrimaryButton3D
           variant="amber"
           onClick={onContinue}
-          className="w-full mt-4 text-base"
+          className="w-full mt-4"
         >
-          INCRÍVEL!
+          INCRÍVEL! (ENTER)
         </PrimaryButton3D>
-      </motion.div>
+      </div>
     </div>
   );
 };

@@ -1,26 +1,14 @@
-/**
- * OnboardingOverlay.tsx
- *
- * Overlay fullscreen de boas-vindas ao PyLingo com 3 slides navegáveis (Bioma Pythonico).
- */
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Code2, Heart } from 'lucide-react';
 import { Mascot } from './Mascot';
 import { PrimaryButton3D } from './PrimaryButton3D';
-import { biomaSpringTransition } from '../utils/motion';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 interface OnboardingOverlayProps {
   onComplete: () => void;
 }
 
 type OnboardingStep = 0 | 1 | 2;
-
-const slideVariants = {
-  enter: { opacity: 0, x: 50 },
-  center: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: -50 },
-};
 
 export const OnboardingOverlay: React.FC<OnboardingOverlayProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState<OnboardingStep>(0);
@@ -31,102 +19,80 @@ export const OnboardingOverlay: React.FC<OnboardingOverlayProps> = ({ onComplete
     }
   };
 
-  const handleComplete = () => {
-    onComplete();
-  };
+  const focusTrapRef = useFocusTrap({ isActive: true, onEscape: onComplete });
 
   return (
     <div 
+      ref={focusTrapRef}
       role="dialog"
       aria-modal="true"
       aria-label="Boas-vindas ao PyLingo"
-      className="fixed inset-0 z-50 bg-bioma-moss-dark/70 backdrop-blur-sm flex items-center justify-center p-4"
+      className="modal-backdrop"
     >
-      <div className="bg-bioma-card border border-bioma-border rounded-organic-md max-w-[420px] w-full p-8 md:p-10 shadow-warm-md">
+      <div className="bg-base-100 border-2 border-base-900 max-w-[420px] w-full p-8 md:p-10 shadow-brutal animate-slide-up">
 
         {/* ── Conteúdo dos Slides ── */}
-        <AnimatePresence mode="wait">
+        <div className="relative overflow-hidden min-h-[300px] flex items-center justify-center">
+          
           {currentStep === 0 && (
-            <motion.div
-              key="slide-0"
-              variants={slideVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={biomaSpringTransition}
-              className="flex flex-col items-center text-center"
-            >
+            <div className="flex flex-col items-center text-center animate-slide-in-right absolute w-full">
               <Mascot mood="happy" size="h-32 w-32" />
-              <h2 className="text-2xl font-extrabold text-bioma-moss mt-6">
-                Bem-vindo ao PyLingo!
+              <h2 className="text-xl font-bold font-pixel uppercase mt-6 text-base-900 leading-snug">
+                Bem-vindo<br/>ao PyLingo
               </h2>
-              <p className="text-sm text-bioma-bark mt-3 leading-relaxed max-w-xs font-semibold">
-                Eu sou o Lingo, seu tutor de Python! 🐍 Vamos juntos do zero absoluto até o nível sênior de programação!
+              <p className="text-sm text-base-600 mt-4 leading-relaxed max-w-xs font-mono">
+                Eu sou o Lingo! 🐍 Vamos juntos do zero absoluto até o nível sênior de programação!
               </p>
-            </motion.div>
+            </div>
           )}
 
           {currentStep === 1 && (
-            <motion.div
-              key="slide-1"
-              variants={slideVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={biomaSpringTransition}
-              className="flex flex-col items-center text-center"
-            >
+            <div className="flex flex-col items-center text-center animate-slide-in-right absolute w-full">
               <Mascot mood="thinking" size="h-24 w-24" />
-              <h2 className="text-2xl font-extrabold text-bioma-moss mt-6">
-                Sua Trilha de Aprendizagem
+              <h2 className="text-xl font-bold font-pixel uppercase mt-6 text-base-900 leading-snug">
+                Sua Trilha
               </h2>
-              <p className="text-sm text-bioma-bark mt-3 leading-relaxed max-w-xs font-semibold">
-                Clique no primeiro nó liberado para iniciar sua jornada. Cada lição ensina um conceito de programação com desafios práticos!
+              <p className="text-sm text-base-600 mt-4 leading-relaxed max-w-xs font-mono">
+                Clique no primeiro nó liberado para iniciar. Cada lição ensina um conceito com desafios práticos.
               </p>
-              {/* Representação visual de um nó da árvore */}
-              <div className="mt-5 w-16 h-16 rounded-organic-sm bg-bioma-leaf text-white flex items-center justify-center shadow-warm-3d pulse-primary">
-                <Code2 className="w-7 h-7 text-white" />
+              <div className="mt-5 w-16 h-16 bg-accent border-2 border-base-900 text-base-900 flex items-center justify-center shadow-brutal">
+                <Code2 className="w-8 h-8" />
               </div>
-            </motion.div>
+            </div>
           )}
 
           {currentStep === 2 && (
-            <motion.div
-              key="slide-2"
-              variants={slideVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={biomaSpringTransition}
-              className="flex flex-col items-center text-center"
-            >
+            <div className="flex flex-col items-center text-center animate-slide-in-right absolute w-full">
               <Mascot mood="sad" size="h-24 w-24" />
-              <h2 className="text-2xl font-extrabold text-bioma-moss mt-6">
-                Pratique sem Medo!
+              <h2 className="text-xl font-bold font-pixel uppercase mt-6 text-base-900 leading-snug">
+                Sem Medo
               </h2>
-              <p className="text-sm text-bioma-bark mt-3 leading-relaxed max-w-xs font-semibold">
-                No PyLingo v2.0 as tentativas são ilimitadas e sem penalidades por erro! Fornecemos dicas socráticas progressivas para você aprender no seu ritmo.
+              <p className="text-sm text-base-600 mt-4 leading-relaxed max-w-xs font-mono">
+                As tentativas são ilimitadas e sem penalidades! Fornecemos dicas socráticas progressivas.
               </p>
-              {/* Visual de 5 corações */}
               <div className="mt-5 flex items-center gap-2">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Heart
                     key={i}
-                    className="w-7 h-7 text-bioma-clay fill-bioma-clay drop-shadow-sm"
+                    className="w-8 h-8 text-error fill-error"
                   />
                 ))}
               </div>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
+
+        </div>
 
         {/* ── Indicadores de Dots ── */}
-        <div className="flex items-center justify-center gap-2 mt-8">
+        <div className="flex items-center justify-center gap-3 mt-8" role="tablist" aria-label="Passos de introdução">
           {([0, 1, 2] as const).map((step) => (
             <div
               key={step}
-              className={`w-2.5 h-2.5 rounded-full transition-colors duration-300 ${
-                currentStep === step ? 'bg-bioma-leaf' : 'bg-bioma-sand-dark'
+              role="tab"
+              aria-selected={currentStep === step}
+              aria-label={`Passo ${step + 1} de 3`}
+              className={`w-3 h-3 border-2 border-base-900 transition-colors duration-300 ${
+                currentStep === step ? 'bg-accent shadow-pixel-sm' : 'bg-base-300'
               }`}
             />
           ))}
@@ -140,15 +106,15 @@ export const OnboardingOverlay: React.FC<OnboardingOverlayProps> = ({ onComplete
               onClick={handleNext}
               className="w-full"
             >
-              Próximo →
+              PRÓXIMO (ENTER)
             </PrimaryButton3D>
           ) : (
             <PrimaryButton3D
               variant="leaf"
-              onClick={handleComplete}
+              onClick={onComplete}
               className="w-full"
             >
-              Começar! 🚀
+              COMEÇAR! 🚀
             </PrimaryButton3D>
           )}
         </div>

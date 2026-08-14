@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Press+Start+2P&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,107 +6,165 @@
 
 @layer base {
   :root, [data-theme="light"] {
-    --color-bioma-sand: #F7F5F0;        /* Fundo Papel/Areia */
-    --color-bioma-sand-dark: #EAE6DF;   /* Superfícies Secundárias */
-    --color-bioma-card: #FFFFFF;        /* Cards */
-    --color-bioma-bark: #0F1D15;        /* Texto Principal - 15.2:1 AAA */
-    --color-bioma-muted: #2E4034;       /* Texto Secundário - 8.1:1 AAA */
-    --color-bioma-moss: #0D2418;        /* Títulos - 14.1:1 AAA */
-    --color-bioma-moss-dark: #07140D;   /* Dark Charcoal Console Backdrop */
-    --color-bioma-leaf: #124229;        /* Ações Primárias - 9.1:1 AAA */
-    --color-bioma-leaf-hover: #0B2B1B;
-    --color-bioma-leaf-light: #D4EED8;
-    --color-bioma-amber: #78350F;       /* Destaques - 7.4:1 AAA */
-    --color-bioma-amber-soft: #FEF3C7;
-    --color-bioma-clay: #7A2210;        /* Alertas - 8.7:1 AAA */
-    --color-bioma-clay-soft: #FEE2E2;
-    --color-bioma-border: #A39B8B;      /* Bordas UI - 4.6:1 AAA */
-    --color-bioma-focus: #124229;
+    /* Base Scale (Monochrome / Grayscale) */
+    --color-base-50: #FFFFFF;
+    --color-base-100: #F4F4F5;
+    --color-base-200: #E4E4E7;
+    --color-base-300: #D4D4D8;
+    --color-base-400: #A1A1AA;
+    --color-base-500: #71717A;
+    --color-base-600: #52525B;
+    --color-base-700: #3F3F46;
+    --color-base-800: #27272A;
+    --color-base-900: #18181B;
+    --color-base-950: #09090B;
 
-    /* Dynamic Type Scale */
-    --text-display: clamp(2.25rem, 4vw, 3.25rem);
-    --text-h1: clamp(1.75rem, 3vw, 2.25rem);
-    --text-h2: clamp(1.25rem, 2vw, 1.5rem);
-    --text-body: 1.00rem;
-    --text-caption: 0.875rem;
-    --text-code: 0.875rem;
+    /* Accents (Matrix Green / Python Gold style) */
+    --color-accent: #22C55E; /* vibrant green */
+    --color-accent-hover: #16A34A;
+    --color-accent-muted: #DCFCE7;
+
+    /* Semantic */
+    --color-success: #22C55E;
+    --color-error: #EF4444;
+    --color-warning: #F59E0B;
+    --color-info: #3B82F6;
   }
 
   [data-theme="dark"], .dark {
-    --color-bioma-sand: #0D1611;        /* Bioma Noturno */
-    --color-bioma-sand-dark: #1A2B22;
-    --color-bioma-card: #14221A;
-    --color-bioma-bark: #F5F9F6;        /* Texto Principal - 16.8:1 AAA */
-    --color-bioma-muted: #C0D4C7;       /* Texto Secundário - 9.2:1 AAA */
-    --color-bioma-moss: #95E2B2;        /* Títulos - 11.6:1 AAA */
-    --color-bioma-moss-dark: #060E09;
-    --color-bioma-leaf: #34AA70;        /* Ações Primárias - 7.2:1 AAA */
-    --color-bioma-leaf-hover: #45BD82;
-    --color-bioma-leaf-light: #1A382A;
-    --color-bioma-amber: #FBBF24;       /* Destaques - 12.1:1 AAA */
-    --color-bioma-amber-soft: #38270B;
-    --color-bioma-clay: #F87171;        /* Alertas - 7.6:1 AAA */
-    --color-bioma-clay-soft: #3D1816;
-    --color-bioma-border: #3D5A48;      /* Bordas UI - 4.5:1 AAA */
-    --color-bioma-focus: #95E2B2;
+    /* Base Scale (Inverted) */
+    --color-base-50: #09090B;
+    --color-base-100: #18181B;
+    --color-base-200: #27272A;
+    --color-base-300: #3F3F46;
+    --color-base-400: #52525B;
+    --color-base-500: #71717A;
+    --color-base-600: #A1A1AA;
+    --color-base-700: #D4D4D8;
+    --color-base-800: #E4E4E7;
+    --color-base-900: #F4F4F5;
+    --color-base-950: #FFFFFF;
+
+    /* Accents */
+    --color-accent: #4ADE80; /* lighter green for dark mode */
+    --color-accent-hover: #22C55E;
+    --color-accent-muted: #14532D;
+
+    /* Semantic */
+    --color-success: #4ADE80;
+    --color-error: #F87171;
+    --color-warning: #FBBF24;
+    --color-info: #60A5FA;
   }
 
   body {
-    background-color: var(--color-bioma-sand);
-    color: var(--color-bioma-bark);
-    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    -webkit-font-smoothing: antialiased;
+    @apply bg-base-50 text-base-900 font-sans antialiased selection:bg-accent selection:text-base-50;
+  }
+}
+
+@layer components {
+  /* Minimalist / Brutalist Button */
+  .btn-primary {
+    @apply relative font-bold text-sm tracking-wide px-6 py-3 rounded-none text-base-50 bg-accent hover:bg-accent-hover border-2 border-base-900 shadow-brutal active:shadow-brutal-active active:translate-x-[4px] active:translate-y-[4px] transition-all duration-75 flex items-center justify-center gap-2 select-none min-h-[44px];
   }
 
-  :focus-visible {
-    outline: 3px solid var(--color-bioma-focus);
-    outline-offset: 2px;
+  .btn-secondary {
+    @apply relative font-bold text-sm tracking-wide px-6 py-3 rounded-none text-base-900 bg-base-100 hover:bg-base-200 border-2 border-base-900 shadow-brutal active:shadow-brutal-active active:translate-x-[4px] active:translate-y-[4px] transition-all duration-75 flex items-center justify-center gap-2 select-none min-h-[44px];
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    *, ::before, ::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
+  .btn-danger {
+    @apply relative font-bold text-sm tracking-wide px-6 py-3 rounded-none text-white bg-error border-2 border-base-900 shadow-brutal active:shadow-brutal-active active:translate-x-[4px] active:translate-y-[4px] transition-all duration-75 flex items-center justify-center gap-2 select-none min-h-[44px];
+  }
+
+  /* Accessible Utilities */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  .focus-visible\:not-sr-only:focus-visible {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 1rem;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+
+  /* Touch Target minimums (WCAG 2.5.8) */
+  .min-touch-target {
+    position: relative;
+  }
+  .min-touch-target::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 48px;
+    min-height: 48px;
+  }
+
+  /* Safe Area Utilities for Mobile */
+  @supports (padding-bottom: env(safe-area-inset-bottom)) {
+    .safe-area-pb {
+      padding-bottom: env(safe-area-inset-bottom);
     }
   }
-}
 
-/* Background Texture */
-.bg-bioma-pattern {
-  background-image: radial-gradient(var(--color-bioma-leaf) 0.75px, transparent 0.75px);
-  background-size: 24px 24px;
-  background-position: 0 0;
-  opacity: 0.05;
-}
-
-/* Button Classes */
-.btn-bioma-primary {
-  @apply relative translate-y-0 active:translate-y-1 transition-all duration-150 font-bold text-sm tracking-wide px-6 py-3.5 rounded-organic-sm text-white bg-bioma-leaf hover:bg-bioma-leaf-hover shadow-warm-3d active:shadow-warm-3d-active select-none flex items-center justify-center gap-2;
-}
-
-.btn-bioma-amber {
-  @apply relative translate-y-0 active:translate-y-1 transition-all duration-150 font-bold text-sm tracking-wide px-6 py-3.5 rounded-organic-sm text-white bg-bioma-amber hover:bg-amber-800 shadow-warm-3d-amber active:shadow-warm-3d-active select-none flex items-center justify-center gap-2;
-}
-
-.btn-bioma-secondary {
-  @apply relative translate-y-0 active:translate-y-1 transition-all duration-150 font-bold text-sm tracking-wide px-6 py-3.5 rounded-organic-sm text-bioma-moss bg-bioma-sand-dark hover:bg-bioma-border border border-bioma-border select-none flex items-center justify-center gap-2;
-}
-
-/* Pulse animation */
-@keyframes soft-pulse {
-  0%, 100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(30, 90, 59, 0.4);
-  }
-  50% {
-    transform: scale(1.02);
-    box-shadow: 0 0 0 8px rgba(30, 90, 59, 0);
+  /* Pixel Art / Retro Text utility */
+  .font-pixel {
+    font-family: 'Press Start 2P', cursive;
   }
 }
 
-.pulse-primary {
-  animation: soft-pulse 2s infinite ease-in-out;
+/* Animations */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slide-in-right {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* Modal Backdrops */
+.modal-backdrop {
+  @apply fixed inset-0 z-50 bg-[#09090B]/80 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in;
+}
+
+/* Global Reset overrides */
+* {
+  border-color: var(--color-base-300);
+}
+
+.dark * {
+  border-color: var(--color-base-700);
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Flame, Award, Volume2, VolumeX, BookOpen } from 'lucide-react';
+import { Sparkles, Flame, Award, Volume2, VolumeX, BookOpen, Terminal } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 
 interface HeaderProps {
@@ -22,8 +22,9 @@ export const Header: React.FC<HeaderProps> = ({
   currentChapter,
 }) => {
   return (
-    <header className="bg-bioma-card border-b border-bioma-border sticky top-0 z-50 transition-all select-none shadow-warm-sm">
-      <div className="max-w-6xl mx-auto px-3 md:px-6 py-2.5 md:py-3.5 flex items-center justify-between">
+    <header className="bg-base-100 border-b-4 border-base-900 sticky top-0 z-50 transition-all select-none shadow-brutal-sm">
+      <div className="max-w-6xl mx-auto px-3 md:px-6 py-2 md:py-3 flex items-center justify-between">
+        
         {/* Logo + Title */}
         <div 
           onClick={onLogoClick} 
@@ -31,61 +32,62 @@ export const Header: React.FC<HeaderProps> = ({
           tabIndex={0}
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onLogoClick(); } }}
           aria-label="Ir para página inicial do PyLingo"
-          className="flex items-center space-x-3 cursor-pointer group active:scale-95 transition-transform rounded-organic-sm focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2"
+          className="flex items-center space-x-3 cursor-pointer group hover:-translate-y-1 active:translate-y-0 transition-transform focus-visible:outline focus-visible:outline-2"
         >
-          <div className="bg-bioma-leaf p-2.5 rounded-organic-sm text-white shadow-warm-sm group-hover:bg-bioma-leaf-hover transition-colors">
-            <svg className="w-6 h-6 transform rotate-12 group-hover:rotate-0 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-            </svg>
+          <div className="bg-base-900 p-2 text-accent shadow-pixel-sm group-hover:bg-accent group-hover:text-base-900 transition-colors border-2 border-base-900">
+            <Terminal className="w-5 h-5 sm:w-6 sm:h-6" />
           </div>
-          <span className="text-base md:text-xl lg:text-2xl font-extrabold tracking-tight text-bioma-moss">
+          <span className="text-lg md:text-xl lg:text-2xl font-pixel uppercase tracking-tighter text-base-900 drop-shadow-[2px_2px_0_rgba(255,255,255,1)]">
             PyLingo
-            <span className="text-bioma-leaf text-xs font-bold ml-1.5 align-super bg-bioma-leaf-light px-2 py-0.5 rounded-organic-sm border border-bioma-leaf/20 hidden sm:inline-block">
-              v2.0
+            <span className="text-base-900 text-[10px] font-mono font-bold ml-2 align-super bg-accent px-1.5 py-0.5 border-2 border-base-900 hidden sm:inline-block">
+              V3
             </span>
           </span>
         </div>
 
         {/* Profile metrics */}
-        <div className="flex items-center flex-wrap gap-1.5 sm:gap-2 md:gap-4">
+        <div className="flex items-center flex-wrap gap-2 md:gap-4 font-mono uppercase text-xs font-bold">
+          
           {/* Chapter Badge */}
           {currentChapter && (
-            <div className="flex items-center space-x-1.5 sm:space-x-2 text-bioma-leaf font-bold bg-bioma-leaf-light px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-organic-sm border border-bioma-leaf/30 shadow-warm-sm transition-all hover:scale-105">
-              <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-bioma-leaf" aria-hidden="true" />
-              <span className="text-xs sm:text-sm">Cap. {currentChapter.number}</span>
+            <div aria-label={`Capítulo atual: ${currentChapter.number} - ${currentChapter.title}`} className="hidden md:flex items-center space-x-1.5 sm:space-x-2 text-base-900 bg-base-200 px-2 py-1 border-2 border-base-900 shadow-pixel-sm">
+              <BookOpen className="w-4 h-4 text-base-900" aria-hidden="true" />
+              <span>Cap {currentChapter.number}</span>
             </div>
           )}
 
           {/* XP */}
-          <div className="flex items-center space-x-1.5 sm:space-x-2 text-bioma-leaf font-bold bg-bioma-leaf-light px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-organic-sm border border-bioma-leaf/30 shadow-warm-sm transition-all hover:scale-105">
-            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 fill-current animate-pulse text-bioma-leaf" aria-hidden="true" />
-            <span className="text-xs sm:text-sm md:text-base">{xp} <span className="text-xs font-extrabold uppercase tracking-wider hidden sm:inline">XP</span></span>
+          <div aria-label={`Pontos de experiência: ${xp} XP`} className="flex items-center space-x-1 sm:space-x-2 text-base-900 bg-warning px-2 py-1 border-2 border-base-900 shadow-pixel-sm">
+            <Sparkles className="w-4 h-4 text-base-900" aria-hidden="true" />
+            <span>{xp} <span className="hidden sm:inline">XP</span></span>
           </div>
 
           {/* Streak */}
-          <div className="flex items-center space-x-1.5 sm:space-x-2 text-bioma-amber font-bold bg-bioma-amber-soft px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-organic-sm border border-bioma-amber/30 shadow-warm-sm transition-all hover:scale-105">
-            <Flame className="w-4 h-4 sm:w-5 sm:h-5 fill-current animate-bounce text-bioma-amber" aria-hidden="true" />
-            <span className="text-xs sm:text-sm md:text-base">{streak} <span className="text-xs font-extrabold uppercase tracking-wider hidden sm:inline">Dias</span></span>
+          <div aria-label={`Ofensiva: ${streak} dias`} className="flex items-center space-x-1 sm:space-x-2 text-base-50 bg-error px-2 py-1 border-2 border-base-900 shadow-pixel-sm">
+            <Flame className="w-4 h-4 text-base-50" aria-hidden="true" />
+            <span>{streak} <span className="hidden sm:inline">Dias</span></span>
           </div>
 
           {/* LingoCoins */}
-          <div className="flex items-center space-x-1.5 sm:space-x-2 text-bioma-amber font-bold bg-bioma-amber-soft px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-organic-sm border border-bioma-amber/30 shadow-warm-sm transition-all hover:scale-105">
-            <Award className="w-4 h-4 sm:w-5 sm:h-5 text-bioma-amber fill-bioma-amber/20" aria-hidden="true" />
-            <span className="text-xs sm:text-sm md:text-base">{coins} <span className="text-xs font-extrabold uppercase tracking-wider hidden sm:inline">Coins</span></span>
+          <div aria-label={`Moedas: ${coins} LingoCoins`} className="flex items-center space-x-1 sm:space-x-2 text-base-900 bg-success px-2 py-1 border-2 border-base-900 shadow-pixel-sm">
+            <Award className="w-4 h-4 text-base-900" aria-hidden="true" />
+            <span>{coins} <span className="hidden sm:inline">L-Coins</span></span>
           </div>
 
           {/* Sound toggle */}
           <button
             onClick={onToggleSound}
             aria-label={soundEnabled ? "Mudar para Silencioso" : "Ativar Áudio"}
-            className="p-2 rounded-organic-sm bg-bioma-sand hover:bg-bioma-sand-dark text-bioma-muted border border-bioma-border transition-colors shadow-warm-sm focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 cursor-pointer"
-            title={soundEnabled ? "Mudar para Silencioso" : "Ativar Áudio"}
+            className="p-1.5 bg-base-200 hover:bg-base-900 hover:text-base-50 text-base-900 border-2 border-base-900 transition-colors shadow-pixel-sm focus-visible:outline focus-visible:outline-2"
           >
-            {soundEnabled ? <Volume2 className="w-5 h-5 text-bioma-moss" /> : <VolumeX className="w-5 h-5 text-bioma-muted" />}
+            {soundEnabled ? <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" /> : <VolumeX className="w-4 h-4 sm:w-5 sm:h-5 opacity-50" />}
           </button>
 
           {/* Theme toggle */}
-          <ThemeToggle />
+          <div className="flex items-center justify-center border-2 border-base-900 bg-base-200 shadow-pixel-sm">
+            <ThemeToggle />
+          </div>
+
         </div>
       </div>
     </header>

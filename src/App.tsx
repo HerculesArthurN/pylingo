@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { LearningTree } from './components/LearningTree';
@@ -404,7 +403,13 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-bioma-sand text-bioma-bark flex flex-col font-sans selection:bg-bioma-leaf selection:text-white bg-bioma-pattern">
+    <div className="min-h-screen bg-base-50 text-base-900 flex flex-col font-mono selection:bg-accent selection:text-base-900">
+      <a 
+        href="#main-content" 
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-accent focus:text-base-900 focus:shadow-brutal focus:outline-none focus:ring-4 focus:ring-base-900 font-bold"
+      >
+        Pular para o conteúdo principal
+      </a>
       
       {/* Header Global */}
       <Header
@@ -430,23 +435,17 @@ export default function App() {
       )}
 
       {/* Conteúdo Principal */}
-      <main className="flex-1 flex flex-col max-w-6xl w-full mx-auto p-4 md:py-8 pb-20 lg:pb-4" data-queue-size={modalQueue.length}>
+      <main id="main-content" tabIndex={-1} className="flex-1 flex flex-col max-w-6xl w-full mx-auto p-4 md:py-8 pb-20 lg:pb-4" data-queue-size={modalQueue.length}>
         
         {pyodideError && (
-          <div className="bg-bioma-clay-soft text-bioma-clay border border-bioma-clay/40 px-4 py-3 rounded-organic-sm mb-6 text-xs font-bold font-mono">
+          <div className="bg-error text-white border-2 border-base-900 shadow-brutal px-4 py-3 mb-6 text-xs font-bold font-mono">
             ⚠️ Ocorreu um erro ao carregar o interpretador Python WASM: {pyodideError}
           </div>
         )}
 
-        <AnimatePresence mode="wait">
+        <div className="animate-fade-in flex-1 flex flex-col">
           {currentLesson ? (
-            <motion.div
-              key="active-lesson"
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -40 }}
-              transition={{ duration: 0.25, ease: 'easeInOut' }}
-            >
+            <div key="active-lesson" className="animate-slide-up h-full">
               <ActiveLessonView
                 exercise={currentLesson}
                 onBack={() => setCurrentLesson(null)}
@@ -458,15 +457,9 @@ export default function App() {
                 pyodideReady={pyodideReady}
                 hintPassActive={hintPassRemaining > 0}
               />
-            </motion.div>
+            </div>
           ) : activeTab === 'book' && activeChapter ? (
-            <motion.div
-              key="active-book"
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -40 }}
-              transition={{ duration: 0.25, ease: 'easeInOut' }}
-            >
+            <div key="active-book" className="animate-slide-up h-full">
               <BookReader
                 chapter={activeChapter}
                 onChapterReadComplete={handleChapterReadComplete}
@@ -475,16 +468,9 @@ export default function App() {
                 onBack={() => setActiveTab('tree')}
                 playSound={playSound}
               />
-            </motion.div>
+            </div>
           ) : (
-            <motion.div
-              key="dashboard"
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -40 }}
-              transition={{ duration: 0.25, ease: 'easeInOut' }}
-              className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
-            >
+            <div key="dashboard" className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start animate-fade-in">
               <div className="hidden lg:block lg:col-span-4">
                 <Sidebar
                   activeTab={activeTab}
@@ -562,9 +548,9 @@ export default function App() {
                   />
                 )}
               </div>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
+        </div>
 
         {activeModal?.type === 'complete' && (
           <LessonCompleteModal
@@ -591,18 +577,16 @@ export default function App() {
         )}
       </main>
 
-      <AnimatePresence>
-        {showAuthModal && (
-          <AuthView
-            onAuthSuccess={(u) => {
-              setUser(u);
-              setShowAuthModal(false);
-            }}
-            onClose={() => setShowAuthModal(false)}
-            playSound={playSound}
-          />
-        )}
-      </AnimatePresence>
+      {showAuthModal && (
+        <AuthView
+          onAuthSuccess={(u) => {
+            setUser(u);
+            setShowAuthModal(false);
+          }}
+          onClose={() => setShowAuthModal(false)}
+          playSound={playSound}
+        />
+      )}
 
       <div className="lg:hidden">
         <Sidebar
@@ -624,12 +608,12 @@ export default function App() {
         />
       </div>
 
-      <footer className="bg-bioma-card border-t border-bioma-border py-6 mt-12 text-center text-xs text-bioma-muted select-none mb-16 lg:mb-0">
-        <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
-          <span>© 2026 PyLingo Inc. Bioma Pythonico v2.0 • Aprendizado Acolhedor & Fluido.</span>
+      <footer role="contentinfo" className="bg-base-100 border-t-4 border-base-900 py-6 mt-12 text-center text-xs text-base-900 select-none mb-16 lg:mb-0">
+        <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4 font-mono font-bold">
+          <span>© 2026 PyLingo V3 • DEVELOPER EDITION</span>
           <div className="flex items-center space-x-2">
-            <span className="bg-bioma-sand text-bioma-bark border border-bioma-border px-3 py-1 rounded-organic-sm font-bold">Vite Web Worker</span>
-            <span className="bg-bioma-leaf-light text-bioma-leaf px-3 py-1 rounded-organic-sm font-bold">Pyodide WASM Runtime</span>
+            <span className="bg-base-200 border-2 border-base-900 px-3 py-1 text-[10px] uppercase shadow-pixel-sm">Vite Web Worker</span>
+            <span className="bg-accent text-base-900 border-2 border-base-900 px-3 py-1 text-[10px] uppercase shadow-pixel-sm">Pyodide WASM Runtime</span>
           </div>
         </div>
       </footer>

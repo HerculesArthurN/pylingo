@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
-import { ArrowLeft, Terminal, Code2, BookOpen, Compass, CheckCircle2, Play, Lightbulb } from 'lucide-react';
+import { ArrowLeft, Terminal, Code2, BookOpen, Compass, CheckCircle2, Play, Lightbulb, XCircle } from 'lucide-react';
 import { IExercise, ILesson, MascotMood } from '../core/types';
 import { Mascot } from './Mascot';
 import { translatePythonError } from '../core/errorTranslator';
@@ -32,10 +32,10 @@ interface ConsoleOutputProps {
 }
 
 function classifyConsoleLine(line: string): string {
-  if (line.startsWith('[SUCESSO]') || line.startsWith('✓') || line.startsWith('✅')) return 'text-emerald-400 font-bold';
-  if (line.includes('Error') || line.includes('Traceback') || line.includes('TimeoutError')) return 'text-rose-300 bg-rose-950/60 rounded px-1 font-bold';
-  if (line.includes('AssertionError')) return 'text-amber-300 font-bold';
-  return 'text-[#F0F4F1]';
+  if (line.startsWith('[SUCESSO]') || line.startsWith('✓') || line.startsWith('✅')) return 'text-success font-bold';
+  if (line.includes('Error') || line.includes('Traceback') || line.includes('TimeoutError')) return 'text-error bg-error/10 border-l-4 border-error pl-2 font-bold';
+  if (line.includes('AssertionError')) return 'text-warning font-bold';
+  return 'text-base-50';
 }
 
 const ConsoleOutput: React.FC<ConsoleOutputProps> = ({
@@ -49,20 +49,20 @@ const ConsoleOutput: React.FC<ConsoleOutputProps> = ({
       role="region"
       aria-live="polite"
       aria-label="Terminal de Saída do Interpretador"
-      className="flex-1 p-4 font-mono text-xs overflow-y-auto select-text flex flex-col gap-1"
+      className="flex-1 p-4 font-mono text-[10px] md:text-xs overflow-y-auto select-text flex flex-col gap-1 bg-base-900 text-base-50"
     >
-      {isEmpty && <span className="text-stone-400 italic select-none">Nenhuma saída no terminal. Clique em Rodar Código.</span>}
+      {isEmpty && <span className="text-base-500 italic select-none">Nenhuma saída. Aperte RUN.</span>}
       {outputLines.map((line, i) => (
         <pre key={`out-${i}`} className={`whitespace-pre-wrap ${classifyConsoleLine(line)}`}>{line}</pre>
       ))}
       {errorLines.map((line, i) => (
-        <pre key={`err-${i}`} className={`whitespace-pre-wrap ${classifyConsoleLine(line) || 'text-rose-300'}`}>{line}</pre>
+        <pre key={`err-${i}`} className={`whitespace-pre-wrap ${classifyConsoleLine(line) || 'text-error'}`}>{line}</pre>
       ))}
       {hasTestMetrics && !isRunning && (
-        <div className={`mt-2 pt-2 border-t font-bold text-xs flex items-center gap-1.5 ${
-          testsFailed === 0 ? 'border-bioma-leaf text-emerald-400' : 'border-bioma-clay text-rose-300'
+        <div className={`mt-2 pt-2 border-t-2 font-bold font-pixel text-[10px] flex items-center gap-2 uppercase ${
+          testsFailed === 0 ? 'border-success text-success' : 'border-error text-error'
         }`}>
-          {testsFailed === 0 ? <span>✓ {testsPassed}/{testsTotal} testes passaram</span> : <span>✗ {testsFailed}/{testsTotal} testes falharam</span>}
+          {testsFailed === 0 ? <span>PASS {testsPassed}/{testsTotal}</span> : <span>FAIL {testsFailed}/{testsTotal}</span>}
         </div>
       )}
     </div>
@@ -129,7 +129,7 @@ export const ActiveLessonView: React.FC<ActiveLessonViewProps> = ({
     playSound('click');
     setIsEvaluating(true);
     setMood('thinking');
-    setOutputLines(['Executando código...']);
+    setOutputLines(['EXECUTANDO...']);
     setErrorLines([]);
     setTestsTotal(undefined); setTestsPassed(undefined); setTestsFailed(undefined);
     const res = await runCode(code);
@@ -148,7 +148,7 @@ export const ActiveLessonView: React.FC<ActiveLessonViewProps> = ({
     playSound('click');
     setIsEvaluating(true);
     setMood('thinking');
-    setOutputLines(['Carregando suíte de testes...']);
+    setOutputLines(['RODANDO TESTES...']);
     setErrorLines([]);
     setEvaluationSuccess(null);
     setTestsTotal(undefined); setTestsPassed(undefined); setTestsFailed(undefined);
@@ -186,26 +186,26 @@ export const ActiveLessonView: React.FC<ActiveLessonViewProps> = ({
   const availableHintLevel = getAvailableHintLevel(attempts);
 
   return (
-    <div className="flex-1 flex flex-col bg-bioma-card rounded-organic-md border border-bioma-border overflow-hidden shadow-warm-md select-none">
+    <div className="flex-1 flex flex-col bg-base-100 border-2 border-base-900 overflow-hidden shadow-brutal select-none font-mono animate-fade-in min-h-[70vh]">
       {/* Header de Foco */}
-      <div className="bg-[#121E17] text-white px-6 py-4 flex items-center justify-between border-b border-bioma-moss">
+      <div className="bg-base-900 text-base-50 px-4 md:px-6 py-4 flex items-center justify-between border-b-2 border-base-900">
         <div className="flex items-center space-x-4">
           <button
             onClick={() => { playSound('click'); onBack(); }}
             aria-label="Voltar para a árvore de lições"
-            className="p-2 rounded-organic-sm hover:bg-bioma-moss transition-colors text-emerald-300 hover:text-white cursor-pointer focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2"
+            className="p-2 border-2 border-base-50 hover:bg-base-50 hover:text-base-900 transition-colors cursor-pointer focus-visible:outline focus-visible:outline-2"
           >
             <ArrowLeft className="w-5 h-5" aria-hidden="true" />
           </button>
           <div>
-            <p className="text-xs font-extrabold text-bioma-amber uppercase tracking-widest">
+            <p className="text-[10px] font-bold font-pixel text-accent uppercase tracking-widest">
               {'concept' in exercise ? exercise.concept : 'Exercício PyLingo'}
             </p>
-            <h2 className="text-base font-bold flex items-center gap-2 text-white">
+            <h2 className="text-sm md:text-base font-bold flex items-center gap-2 uppercase font-pixel tracking-tighter">
               {exercise.title}
-              <span className={`text-xs px-2 py-0.5 rounded-organic-sm font-extrabold ${
-                exercise.difficulty === 'Fácil' ? 'bg-bioma-leaf/60 text-emerald-200 border border-bioma-leaf' :
-                exercise.difficulty === 'Médio' ? 'bg-amber-950/80 text-amber-300 border border-amber-600' : 'bg-rose-950/80 text-rose-300 border border-rose-600'
+              <span className={`text-[8px] px-2 py-0.5 border-2 hidden sm:inline-block ${
+                exercise.difficulty === 'Fácil' ? 'bg-success text-base-900 border-success' :
+                exercise.difficulty === 'Médio' ? 'bg-warning text-base-900 border-warning' : 'bg-error text-base-50 border-error'
               }`}>{exercise.difficulty}</span>
             </h2>
           </div>
@@ -217,115 +217,137 @@ export const ActiveLessonView: React.FC<ActiveLessonViewProps> = ({
             <button
               onClick={() => { playSound('click'); setIsHintDrawerOpen(true); }}
               aria-label={`Abrir central de dicas (${availableHintLevel} de 3 disponíveis)`}
-              className={`px-3.5 py-1.5 rounded-organic-sm border text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 ${
+              className={`px-3 py-2 border-2 text-[10px] font-bold font-pixel uppercase flex items-center gap-2 transition-colors cursor-pointer focus-visible:outline focus-visible:outline-2 hidden sm:flex ${
                 availableHintLevel > currentHintLevel
-                  ? 'bg-bioma-amber text-white border-amber-800 animate-pulse shadow-warm-sm'
+                  ? 'bg-warning text-base-900 border-warning shadow-pixel-sm animate-pulse'
                   : currentHintLevel > 0
-                  ? 'bg-bioma-amber-soft text-bioma-amber border-bioma-amber/40'
-                  : 'bg-bioma-moss text-[#F5F9F6] border-bioma-moss-dark hover:bg-bioma-moss/80'
+                  ? 'bg-base-200 text-warning border-warning'
+                  : 'bg-base-900 text-base-50 border-base-50 hover:bg-base-50 hover:text-base-900'
               }`}
             >
-              <Lightbulb className="w-4 h-4 fill-current" />
-              <span>Dicas {attempts > 0 ? `(${availableHintLevel}/3)` : ''}</span>
+              <Lightbulb className="w-4 h-4" />
+              <span>DICAS {attempts > 0 ? `(${availableHintLevel}/3)` : ''}</span>
             </button>
           )}
 
           {/* Status Python WASM */}
-          <div className="flex items-center space-x-2.5 bg-bioma-moss px-3.5 py-1.5 rounded-organic-sm border border-bioma-leaf/40 text-xs font-mono">
-            <div className={`w-2.5 h-2.5 rounded-full ${pyodideReady ? 'bg-bioma-leaf animate-pulse' : 'bg-bioma-amber animate-spin'}`}></div>
-            <span className="text-emerald-300 font-bold hidden sm:inline">{pyodideReady ? 'Python Pronto' : 'Inicializando...'}</span>
+          <div className="flex items-center space-x-2 bg-base-900 px-3 py-2 border-2 border-base-50 text-[10px] font-pixel uppercase">
+            <div className={`w-2.5 h-2.5 ${pyodideReady ? 'bg-accent animate-pulse' : 'bg-warning animate-spin'}`}></div>
+            <span className="text-base-50 font-bold hidden md:inline">{pyodideReady ? 'SYS.READY' : 'BOOTING...'}</span>
           </div>
         </div>
       </div>
 
       {/* Painel Central */}
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 overflow-hidden min-h-[500px]">
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 overflow-hidden bg-base-100">
+        
         {/* Esquerda: Teoria / Missão */}
-        <div className="lg:col-span-5 border-r border-bioma-border p-6 overflow-y-auto flex flex-col justify-between space-y-6 bg-bioma-card">
-          <div className="space-y-5">
+        <div className="lg:col-span-5 border-b-2 lg:border-b-0 lg:border-r-2 border-base-900 p-4 md:p-6 overflow-y-auto flex flex-col space-y-6">
+          <div className="space-y-6">
+            
             {/* Mascote reativo */}
-            <div className="flex items-center space-x-4 bg-bioma-sand p-4 rounded-organic-sm border border-bioma-border">
-              <Mascot mood={mood} size="h-20 w-20" />
+            <div className="flex items-start space-x-4 bg-base-200 p-4 border-2 border-base-900 shadow-pixel-sm relative">
+              <div className="absolute top-0 right-0 bg-base-900 text-accent font-pixel text-[8px] px-1 py-0.5 uppercase">
+                TUTOR
+              </div>
+              <Mascot mood={mood} size="h-16 w-16 md:h-20 md:w-20" />
               <div>
-                <p className="text-xs italic font-bold text-bioma-bark leading-relaxed">
-                  {evaluationSuccess === true && "Excepcional! Você escreveu um código perfeito."}
-                  {evaluationSuccess === false && "Opa! O interpretador encontrou um erro. Dê uma olhada na dica abaixo!"}
-                  {evaluationSuccess === null && "Leia o objetivo da sua missão e codifique a solução ao lado!"}
+                <p className="text-[10px] md:text-xs font-bold text-base-900 leading-relaxed uppercase">
+                  {evaluationSuccess === true && "EXCELENTE. SOLUÇÃO VÁLIDA."}
+                  {evaluationSuccess === false && "ERRO DETECTADO. ANALISE O STACKTRACE OU USE UMA DICA."}
+                  {evaluationSuccess === null && "LEIA A MISSÃO. ESCREVA O CÓDIGO. EXECUTE."}
                 </p>
               </div>
             </div>
 
-            <h3 className="text-sm font-extrabold text-bioma-moss flex items-center gap-1.5 uppercase tracking-wider">
-              <BookOpen className="w-4 h-4 text-bioma-leaf" /> Enunciado
-            </h3>
-            <p className="text-bioma-bark text-xs md:text-sm leading-relaxed whitespace-pre-line font-bold">{exercise.description}</p>
-
-            {/* Objetivo */}
-            <div className="bg-bioma-leaf-light border border-bioma-leaf/40 rounded-organic-sm p-4 space-y-2">
-              <span className="text-xs font-extrabold text-bioma-leaf uppercase tracking-widest flex items-center gap-1.5">
-                <Compass className="w-4 h-4 text-bioma-leaf" /> Missão:
-              </span>
-              <p className="text-bioma-moss font-extrabold text-xs md:text-sm leading-relaxed">{exercise.instructions}</p>
+            <div>
+              <h3 className="text-[10px] font-bold font-pixel text-base-500 flex items-center gap-2 uppercase tracking-wider mb-2">
+                <BookOpen className="w-4 h-4" /> ENUNCIADO
+              </h3>
+              <p className="text-base-900 text-xs md:text-sm leading-relaxed whitespace-pre-line font-bold font-mono">
+                {exercise.description}
+              </p>
             </div>
 
-            {/* Teste Visível (v2.0) */}
+            {/* Objetivo */}
+            <div className="bg-accent text-base-900 border-2 border-base-900 p-4 shadow-pixel-sm space-y-2">
+              <span className="text-[10px] font-bold font-pixel uppercase tracking-widest flex items-center gap-2">
+                <Compass className="w-4 h-4" /> MISSÃO
+              </span>
+              <p className="font-bold text-xs md:text-sm leading-relaxed font-mono">
+                {exercise.instructions}
+              </p>
+            </div>
+
+            {/* Teste Visível */}
             {'visibleTestCase' in exercise && (exercise as IExercise).visibleTestCase && (
-              <div className="bg-bioma-sand border border-bioma-border rounded-organic-sm p-4 space-y-1">
-                <span className="text-xs font-extrabold text-bioma-amber uppercase tracking-widest">
-                  🧪 Caso de Teste Visível:
+              <div className="bg-base-900 text-base-50 border-2 border-base-900 p-4 shadow-pixel-sm space-y-2">
+                <span className="text-[10px] font-bold font-pixel text-warning uppercase tracking-widest">
+                  TEST CASE
                 </span>
-                <p className="text-bioma-bark font-mono text-xs font-bold">{(exercise as IExercise).visibleTestCase}</p>
+                <p className="font-mono text-[10px] md:text-xs">{(exercise as IExercise).visibleTestCase}</p>
               </div>
             )}
           </div>
 
-          <div className="text-xs text-bioma-muted font-mono flex items-center justify-between font-bold">
-            <span>Tentativas infinitas (sem perda de vidas)</span>
-            <span>Tentativas: {attempts}</span>
+          <div className="text-[10px] font-pixel text-base-500 uppercase flex items-center justify-between font-bold mt-auto pt-6">
+            <span>TENTATIVAS: {attempts}</span>
           </div>
         </div>
 
         {/* Direita: Editor + Console */}
-        <div className="lg:col-span-7 flex flex-col bg-[#121E17] overflow-hidden">
-          <div className="bg-[#0A140E] px-4 py-2.5 flex items-center justify-between border-b border-bioma-border/30">
-            <span className="text-xs font-mono text-emerald-400 flex items-center gap-1.5">
-              <Code2 className="w-4 h-4 text-bioma-leaf" /> <span>solucao.py</span>
+        <div className="lg:col-span-7 flex flex-col bg-base-900 overflow-hidden h-[60vh] lg:h-auto">
+          
+          <div className="bg-base-900 px-4 py-2 flex items-center justify-between border-b-2 border-base-50">
+            <span className="text-[10px] font-pixel text-accent flex items-center gap-2 uppercase">
+              <Code2 className="w-4 h-4" /> main.py
             </span>
             <button
               onClick={() => { playSound('click'); setCode(exercise.codeSkeleton); }}
               aria-label="Resetar código do editor para o esqueleto inicial"
-              className="text-xs text-[#A3B8AC] hover:text-white font-mono cursor-pointer"
+              className="text-[10px] font-pixel text-base-500 hover:text-error uppercase cursor-pointer focus-visible:outline focus-visible:outline-2"
             >
-              Resetar
+              RESET
             </button>
           </div>
 
-          <div className="flex-1 min-h-[250px] bg-[#121E17]">
-            <Suspense fallback={<div className="w-full h-full bg-[#121E17] flex flex-col items-center justify-center text-xs font-mono text-[#A3B8AC] gap-3">
-              <div className="w-8 h-8 rounded-full border-4 border-bioma-moss border-t-bioma-leaf animate-spin"></div>
-              <span>Carregando Editor...</span>
-            </div>}>
+          <div className="flex-1 min-h-[250px] relative">
+            <Suspense fallback={
+              <div className="absolute inset-0 bg-base-900 flex flex-col items-center justify-center text-[10px] font-pixel text-base-500 gap-4 uppercase">
+                <div className="w-8 h-8 border-4 border-base-500 border-t-accent animate-spin"></div>
+                <span>LOADING IDE...</span>
+              </div>
+            }>
               <MonacoEditorLazy value={code} onChange={setCode} readOnly={isEvaluating} />
             </Suspense>
           </div>
 
-          <div className="h-48 bg-[#121E17] border-t border-bioma-border/30 flex flex-col">
-            <div className="px-4 py-2 bg-[#0A140E] flex items-center text-xs font-mono text-[#A3B8AC] border-b border-bioma-border/30">
-              <Terminal className="w-3.5 h-3.5 text-bioma-leaf mr-2" /> <span>Terminal Output</span>
+          <div className="h-48 md:h-56 bg-base-900 border-t-4 border-base-100 flex flex-col">
+            <div className="px-4 py-2 bg-base-900 flex items-center text-[10px] font-pixel text-base-500 border-b-2 border-base-50 uppercase">
+              <Terminal className="w-4 h-4 text-accent mr-2" /> CONSOLE
             </div>
             <ConsoleOutput outputLines={outputLines} errorLines={errorLines} testsTotal={testsTotal} testsPassed={testsPassed} testsFailed={testsFailed} isRunning={isEvaluating} />
           </div>
 
-          <div className="bg-[#0A140E] p-4 border-t border-bioma-border/30 flex items-center justify-between">
+          <div className="bg-base-200 p-4 border-t-4 border-base-900 flex items-center justify-between">
             <button
               onClick={handleRunCode}
               disabled={isEvaluating || !pyodideReady}
               aria-disabled={isEvaluating || !pyodideReady ? true : undefined}
-              className="px-4 py-2.5 bg-bioma-moss hover:bg-bioma-moss/80 border border-bioma-leaf/40 text-white text-xs font-mono font-bold rounded-organic-sm flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer disabled:opacity-50"
+              className="px-6 py-3 bg-base-900 hover:bg-base-800 text-accent font-bold font-pixel text-[10px] uppercase flex items-center gap-2 transition-colors cursor-pointer disabled:opacity-50 border-2 border-base-900 shadow-brutal hover:-translate-y-1 active:translate-y-0"
             >
-              <Play className="w-3.5 h-3.5" /> <span>Rodar Código</span>
+              <Play className="w-4 h-4" /> RUN
             </button>
-            <span className="text-xs text-[#C0D4C7] font-mono font-bold">Pyodide WASM</span>
+            
+            {/* Show hint button on mobile here */}
+            {isV2Exercise && (
+              <button
+                onClick={() => { playSound('click'); setIsHintDrawerOpen(true); }}
+                className="px-4 py-3 bg-warning text-base-900 font-bold font-pixel text-[10px] uppercase border-2 border-base-900 shadow-pixel-sm sm:hidden"
+              >
+                DICAS
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -334,49 +356,52 @@ export const ActiveLessonView: React.FC<ActiveLessonViewProps> = ({
       <div
         role="region"
         aria-live="polite"
-        aria-label="Feedback socrático de conclusão do exercício"
-        className={`p-6 border-t ${
-          evaluationSuccess === true ? 'bg-bioma-leaf-light border-bioma-leaf/40' :
-          evaluationSuccess === false ? 'bg-bioma-clay-soft border-bioma-clay/40' :
-          'bg-bioma-sand border-bioma-border'
-        } transition-all duration-350`}
+        aria-label="Feedback de conclusão do exercício"
+        className={`p-4 md:p-6 border-t-4 border-base-900 ${
+          evaluationSuccess === true ? 'bg-success text-base-900' :
+          evaluationSuccess === false ? 'bg-error text-base-50' :
+          'bg-base-200 text-base-900'
+        } transition-colors`}
       >
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center space-x-4 w-full sm:w-auto">
             {evaluationSuccess === true && (
-              <div className="bg-bioma-leaf p-3 rounded-full text-white animate-bounce shadow-warm-sm"><CheckCircle2 className="w-8 h-8" /></div>
+              <div className="bg-base-900 p-3 text-success shadow-pixel-sm"><CheckCircle2 className="w-8 h-8" /></div>
+            )}
+            {evaluationSuccess === false && (
+              <div className="bg-base-900 p-3 text-error shadow-pixel-sm"><XCircle className="w-8 h-8" /></div>
             )}
             <div>
               {evaluationSuccess === true && (
                 <div>
-                  <h4 className="text-base font-extrabold text-bioma-moss">Incrível! Resposta correta!</h4>
-                  <p className="text-bioma-leaf text-xs font-bold">Desafio concluído com sucesso!</p>
+                  <h4 className="text-sm md:text-base font-bold font-pixel uppercase tracking-tighter">SUCESSO</h4>
+                  <p className="text-[10px] font-bold font-mono uppercase mt-1">Todos os testes passaram.</p>
                 </div>
               )}
               {evaluationSuccess === false && (
-                <div className="space-y-1">
-                  <h4 className="text-base font-extrabold text-bioma-clay">Não foi dessa vez...</h4>
-                  <p className="text-bioma-clay text-xs max-w-xl leading-relaxed whitespace-pre-line bg-bioma-card p-2.5 rounded-organic-sm border border-bioma-clay/30 font-bold select-text">
+                <div className="space-y-2">
+                  <h4 className="text-sm md:text-base font-bold font-pixel uppercase tracking-tighter">FALHA</h4>
+                  <p className="text-[10px] font-mono leading-relaxed bg-base-900 text-base-50 p-2 border-2 border-base-50 font-bold select-text">
                     {socraticFeedback}
                   </p>
                 </div>
               )}
               {evaluationSuccess === null && (
-                <p className="text-bioma-muted text-xs font-bold leading-relaxed">
-                  Escreva sua solução e clique em Verificar Desafio para validar.
+                <p className="text-[10px] md:text-xs font-bold font-mono uppercase">
+                  Escreva o código e clique em VERIFICAR para rodar os testes.
                 </p>
               )}
             </div>
           </div>
 
-          <div className="flex items-center space-x-4 w-full sm:w-auto justify-end">
+          <div className="flex items-center space-x-4 w-full sm:w-auto sm:justify-end">
             {evaluationSuccess === true ? (
-              <PrimaryButton3D variant="leaf" onClick={() => { playSound('click'); onBack(); }}>
-                Continuar
+              <PrimaryButton3D variant="leaf" onClick={() => { playSound('click'); onBack(); }} className="w-full sm:w-auto py-3 md:py-4">
+                CONTINUAR
               </PrimaryButton3D>
             ) : (
-              <PrimaryButton3D variant="leaf" onClick={handleVerify} disabled={isEvaluating || !pyodideReady}>
-                Verificar Desafio
+              <PrimaryButton3D variant="sand" onClick={handleVerify} disabled={isEvaluating || !pyodideReady} className="w-full sm:w-auto py-3 md:py-4 bg-accent text-base-900 hover:bg-base-900 hover:text-accent">
+                VERIFICAR
               </PrimaryButton3D>
             )}
           </div>

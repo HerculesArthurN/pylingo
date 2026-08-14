@@ -31,48 +31,48 @@ export const InteractiveCode: React.FC<InteractiveCodeProps> = ({
       if (res.error) {
         setError(res.error);
       } else {
-        setOutput(res.output || 'Código executado sem saídas de texto.');
+        setOutput(res.output || 'No text output.');
       }
     } catch (err) {
-      setError('Erro ao executar código no ambiente Python.');
+      setError('System Error: Pyodide execution failed.');
     } finally {
       setIsRunning(false);
     }
   };
 
   return (
-    <div className="bg-bioma-moss-dark rounded-organic-md overflow-hidden border border-bioma-moss my-4 shadow-warm-sm font-mono text-xs select-none">
+    <div className="bg-base-900 overflow-hidden border-2 border-base-900 my-4 shadow-brutal font-mono select-none flex flex-col">
       {/* Bar */}
-      <div className="bg-[#0E1511] px-4 py-2.5 flex items-center justify-between border-b border-bioma-moss/50">
-        <span className="text-emerald-400 font-bold flex items-center gap-1.5">
-          <Terminal className="w-4 h-4 text-emerald-400" /> Playground Interativo
+      <div className="bg-base-900 px-4 py-2 border-b-2 border-base-50 flex items-center justify-between">
+        <span className="text-accent font-pixel text-[10px] uppercase flex items-center gap-2">
+          <Terminal className="w-4 h-4" /> PLAYGROUND
         </span>
         {runnable && onRunCode && (
           <button
             onClick={handleRun}
             disabled={isRunning}
             aria-label={isRunning ? 'Executando código Python' : 'Testar código Python'}
-            className="px-3.5 py-1.5 bg-bioma-leaf hover:bg-emerald-700 active:scale-95 text-white font-bold rounded-organic-sm flex items-center gap-1.5 transition-all text-xs focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 disabled:opacity-50 cursor-pointer"
+            className="px-4 py-1.5 bg-accent hover:bg-base-50 text-base-900 font-bold font-pixel text-[10px] uppercase transition-colors focus-visible:outline focus-visible:outline-2 disabled:opacity-50 cursor-pointer shadow-pixel-sm flex items-center gap-2"
           >
-            <Play className="w-3.5 h-3.5 fill-current" aria-hidden="true" />
-            <span>{isRunning ? 'Executando...' : 'Testar Código'}</span>
+            <Play className="w-3 h-3 fill-current" aria-hidden="true" />
+            <span>{isRunning ? 'RUNNING' : 'RUN'}</span>
           </button>
         )}
       </div>
 
       {/* Editor / Code view */}
-      <div className="p-4 bg-bioma-moss-dark">
+      <div className="p-4 bg-base-900 text-base-50">
         {editable ? (
           <textarea
             value={code}
             onChange={(e) => setCode(e.target.value)}
             rows={Math.max(3, code.split('\n').length)}
             aria-label="Editor de código Python interativo"
-            className="w-full bg-transparent text-[#A7F3D0] font-mono focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 rounded-organic-sm resize-none leading-relaxed"
+            className="w-full bg-transparent text-base-50 font-mono text-[10px] md:text-xs focus-visible:outline focus-visible:outline-2 rounded-none resize-none leading-relaxed"
             spellCheck={false}
           />
         ) : (
-          <pre className="text-[#A7F3D0] whitespace-pre-wrap leading-relaxed">{code}</pre>
+          <pre className="text-base-50 whitespace-pre-wrap leading-relaxed text-[10px] md:text-xs">{code}</pre>
         )}
       </div>
 
@@ -82,13 +82,13 @@ export const InteractiveCode: React.FC<InteractiveCodeProps> = ({
           role="region"
           aria-live="polite"
           aria-label="Saída de execução do código"
-          className="bg-[#0E1511] p-4 border-t border-bioma-moss/50 flex flex-col gap-1"
+          className="bg-base-900 p-4 border-t-2 border-base-50 flex flex-col gap-2"
         >
-          <span className="text-xs text-emerald-400 uppercase tracking-widest font-bold flex items-center gap-1">
-            <CheckCircle2 className="w-3.5 h-3.5 text-bioma-leaf" aria-hidden="true" /> Saída do Interpretador:
+          <span className="text-[10px] font-pixel text-accent uppercase tracking-widest flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4" aria-hidden="true" /> TERMINAL OUT:
           </span>
-          {output && <pre className="text-stone-200 font-mono text-xs whitespace-pre-wrap select-text">{output}</pre>}
-          {error && <pre className="text-red-300 font-mono text-xs whitespace-pre-wrap select-text">{error}</pre>}
+          {output && <pre className="text-base-50 font-mono text-[10px] md:text-xs whitespace-pre-wrap select-text">{output}</pre>}
+          {error && <pre className="text-error font-mono text-[10px] md:text-xs whitespace-pre-wrap select-text">{error}</pre>}
         </div>
       )}
     </div>
