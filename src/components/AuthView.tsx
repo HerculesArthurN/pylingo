@@ -215,7 +215,7 @@ export const AuthView: React.FC<AuthViewProps> = ({
                 type="email"
                 required
                 disabled={status.type === 'loading' || status.type === 'success'}
-                placeholder="seu-email@exemplo.com"
+                placeholder="user@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full pl-11 pr-4 py-3 bg-bioma-sand border border-bioma-border rounded-organic-sm font-semibold text-bioma-bark placeholder-bioma-muted focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 focus:border-bioma-leaf focus:bg-bioma-card transition-all disabled:opacity-60"
