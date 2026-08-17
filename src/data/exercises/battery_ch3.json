@@ -72,7 +72,7 @@
       "id": "c3_e03",
       "number": 3,
       "title": "Validação de Acesso (and)",
-      "description": "O operador lógicos 'and' exige que ambas as condições sejam verdadeiras.",
+      "description": "O operador lógico 'and' exige que ambas as condições sejam verdadeiras.",
       "difficulty": "Médio",
       "xpReward": 15,
       "concept": "Operador and",

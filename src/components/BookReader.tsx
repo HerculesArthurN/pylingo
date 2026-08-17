@@ -63,74 +63,76 @@ export const BookReader: React.FC<BookReaderProps> = ({
   const readPercentage = Math.round((completedSections.length / totalSections) * 100);
 
   return (
-    <div className="flex-1 flex flex-col bg-bioma-card rounded-organic-md border border-bioma-border overflow-hidden shadow-warm-md select-none">
+    <div className="flex-1 flex flex-col bg-base-50 dark:bg-base-900 rounded-xl border-2 border-base-900 dark:border-base-700 overflow-hidden shadow-brutal select-none font-sans">
       {/* Header */}
-      <div className="bg-bioma-moss-dark text-white px-5 md:px-8 py-4 flex items-center justify-between border-b border-bioma-moss">
-        <div className="flex items-center space-x-3 md:space-x-4">
+      <div className="bg-base-900 dark:bg-base-800 text-white px-4 sm:px-6 py-3.5 flex items-center justify-between border-b-2 border-base-900 dark:border-base-700">
+        <div className="flex items-center space-x-3 min-w-0">
           <button
             onClick={() => { playSound('click'); onBack(); }}
             aria-label="Voltar para a árvore de aprendizagem"
-            className="p-2 rounded-organic-sm hover:bg-bioma-moss transition-colors text-emerald-300 hover:text-white cursor-pointer focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2"
+            className="p-1.5 sm:p-2 rounded-lg border-2 border-base-700 hover:bg-base-800 dark:hover:bg-base-700 transition-colors text-emerald-400 hover:text-white cursor-pointer shrink-0 focus-visible:outline focus-visible:ring-2 focus-visible:ring-accent"
           >
-            <ArrowLeft className="w-5 h-5" aria-hidden="true" />
+            <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" />
           </button>
-          <div>
-            <span className="text-xs font-bold text-bioma-amber uppercase tracking-widest block">
-              Livro Interativo • Capítulo {chapter.number}
+          <div className="min-w-0">
+            <span className="text-[10px] font-bold text-accent uppercase tracking-widest block font-mono">
+              Capítulo {chapter.number}
             </span>
-            <h2 className="text-base md:text-lg font-extrabold text-white">{chapter.title}</h2>
+            <h2 className="text-sm sm:text-base md:text-lg font-bold text-white truncate font-sans">{chapter.title}</h2>
           </div>
         </div>
 
         {/* Reading Progress */}
-        <div className="flex items-center space-x-3 bg-bioma-moss px-3.5 py-1.5 rounded-organic-sm border border-bioma-leaf/30">
-          <div className="w-20 md:w-28 bg-bioma-moss-dark h-2 rounded-full overflow-hidden">
+        <div className="flex items-center space-x-2 sm:space-x-3 bg-base-800 dark:bg-base-700 px-2.5 sm:px-3.5 py-1.5 rounded-lg border border-base-700 dark:border-base-600 shrink-0">
+          <div className="w-14 sm:w-24 bg-base-900 h-2 rounded-full overflow-hidden">
             <div
-              className="bg-bioma-leaf h-full transition-all duration-500"
+              className="bg-accent h-full transition-all duration-500"
               style={{ width: `${readPercentage}%` }}
             />
           </div>
-          <span className="text-xs font-bold text-emerald-300">{readPercentage}%</span>
+          <span className="text-[11px] sm:text-xs font-bold text-accent font-mono">{readPercentage}%</span>
         </div>
       </div>
 
       {/* Content Layout */}
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 overflow-hidden">
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 overflow-hidden min-h-[500px]">
         {/* Left: Section Navigation Menu */}
-        <div className="lg:col-span-4 border-r border-bioma-border bg-bioma-sand p-4 md:p-6 overflow-y-auto space-y-3">
-          <h4 className="text-xs font-black text-bioma-muted uppercase tracking-widest mb-3 flex items-center gap-1.5">
-            <BookOpen className="w-4 h-4 text-bioma-leaf" aria-hidden="true" /> Índice de Seções
+        <div className="lg:col-span-4 border-b-2 lg:border-b-0 lg:border-r-2 border-base-200 dark:border-base-800 bg-base-100 dark:bg-base-900/60 p-3 sm:p-5 overflow-y-auto space-y-2 sm:space-y-3">
+          <h4 className="text-[11px] font-bold text-base-500 dark:text-base-400 uppercase tracking-wider mb-2 flex items-center gap-1.5 font-mono">
+            <BookOpen className="w-4 h-4 text-accent" aria-hidden="true" /> Índice de Seções ({chapter.sections.length})
           </h4>
 
-          {chapter.sections.map((sec, idx) => {
-            const isSelected = idx === activeSectionIndex;
-            const isRead = completedSections.includes(sec.id);
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-1.5 sm:gap-2">
+            {chapter.sections.map((sec, idx) => {
+              const isSelected = idx === activeSectionIndex;
+              const isRead = completedSections.includes(sec.id);
 
-            return (
-              <button
-                key={sec.id}
-                onClick={() => { playSound('click'); setActiveSectionIndex(idx); }}
-                className={`w-full text-left p-3.5 rounded-organic-sm border transition-all flex items-center justify-between text-xs md:text-sm font-bold cursor-pointer focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 ${
-                  isSelected
-                    ? 'border-bioma-leaf bg-bioma-card text-bioma-moss shadow-warm-sm'
-                    : isRead
-                    ? 'border-bioma-border bg-bioma-card text-bioma-bark hover:border-bioma-leaf/40'
-                    : 'border-bioma-border bg-bioma-sand-dark text-bioma-muted'
-                }`}
-              >
-                <div className="flex items-center space-x-2.5 truncate">
-                  <span className={`w-6 h-6 rounded-organic-sm flex items-center justify-center text-xs font-bold ${isSelected ? 'bg-bioma-leaf text-white' : 'bg-bioma-sand-dark text-bioma-bark'}`}>
-                    {sec.order}
-                  </span>
-                  <span className="truncate">{sec.title}</span>
-                </div>
-                {isRead && <CheckCircle2 className="w-4 h-4 text-bioma-leaf flex-shrink-0 ml-2" aria-hidden="true" />}
-              </button>
-            );
-          })}
+              return (
+                <button
+                  key={sec.id}
+                  onClick={() => { playSound('click'); setActiveSectionIndex(idx); }}
+                  className={`w-full text-left p-2.5 sm:p-3 rounded-lg border transition-all flex items-center justify-between text-xs sm:text-sm font-semibold cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                    isSelected
+                      ? 'border-accent bg-accent/10 dark:bg-accent/15 text-accent font-bold shadow-xs'
+                      : isRead
+                      ? 'border-base-200 dark:border-base-700 bg-base-50 dark:bg-base-800 text-base-800 dark:text-base-200 hover:border-accent/40'
+                      : 'border-base-200 dark:border-base-800 bg-base-50/50 dark:bg-base-800/40 text-base-500 hover:bg-base-50 dark:hover:bg-base-800'
+                  }`}
+                >
+                  <div className="flex items-center space-x-2 truncate">
+                    <span className={`w-5 h-5 rounded flex items-center justify-center text-[10px] font-mono font-bold shrink-0 ${isSelected ? 'bg-accent text-white dark:text-base-950' : 'bg-base-200 dark:bg-base-700 text-base-600 dark:text-base-300'}`}>
+                      {sec.order}
+                    </span>
+                    <span className="truncate">{sec.title}</span>
+                  </div>
+                  {isRead && <CheckCircle2 className="w-4 h-4 text-accent flex-shrink-0 ml-1.5" aria-hidden="true" />}
+                </button>
+              );
+            })}
+          </div>
 
           {/* Action box: Start Exercises */}
-          <div className="pt-4 border-t border-bioma-border">
+          <div className="pt-3 border-t border-base-200 dark:border-base-800 hidden lg:block">
             <PrimaryButton3D
               variant="leaf"
               onClick={handleStartExercisesClick}
@@ -143,7 +145,7 @@ export const BookReader: React.FC<BookReaderProps> = ({
         </div>
 
         {/* Right: Active Section Reader */}
-        <div className="lg:col-span-8 p-6 md:p-8 overflow-y-auto flex flex-col justify-between space-y-8 bg-bioma-card">
+        <div className="lg:col-span-8 p-4 sm:p-6 md:p-8 overflow-y-auto flex flex-col justify-between space-y-6 bg-base-50 dark:bg-base-900">
           <BookSection
             section={currentSection}
             onRunCode={onRunCode}
@@ -151,11 +153,12 @@ export const BookReader: React.FC<BookReaderProps> = ({
           />
 
           {/* Section Pagination Controls */}
-          <div className="pt-6 border-t border-bioma-border flex items-center justify-between gap-4">
+          <div className="pt-4 border-t border-base-200 dark:border-base-800 flex items-center justify-between gap-3 flex-wrap sm:flex-nowrap">
             <PrimaryButton3D
               variant="sand"
               onClick={handlePrev}
               disabled={activeSectionIndex === 0}
+              className="w-full sm:w-auto"
             >
               <ChevronLeft className="w-4 h-4" /> Anterior
             </PrimaryButton3D>
@@ -164,6 +167,7 @@ export const BookReader: React.FC<BookReaderProps> = ({
               <PrimaryButton3D
                 variant="leaf"
                 onClick={handleNext}
+                className="w-full sm:w-auto"
               >
                 <span>Próxima Seção</span>
                 <ChevronRight className="w-4 h-4" />
@@ -172,7 +176,7 @@ export const BookReader: React.FC<BookReaderProps> = ({
               <PrimaryButton3D
                 variant="leaf"
                 onClick={handleStartExercisesClick}
-                className="animate-pulse"
+                className="w-full sm:w-auto animate-pulse"
               >
                 <Award className="w-4 h-4" /> Concluir Leitura & Praticar!
               </PrimaryButton3D>

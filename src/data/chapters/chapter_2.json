@@ -27,7 +27,7 @@
         {
           "type": "code",
           "language": "python",
-          "code": "nome = input(\"Qual é o seu nome? \")\nprint(\"Olá,\", nome)!",
+          "code": "nome = input(\"Qual é o seu nome? \")\nprint(\"Olá,\", nome)",
           "caption": "O programa exibe a pergunta, aguarda a resposta e armazena o resultado na variável 'nome'."
         },
         {

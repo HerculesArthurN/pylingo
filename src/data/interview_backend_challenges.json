@@ -1,0 +1,313 @@
+[
+  {
+    "id": "be_01",
+    "number": 1,
+    "title": "Idempotência de Pagamento & Deduplicação de Requests",
+    "category": "APIs & Protocolos",
+    "difficulty": "Medium",
+    "xpReward": 35,
+    "description": "Em sistemas de pagamento (como PIX ou Stripe), é crítico garantir que um pagamento não seja cobrado duas vezes caso o cliente sofra lentidão na rede e clique em 'Pagar' duas vezes.\n\nImplemente a função `process_payment` que simula um endpoint de pagamento. Ela recebe `(payment_id: str, amount: float, idempotency_key: str)`.\nSe uma requisição for recebida com uma `idempotency_key` inédita, ela deve processar o pagamento e retornar um dicionário `{'status': 200, 'message': 'Payment processed', 'id': payment_id}`.\nSe a mesma `idempotency_key` for recebida novamente (independente de falha de rede do cliente na primeira vez), o sistema não deve processar de novo, e sim retornar os mesmos dados de sucesso da primeira requisição: `{'status': 200, 'message': 'Payment processed', 'id': payment_id}`.\nSe a mesma `idempotency_key` for recebida mas com parâmetros diferentes (ex: `amount` diferente ou `payment_id` diferente), deve retornar `{'status': 409, 'message': 'Conflict'}`.",
+    "interviewerGoal": "O que o entrevistador técnico quer avaliar em você: O entendimento profundo sobre APIs distribuídas, falhas de rede (retries vs double charge) e a implementação do padrão de Idempotency-Key. É esperado que você use um armazenamento em memória (ex: um dicionário atuando como um Redis local) para rastrear os requests já processados de forma rápida O(1).",
+    "examples": [
+      {
+        "input": "process_payment('p1', 100.0, 'key123')\nprocess_payment('p1', 100.0, 'key123')",
+        "output": "{'status': 200, ...} (nas duas chamadas)",
+        "explanation": "A segunda chamada retorna o resultado cacheado, não refazendo a cobrança."
+      },
+      {
+        "input": "process_payment('p2', 50.0, 'key456')\nprocess_payment('p2', 200.0, 'key456')",
+        "output": "Primeira: 200, Segunda: 409",
+        "explanation": "A segunda tenta usar a mesma chave de idempotência para valores diferentes, configurando conflito."
+      }
+    ],
+    "constraints": [
+      "A busca pela idempotency_key deve ter complexidade de tempo O(1)",
+      "Você deve gerenciar o estado usando variáveis globais ou de classe (ex: store em memória)"
+    ],
+    "codeSkeleton": "class PaymentGateway:\n    def __init__(self):\n        # Use este dicionário como um banco Chave-Valor em memória\n        self.cache = {}\n\n    def process_payment(self, payment_id: str, amount: float, idempotency_key: str) -> dict:\n        pass",
+    "testAssertions": "gateway = PaymentGateway()\n\nres1 = gateway.process_payment('p1', 100.0, 'key1')\nassert res1['status'] == 200, 'A primeira cobrança deve ter sucesso (status 200)'\nassert res1['id'] == 'p1', 'O retorno deve conter o payment_id correto'\n\nres2 = gateway.process_payment('p1', 100.0, 'key1')\nassert res2['status'] == 200, 'Uma requisição com a mesma chave deve retornar status 200 (resultado cacheado)'\nassert gateway.cache['key1']['calls'] == 1 if hasattr(gateway, 'metrics') else True, 'O processamento real só deveria acontecer uma vez!'\n\nres3 = gateway.process_payment('p1', 150.0, 'key1')\nassert res3['status'] == 409, 'Uma requisição com mesma chave mas parâmetros diferentes deve retornar status 409 (Conflict)'\n\nres4 = gateway.process_payment('p2', 50.0, 'key2')\nassert res4['status'] == 200, 'Chave de idempotência nova deve processar normalmente.'",
+    "hints": [
+      "No `__init__`, você já tem um `self.cache` vazio.",
+      "Para a `idempotency_key`, salve no cache não só a resposta final, mas também os parâmetros originais (payment_id e amount).",
+      "Antes de processar, verifique se `idempotency_key` existe no cache. Se existir, compare os parâmetros. Se forem iguais, devolva a resposta cacheada. Se diferentes, devolva 409."
+    ],
+    "solutionExplanation": "A solução ideal utiliza um Hash Map (`self.cache`) para mapear `idempotency_key` aos dados da transação e resposta previamente calculada. Complexidade O(1) de acesso garante alta performance. Se a chave já existe, garantimos que os parâmetros batem (para evitar que clientes reutilizem keys incorretamente para burlar cobranças) e retornamos os dados pré-processados, evitando efeitos colaterais duplicados (ex: comunicação com banco/adquirente).",
+    "timeComplexity": "O(1) amortizado para cada request",
+    "spaceComplexity": "O(N) onde N é o número de chaves únicas enviadas"
+  },
+  {
+    "id": "be_02",
+    "number": 2,
+    "title": "Validação & Decodificação Segura de JWT",
+    "category": "Segurança & Autenticação",
+    "difficulty": "Medium",
+    "xpReward": 35,
+    "description": "Em sistemas de autenticação State-less, o JSON Web Token (JWT) é o rei. Um JWT falso é como uma identidade falsa: se o backend não validar direito, um hacker ganha acesso total.\n\nVocê deve implementar uma função `validate_jwt(token: str, secret: str, current_timestamp: int) -> dict`.\nO token tem o formato simplificado: `header.payload.signature`.\nRegras de negócio:\n1. Se o token não tiver 3 partes separadas por '.', lance um `ValueError('Invalid JWT format')`.\n2. Para simplificar, a 'assinatura' esperada deve ser a string `f'{payload}.{secret}'`. Se não bater, lance `ValueError('Invalid signature')`.\n3. O payload é uma string JSON (ex: `\"{'user': 'admin', 'exp': 1700000000}\"`). Você deve dar parse para dict. Você pode usar `eval` ou formatar o JSON corretamente, simularemos usando `eval()` seguro ou strings formatadas python.\n4. Se `exp` (timestamp de expiração) estiver ausente, lance `ValueError('Missing exp')`.\n5. Se o `current_timestamp` for MAIOR que `exp`, lance `ValueError('Token expired')`.\n6. Caso tudo certo, retorne o dicionário do payload decodificado.",
+    "interviewerGoal": "O que o entrevistador técnico quer avaliar em você: O entendimento de como Autenticação Baseada em Token realmente funciona por debaixo dos panos. Validação de assinatura para provar a origem, e validação de claims temporais (`exp`) para minimizar a janela de ataque em caso de tokens vazados.",
+    "examples": [
+      {
+        "input": "validate_jwt('header.payload123.payload123.mysupersecret', 'mysupersecret', 1000)",
+        "output": "retorna dict, pois a assinatura 'payload123.mysupersecret' bate",
+        "explanation": "Simulação didática de hash criptográfico."
+      }
+    ],
+    "constraints": [
+      "Você não pode importar a biblioteca `jwt`.",
+      "Manipule as strings usando `split('.')`."
+    ],
+    "codeSkeleton": "def validate_jwt(token: str, secret: str, current_timestamp: int) -> dict:\n    import json # Pode usar json.loads para o payload\n    pass",
+    "testAssertions": "import json\n\npayload = json.dumps({'user': 'alice', 'exp': 2000})\nvalid_token = f'hdr.{payload}.{payload}.secret'\n\nassert validate_jwt(valid_token, 'secret', 1500) == {'user': 'alice', 'exp': 2000}, 'Token válido deve retornar o payload.'\n\ntry:\n    validate_jwt(f'hdr.{payload}.wrong.secret', 'secret', 1500)\n    assert False, 'Deveria falhar na assinatura'\nexcept ValueError as e:\n    assert str(e) == 'Invalid signature', 'Erro de assinatura esperado'\n\ntry:\n    validate_jwt(valid_token, 'secret', 2500)\n    assert False, 'Deveria falhar por expiração'\nexcept ValueError as e:\n    assert str(e) == 'Token expired', 'Erro de expiração esperado'\n\npayload_no_exp = json.dumps({'user': 'bob'})\ntoken_no_exp = f'hdr.{payload_no_exp}.{payload_no_exp}.secret'\ntry:\n    validate_jwt(token_no_exp, 'secret', 1500)\n    assert False, 'Deveria falhar por falta de exp'\nexcept ValueError as e:\n    assert str(e) == 'Missing exp', 'Erro de falta de exp esperado'",
+    "hints": [
+      "Use `parts = token.split('.')`. Se `len(parts) != 3`, lance o erro.",
+      "A extração do payload string é `parts[1]`. A assinatura é `parts[2]`.",
+      "Valide a assinatura verificando se `parts[2] == f'{parts[1]}.{secret}'`.",
+      "Use `json.loads(parts[1])` para ter o dict e faça as checagens do campo 'exp'."
+    ],
+    "solutionExplanation": "Esta é uma simulação educacional do processo HMAC-SHA256 e validação de claims (`exp`). O backend valida o token separando em partes, garantindo a integridade (verificando a assinatura com o secret que só o servidor conhece) para evitar adulterações (se alguém tentar mudar o user para admin, a assinatura atual não bateria) e garantindo validade de tempo (exp).",
+    "timeComplexity": "O(N) onde N é o comprimento da string (parse JSON)",
+    "spaceComplexity": "O(N) para criar novas strings na memória e parse JSON"
+  },
+  {
+    "id": "be_03",
+    "number": 3,
+    "title": "Cache LRU com Expiração TTL (Estilo Redis)",
+    "category": "Performance & Caching",
+    "difficulty": "Hard",
+    "xpReward": 45,
+    "description": "Em sistemas backend de alto tráfego, salvar dados no banco de dados para todas as requisições derrete o banco. Usamos caches como Redis em memória. Um cache eficiente não cresce infinitamente e remove dados expirados.\n\nVocê precisa implementar um Cache na classe `TimeAwareLRU`:\n1. Ela tem uma `capacidade` máxima (int).\n2. `set(key: str, value: any, ttl: int, current_timestamp: int)`: Insere/atualiza a chave. A chave irá expirar em `current_timestamp + ttl`.\n3. `get(key: str, current_timestamp: int) -> any`: Retorna o valor. Retorna `None` se a chave não existir OU se `current_timestamp > tempo_expiracao_da_chave`.\n4. O algoritmo LRU (Least Recently Used) deve ser aplicado: Se atingir a capacidade, e houver um `set` de chave NOVA, deve remover a chave acessada/atualizada MENOS recentemente para abrir espaço (mesmo que não tenha expirado). `get` e `set` renovam o 'uso recente' de uma chave (mas `set` renova o TTL, `get` não mexe no TTL, apenas o uso).\n5. Dica do mestre: Chaves expiradas que ainda estão na cache também contam para a capacidade. (Não se preocupe com workers em background para limpeza ativa).",
+    "interviewerGoal": "O que o entrevistador técnico quer avaliar em você: Conhecimento de Estruturas de Dados Avançadas e estratégias de evicção (Cache Eviction Policies). Idealmente LRU se implementa com Ordered Dictionary (Hash Map + Doubly Linked List).",
+    "examples": [
+      {
+        "input": "cache = TimeAwareLRU(2)\ncache.set('a', 1, 10, 0)\ncache.set('b', 2, 10, 0)\ncache.set('c', 3, 10, 0)",
+        "output": "A chave 'a' foi ejetada, pois a capacidade é 2.",
+        "explanation": "Evicção clássica de LRU."
+      }
+    ],
+    "constraints": [
+      "Operações GET e SET idealmente precisam rodar em tempo O(1). Em Python, `collections.OrderedDict` fornece propriedades O(1) de mover itens para o final e ejetar do início."
+    ],
+    "codeSkeleton": "from collections import OrderedDict\n\nclass TimeAwareLRU:\n    def __init__(self, capacity: int):\n        self.capacity = capacity\n        self.cache = OrderedDict() # Guarda a tupla (value, expire_at)\n\n    def get(self, key: str, current_time: int):\n        pass\n\n    def set(self, key: str, value: any, ttl: int, current_time: int):\n        pass",
+    "testAssertions": "cache = TimeAwareLRU(2)\ncache.set('k1', 'v1', 10, timestamp=0)\ncache.set('k2', 'v2', 20, timestamp=0)\n\nassert cache.get('k1', 5) == 'v1', 'Acesso k1 renova a ordem LRU'\n# Neste ponto, LRU em ordem de uso do menos -> mais recente: k2, k1\n\ncache.set('k3', 'v3', 10, 6) # Ocupa 3, deve ejetar k2 (menos recentemente usada, k1 foi usada no t=5)\n\nassert cache.get('k2', 6) is None, 'k2 deveria ter sido ejetada pelo LRU policy'\nassert cache.get('k1', 6) == 'v1', 'k1 ainda deve estar no cache'\n\n# Testando TTL\nassert cache.get('k3', 20) is None, 'k3 deveria estar expirada, ttl era 10, (10+6=16) <= 20'",
+    "hints": [
+      "No `get`, se a chave existir no dict: se tiver expirada (`current_time > expire_at`), você pode deletá-la e retornar None. Se não tiver expirada, use `self.cache.move_to_end(key)` e retorne o valor.",
+      "No `set`, se a chave já existir, remova-a antes para reinserir e ir pro final (ou use move_to_end e atualize valor).",
+      "No `set`, se a capacidade estourar (`len(self.cache) > self.capacity`) APÓS inserir uma NOVA, use `self.cache.popitem(last=False)` para jogar fora o primeiro inserido/menos usado."
+    ],
+    "solutionExplanation": "A união de Cache LRU O(1) e Time-to-Live é a base do Redis. O OrderedDict em Python implementa internamente um Hash Map com uma Lista Duplamente Encadeada. Mover para o final é O(1) alterando ponteiros. O TTL é checado on-demand (Lazy Expiration), ou seja, só descobrimos se expirou quando alguém dá GET, o que economiza processamento (sem necessidade de threads rodando por trás para limpar).",
+    "timeComplexity": "O(1) para GET e SET",
+    "spaceComplexity": "O(C) onde C é a capacidade do cache"
+  },
+  {
+    "id": "be_04",
+    "number": 4,
+    "title": "Rate Limiter por Token Bucket",
+    "category": "Arquitetura & Resiliência",
+    "difficulty": "Hard",
+    "xpReward": 40,
+    "description": "APIs públicas precisam de limite de taxa (Rate Limiting) para evitar ataques DDoS ou consumo abusivo de clientes (ex: API do Twitter/X permite 900 requests a cada 15 min).\n\nImplemente a lógica de Rate Limiter (Token Bucket Algorithm).\nA classe `RateLimiter` é inicializada com `max_tokens` (capacidade máxima do balde) e `refill_rate` (tokens adicionados por SEGUNDO).\nMétodo:\n`allow_request(client_ip: str, current_time_sec: float) -> bool`\n\nRegras:\n1. Cada IP tem seu próprio balde (armazene no máximo os tokens restantes e a última vez que o IP fez request).\n2. A cada requisição (`allow_request`), primeiro 'reabastecemos' os tokens do balde desse IP baseando-se no tempo passado desde a última chamada: `tokens_adicionados = (tempo_atual - tempo_ultimo) * refill_rate`. Os tokens não podem exceder `max_tokens`. O cálculo pode e deve usar floats/decimais.\n3. Se o balde (após reabastecido) tiver pelo menos 1 token, debite 1 token, atualize o 'tempo_ultimo' e retorne `True` (Request Permitido).\n4. Se tiver menos que 1 token, não mude os tokens, atualize o tempo (para não quebrar a conta futuramente? Pense bem, na verdade você deve registrar que tentou, mas como não consumiu, o tempo para refill da próxima vez ainda deve considerar a última vez que ele ganhou tokens e os gastou ou apenas calcule base no último allow) -> Apenas permita se houver >= 1 e deduza 1, atualizando o last_refill. Retorne `False`.",
+    "interviewerGoal": "O que o entrevistador técnico quer avaliar em você: Capacidade de implementar algoritmos matemáticos e de estado concorrente para proteção e throttling de APIs. Token Bucket é o algoritmo exato que AWS API Gateway e Cloudflare usam. Entendimento de estado distribuído (aqui num IP level) é vital.",
+    "examples": [
+      {
+        "input": "rl = RateLimiter(2, 0.5) \n# capacidade 2, ganha 0.5 por seg (ou seja, 1 token a cada 2 segs)\nrl.allow_request('ip1', 0.0) -> True\nrl.allow_request('ip1', 0.1) -> True\nrl.allow_request('ip1', 0.2) -> False",
+        "output": "Permitiu as duas primeiras (esgotou capacidade 2), recusou a terceira instantânea.",
+        "explanation": "No tempo 0.2, ele ganhou 0.2 * 0.5 = 0.1 token, ficando com 0.1 token, que é menor que 1. Bloqueado."
+      }
+    ],
+    "constraints": [
+      "Use dicts para armazenar o estado por IP.",
+      "Para IPs novos (nunca vistos), inicie o balde cheio (tokens = max_tokens)."
+    ],
+    "codeSkeleton": "class RateLimiter:\n    def __init__(self, max_tokens: int, refill_rate: float):\n        self.max_tokens = max_tokens\n        self.refill_rate = refill_rate\n        # Ex: { 'ip1': {'tokens': 2.0, 'last_time': 0.0} }\n        self.buckets = {}\n\n    def allow_request(self, client_ip: str, current_time: float) -> bool:\n        pass",
+    "testAssertions": "rl = RateLimiter(max_tokens=3, refill_rate=1.0) # 1 token por segundo, max 3\n\nassert rl.allow_request('ip1', 0.0) is True\nassert rl.allow_request('ip1', 0.1) is True\nassert rl.allow_request('ip1', 0.2) is True\nassert rl.allow_request('ip1', 0.3) is False, 'Balde deveria estar vazio e não passou 1 seg ainda'\n\nassert rl.allow_request('ip2', 0.3) is True, 'IP2 tem balde cheio e isolado'\n\n# Passou 1 segundo desde o último allow_request de IP1(que foi atualizado em t=0.2 ou 0.0 a depender da impl)\n# Se ele gastou tudo em 0.2, sobrou 0 tokens. Em 1.2 passou 1.0 seg desde 0.2. Ganhou 1.0 token!\nassert rl.allow_request('ip1', 1.2) is True, 'Após 1 segundo, ganhou 1 token e pode consumir'\nassert rl.allow_request('ip1', 1.3) is False, 'Só ganhou 1 token, gastou em 1.2, já zerou de novo'",
+    "hints": [
+      "Para cada IP, puxe `tokens` e `last_time` do dicionário.",
+      "Se não existir, inicialize `tokens = self.max_tokens`.",
+      "Calcule os novos tokens gerados: `tokens_adicionados = (current_time - last_time) * self.refill_rate`.",
+      "Atualize a quantidade atual limitando com `min(self.max_tokens, tokens + tokens_adicionados)`.",
+      "Se `tokens_atuais >= 1`, subtraia 1, salve `tokens_atuais` e `current_time` e retorne `True`. Senão, apenas salve o `last_time` e retorne `False`. Na verdade, repense a atualização do `last_time` se negado: se você atualiza `last_time` quando nega, você descarta a fração que ele estava acumulando? Sim! O melhor é só alterar o `last_time` e `tokens` quando o token for de fato consumido (allow = True) ou repassar a fração corretamente se negar. Reflita sobre a matemática contínua."
+    ],
+    "solutionExplanation": "A beleza do Token Bucket é que ele não precisa rodar de segundo em segundo num thread de fundo. Calculamos a reposição na hora que a requisição chega (matemática de deltas de tempo). Quando negamos o acesso, se apenas ignorarmos a chamada e NÃO atualizarmos o `last_time` e os `tokens`, o cliente continuará acumulando tokens até chegar em 1.0 e poder passar no futuro. Isso poupa escrita no state na negação e matematicamente é perfeitamente correto.",
+    "timeComplexity": "O(1) por request",
+    "spaceComplexity": "O(U) onde U é a quantidade de IPs únicos"
+  },
+  {
+    "id": "be_05",
+    "number": 5,
+    "title": "Sanitização & Prevenção de SQL Injection",
+    "category": "Bancos de Dados & SQL",
+    "difficulty": "Easy",
+    "xpReward": 25,
+    "description": "Você está dando manutenção em um sistema legado que usa concatenação de strings para criar queries SQL. Péssima ideia! Alguém injetou ' OR 1=1 -- para roubar dados.\n\nSua tarefa não é usar um ORM ou Prepared Statements reais de banco (pois isso é dependência externa), mas sim construir uma função `build_safe_query(table: str, conditions: dict)` que simula a transformação segura para uma cláusula WHERE.\n\nRegras:\n1. A tabela `table` só pode conter letras minúsculas e underscores (sem espaços ou pontos). Caso seja inválida, lance `ValueError('Invalid table name')`.\n2. O dict `conditions` mapeia nomes de coluna para valores. Ex: `{'age': 30, 'name': 'Bob'}`.\n3. O nome da coluna (keys) segue a mesma regra de sanitização da tabela (letras minúsculas e underscore). Senão lance ValueError.\n4. Construa a string final parametrizada com o padrão placeholder de DBAPI2: '?'.\n5. Retorne uma tupla: `(query_string: str, parameters: list)`.\nEx: Se input for `build_safe_query('users', {'email': 'a@a.com', 'is_active': 1})` -> Retorna: `('SELECT * FROM users WHERE email = ? AND is_active = ?', ['a@a.com', 1])`",
+    "interviewerGoal": "O que o entrevistador quer avaliar: Conscientização sobre a raiz das vulnerabilidades OWASP Top 1: Injections. Entender que o nome das colunas e tabelas não pode ser parametrizado (?) em SQL, então precisa de validação por RegEx/Whitelisting, enquanto os valores DEVEM ser sempre extraídos para uma lista de argumentos (Prepared Statements).",
+    "examples": [
+      {
+        "input": "build_safe_query('students', {'grade': 10, 'class': 'A'})",
+        "output": "('SELECT * FROM students WHERE grade = ? AND class = ?', [10, 'A'])"
+      }
+    ],
+    "constraints": [
+      "Use Regex `^[a-z_]+$` para validar nomes de tabelas e colunas."
+    ],
+    "codeSkeleton": "import re\n\ndef build_safe_query(table: str, conditions: dict) -> tuple:\n    pass",
+    "testAssertions": "query, params = build_safe_query('users', {'id': 5, 'name': 'O\\'Brian'})\nassert query == 'SELECT * FROM users WHERE id = ? AND name = ?', 'Query gerada incorretamente'\nassert params == [5, \"O'Brian\"], 'Valores dos parâmetros incorretos'\n\ntry:\n    build_safe_query('user; DROP TABLE users;', {'id': 1})\n    assert False, 'Deveria barrar tabela maliciosa'\nexcept ValueError:\n    pass\n\ntry:\n    build_safe_query('users', {'1=1 OR id': 5})\n    assert False, 'Deveria barrar coluna maliciosa'\nexcept ValueError:\n    pass",
+    "hints": [
+      "Importe `re` e use `re.match(r'^[a-z_]+$', string)` para checar as restrições.",
+      "Itere sobre `.items()` do conditions dict.",
+      "Monte uma lista com as strings `f'{coluna} = ?'` e faça um `.join(' AND ')` no final para montar a query completa."
+    ],
+    "solutionExplanation": "A prevenção contra SQL Injection ocorre em dois pilares fundamentais. Para variáveis de DADOS (valores), delegamos a sanitização e escape para o driver do banco usando Placeholders (ex: ?, %s), e passamos os valores separadamente. Para identificadores ESTRUTURAIS (nomes de tabelas e colunas), o banco não aceita placeholders. Portanto, a única defesa robusta para montar queries dinâmicas é usar AllowLists/Whitelisting (checar se é só caractere alfanumérico).",
+    "timeComplexity": "O(K) onde K é número de condições",
+    "spaceComplexity": "O(K) tamanho do array de parametros"
+  },
+  {
+    "id": "be_06",
+    "number": 6,
+    "title": "Serializador de Paginação por Cursor para API REST",
+    "category": "APIs & Protocolos",
+    "difficulty": "Medium",
+    "xpReward": 30,
+    "description": "Paginação via `limit` e `offset` é lenta em bancos grandes (O banco precisa ler 'offset' linhas antes de pular). Em APIs modernas, usamos Cursor-Based Pagination.\n\nImplemente a função `paginate_users(users: list, cursor: str, limit: int)`.\n\nRegras:\n1. Cada user no array é um dict com `{'id': int, 'name': str, 'created_at': int}`. Assuma que a lista já está ordenada no banco por `created_at` DESCENDENTE.\n2. O `cursor` (quando fornecido e for diferente de string vazia) é uma string Base64 que, quando decodificada, representa o valor do `created_at` do ÚLTIMO item da página anterior.\n3. A função deve achar todos os registros cujo `created_at` é ESTRITAMENTE MENOR que o decodificado do cursor.\n4. Em seguida, pegue até `limit` registros a partir dessa posição.\n5. Calcule o `next_cursor` (encodado em base64) baseado no `created_at` do último registro dessa nova página, se houver registros subsequentes disponíveis. Se não houver, retorne `None`.\n6. Retorne um dict com: `{'data': [lista resultante], 'next_cursor': 'c3RyaW5n... ou None'}`.",
+    "interviewerGoal": "O que o entrevistador quer avaliar: Experiência prática construindo APIs escaláveis e amigáveis para frontends infinitos (infinite scroll). Conhecimentos de conversão de dados primitivos para Base64 (codificação que oculta detalhes internos na URL) e limites algorítmicos para navegação.",
+    "examples": [
+      {
+        "input": "Lista com itens de created_at: [500, 400, 300, 200, 100]. Cursor vazio. Limit=2.",
+        "output": "{'data': [500, 400], 'next_cursor': base64_do('400')}",
+        "explanation": "Pega os primeiros 2. O último item visto foi 400. Ele vira o cursor para o frontend pedir a próx pag."
+      }
+    ],
+    "constraints": [
+      "Importe `base64`. `base64.b64encode(string.encode()).decode()` para gerar e `base64.b64decode(cursor).decode()` para ler."
+    ],
+    "codeSkeleton": "import base64\n\ndef paginate_users(users: list, cursor: str, limit: int) -> dict:\n    pass",
+    "testAssertions": "users_db = [\n    {'id': 1, 'created_at': 1000},\n    {'id': 2, 'created_at': 900},\n    {'id': 3, 'created_at': 800},\n    {'id': 4, 'created_at': 700}\n]\n\n# Primeira pag\np1 = paginate_users(users_db, '', 2)\nassert len(p1['data']) == 2\nassert p1['data'][0]['id'] == 1\nassert p1['data'][1]['id'] == 2\n\n# Cursor da pag 1 é baseado no created_at 900\ncursor_gerado = p1['next_cursor']\nimport base64\nassert base64.b64decode(cursor_gerado).decode() == '900', 'Cursor devia ser do created_at 900'\n\n# Segunda pag, com cursor\np2 = paginate_users(users_db, cursor_gerado, 2)\nassert p2['data'][0]['id'] == 3, 'Deve pular o 900 e buscar quem tem created_at < 900'\nassert p2['data'][1]['id'] == 4\nassert p2['next_cursor'] is None, 'Não há mais itens dps do 4, next_cursor deve ser None'",
+    "hints": [
+      "Decodifique o cursor. Se estiver vazio, use infinito (ou ignore a cláusula de busca <). O valor vira inteiro.",
+      "Itere a lista sequencialmente. Quando encontrar itens com `created_at < cursor_inteiro`, comece a juntá-los num slice da lista até estourar o `limit`.",
+      "Para saber se haverá `next_cursor`, veja se a quantidade final no banco após esse chunk é maior que 0. Se sim, use base64 no `.created_at` da última linha da sua resposta para formar o `next_cursor`."
+    ],
+    "solutionExplanation": "Pagination via cursor elimina anomalias no scroll infinito (quando novos itens são adicionados acima durante a paginação do usuário) e é hiper performante em banco de dados pois usa index ranges (`WHERE created_at < X`) em vez de pular milhares de linhas (OFFSET). Ocultar o valor através do Base64 é o padrão de mercado (Opaque Cursors), permitindo que o backend altere a estratégia de ordenação futuramente sem quebrar integrações estáticas dos clientes.",
+    "timeComplexity": "O(N) numa lista linear. Num DB com Index, isso seria O(Limit).",
+    "spaceComplexity": "O(Limit) para construir o array de retorno."
+  },
+  {
+    "id": "be_07",
+    "number": 7,
+    "title": "Agregação de Logs & Métricas (Simulação de GROUP BY e Agregações)",
+    "category": "Bancos de Dados & SQL",
+    "difficulty": "Medium",
+    "xpReward": 35,
+    "description": "Você precisa processar logs crus de um microserviço para uma dashboard. Não tem banco relacional, os logs chegam em um array de strings bruto.\n\nImplemente `analyze_logs(logs: list) -> dict`.\nFormato de cada string log: `\"[2024-01-01T10:00:00Z] GET /api/users HTTP/1.1 200 45ms\"` (Timestamp, Método, Rota, Protocolo, Status, Latência com 'ms').\n\nA função deve processar e agrupar pela ROTA (`/api/users`) e retornar um dicionário com estatísticas por rota.\nAs chaves são as rotas (ex: `/api/users`), os valores são dicionários com:\n1. `total_requests`: int contagem total de chamadas praquela rota.\n2. `success_rate`: float entre 0.0 e 100.0 (Status 2xx representam sucesso).\n3. `avg_latency`: int da média de tempo (exato inteiro, remova o 'ms' e faça round padrão inteiro `round()`).",
+    "interviewerGoal": "O que o entrevistador quer avaliar: Trabalhos rotineiros de Engenharia de Dados no backend: Parsing robusto de strings, agrupamento e agregação computacional em memória (Map-Reduce rudimentar), lidando de forma segura com estruturas aninhadas.",
+    "examples": [
+      {
+        "input": "[\"... GET /home HTTP/1.1 200 10ms\", \"... POST /home HTTP/1.1 500 50ms\"]",
+        "output": "{'/home': {'total_requests': 2, 'success_rate': 50.0, 'avg_latency': 30}}"
+      }
+    ],
+    "constraints": [
+      "Use parse via `split(' ')` ou Expressão Regular.",
+      "Assegure que lida com arrays vazios retornando {}."
+    ],
+    "codeSkeleton": "def analyze_logs(logs: list) -> dict:\n    pass",
+    "testAssertions": "logs = [\n    '[2024-01-01] GET /api/v1/auth HTTP/1.1 201 10ms',\n    '[2024-01-01] POST /api/v1/auth HTTP/1.1 401 20ms',\n    '[2024-01-01] GET /users HTTP/1.1 200 100ms',\n    '[2024-01-01] GET /users HTTP/1.1 200 102ms'\n]\n\nres = analyze_logs(logs)\nassert '/api/v1/auth' in res, 'Agrupamento por rota falhou'\nauth_stats = res['/api/v1/auth']\nassert auth_stats['total_requests'] == 2\nassert auth_stats['success_rate'] == 50.0, '201 é sucesso, 401 não. 1/2 = 50%'\nassert auth_stats['avg_latency'] == 15, '(10+20)/2'\n\nusers_stats = res['/users']\nassert users_stats['success_rate'] == 100.0\nassert users_stats['avg_latency'] == 101",
+    "hints": [
+      "Inicialize um dict raiz e, para cada rota achada nos logs, crie um subtipo temporário (ex: guarde lista das latências e lista dos status) pra depois iterar no final agregando tudo.",
+      "No parsing: `partes = linha.split(' ')`. `rota = partes[2]`, `status = int(partes[4])`, `latency = int(partes[5].replace('ms',''))`",
+      "Um status é de sucesso se `200 <= status < 300`."
+    ],
+    "solutionExplanation": "Padrão map-reduce aplicado. Mapeamos as linhas cruas para metadados estruturados, reduzimos via chave de agrupamento (GROUP BY da Rota) em listas intermediárias e por fim aplicamos funções de agregação (COUNT, AVG, SUM percentual). Isso é o alicerce por trás de bancos OLAP e sistemas como Elasticsearch/Kibana.",
+    "timeComplexity": "O(L) sendo L total de logs",
+    "spaceComplexity": "O(R * K) onde R é rota única e K arrays de acumulação antes da redução"
+  },
+  {
+    "id": "be_08",
+    "number": 8,
+    "title": "Circuit Breaker para Resiliência de Microserviços",
+    "category": "Arquitetura & Resiliência",
+    "difficulty": "Hard",
+    "xpReward": 40,
+    "description": "Se a API de Pagamento da Stripe cair, seu serviço de Carrinho não deve ficar esperando timeout e empilhando requisições, derrubando sua própria API por 'cascading failure'. Você precisa de um Circuit Breaker!\n\nImplemente a classe `CircuitBreaker` que encapsula chamadas externas.\nEstados: 'CLOSED' (tudo funcionando), 'OPEN' (circuit estourou, rejeite chamadas imediatamente para não sufocar), 'HALF_OPEN' (em teste de recuperação).\n\nParâmetros no init:\n- `failure_threshold`: int (Quantas falhas SEGUIDAS abrem o circuito)\n- `recovery_timeout`: float (Quantos segundos em OPEN até tentar deixar passar 1 call de teste no estado HALF_OPEN).\n\nMétodo `call(func, current_time) -> any`: \nExecuta a `func()`. Se a `func` lançar exception e circuito CLOSED: incrementa failure count. Se passar threshold, vai pra OPEN, anota timestamp e sobe a exception.\nSe circuito OPEN: se `current_time` passou de `timeout`, vai pra HALF_OPEN e tenta rodar a `func`. Se ela rodar lisa: vai pra CLOSED e zera erros. Se ela der erro: volta pra OPEN e anota timestamp novo. \nSe OPEN e não passou o tempo, lance na hora `Exception('Circuit is OPEN')` sem nem rodar `func()`.\nUse print ou retorne valores para o seu controle se desejar.",
+    "interviewerGoal": "O que o avaliador observa: Padrões avançados de Microsserviços e Tratamento de Exceções dinâmico. Conceitos vitais do framework Spring Cloud e Netflix Hystrix (Resilience4j). Tratar transição de estados finitos (State Machine).",
+    "examples": [
+      {
+        "input": "Rodar 3x func() falha, limite é 3. Circuito abre. Rodar 4a vez falha rápido ('fast fail') poupando sistema.",
+        "output": "Fast Fail.",
+        "explanation": "Circuit aberto barra a chamada."
+      }
+    ],
+    "constraints": [
+      "Gerencie `self.state = 'CLOSED' | 'OPEN' | 'HALF_OPEN'`."
+    ],
+    "codeSkeleton": "class CircuitBreaker:\n    def __init__(self, failure_threshold: int, recovery_timeout: float):\n        self.failure_threshold = failure_threshold\n        self.recovery_timeout = recovery_timeout\n        self.state = 'CLOSED'\n        self.failures = 0\n        self.last_failure_time = 0.0\n\n    def call(self, func, current_time: float):\n        pass",
+    "testAssertions": "def success_api(): return 'OK'\ndef fail_api(): raise ValueError('Stripe is down')\n\ncb = CircuitBreaker(failure_threshold=2, recovery_timeout=5.0)\nassert cb.call(success_api, 0.0) == 'OK'\n\n# Falha 1\ntry: cb.call(fail_api, 1.0)\nexcept ValueError: pass\nassert cb.state == 'CLOSED', '1 falha não abre circuito (limit 2)'\n\n# Falha 2\ntry: cb.call(fail_api, 2.0)\nexcept ValueError: pass\nassert cb.state == 'OPEN', 'Atingiu 2 falhas consecutivas, deve abrir!'\n\n# Fast failure\ntry: cb.call(success_api, 3.0)\nexcept Exception as e:\n    assert str(e) == 'Circuit is OPEN', 'Deveria bloquear chamada (tempo 3 < 2 + 5 de recovery)'\n\n# Half open test de sucesso\nassert cb.call(success_api, 8.0) == 'OK', 'Tempo 8 > last fail 2 + 5 recovery. Deixa tentar e se der sucesso fecha'\nassert cb.state == 'CLOSED', 'Recuperou!'",
+    "hints": [
+      "Antes de tudo na `call()`, verifique o estado.",
+      "Se tiver OPEN, calcule o tempo passado. Se for menor que `recovery_timeout`, lance `Exception('Circuit is OPEN')`. Se for maior ou igual, vire estado pra HALF_OPEN.",
+      "Em seguida, envolva o `func()` num try...except Exception as e. Se der OK, resete `self.failures = 0` e vá pra CLOSED, retorne valor. Se der Error, adicione +1 em failures (se tava closed), ou volte pra OPEN (se tava half), grave novo `last_failure_time` e lance pra cima o mesmo error `raise e`."
+    ],
+    "solutionExplanation": "Circuit Breaker é vital. Um Fast-Fail quando o sistema destino está sobrecarregado (OPEN) dá tempo ao sistema destino para se reerguer e impede nossa plataforma de sofrer Thread Exhaustion, onde todas as portas ficam abertas esperando um Timeout de rede de terceiros e paralisam até requests que não dependem do serviço terceiro.",
+    "timeComplexity": "O(1) overhead de gerenciamento em cima da chamada externa.",
+    "spaceComplexity": "O(1) estado contínuo simples de 3 variáveis."
+  },
+  {
+    "id": "be_09",
+    "number": 9,
+    "title": "Fila com Retry Exponencial & Dead Letter Queue (DLQ)",
+    "category": "Arquitetura & Resiliência",
+    "description": "Em sistemas Assíncronos (Celery/RabbitMQ), tarefas background (Jobs) que falham não são perdidas, são colocadas em retentativas com intervalos cada vez maiores (Exponential Backoff). Se todas falharem, caem numa Dead Letter Queue (Caixão das tarefas) para debug humano.\n\nImplemente a classe `JobQueue`:\n- `enqueue(job_id, payload)`: Enfileira tarefa nova.\n- `process_next(current_time) -> str`: Remove da fila a tarefa pronta pra ser processada.\nSe não tiver nenhuma ou a próxima ainda não atingiu seu `next_run_time`, não faça nada e retorne `None`.\n- `fail_job(job_id, current_time)`: Quando um worker informa falha, conte. A política de retry delay é: `delay = 2 ^ attempt_count` segundos. Ex: Primeira falha, attempt vira 1, espera 2s. Se falhar de novo, attempt vira 2, espera 4s. Agende o `next_run_time = current_time + delay` de volta na fila. Limite máximo é 3 attempts (ou seja, se falhar na attempt 3, mova para `dlq` internamente).\n\nDica: Mantenha os itens ordenados ou faça busca manual caso a lista seja pequena (para fins de simulação).",
+    "interviewerGoal": "O que o avaliador avalia: Conceitos de Event-Driven Architecture (Mensageria), resiliência em workers assíncronos e a lógica matemática atemporal por trás do Backoff Exponencial.",
+    "difficulty": "Medium",
+    "xpReward": 35,
+    "examples": [
+      {
+        "input": "jobq.enqueue('j1', 'send_email') \njobq.process_next(0.0) -> pega j1\njobq.fail_job('j1', 1.0) -> reagenda na fila j1 pra rodar em 1.0 + (2^1) = 3.0",
+        "output": "Reagendamento automático em backoff.",
+        "explanation": "Isso dá tempo do SMTP server de email estabilizar."
+      }
+    ],
+    "constraints": [
+      "Não se preocupe com workers multi-threading, é estritamente lógico.",
+      "Para gerenciar e achar o job, pode armazená-lo num array global de fila com dits `{'id':..., 'payload':..., 'attempts':0, 'next_run':0.0}`."
+    ],
+    "codeSkeleton": "class JobQueue:\n    def __init__(self):\n        self.queue = [] # lista de dicts de jobs pendentes/agendados\n        self.dlq = [] # lista de dicts\n        self.processing = {} # Para achar rápido o job quando worker avisar falha\n\n    def enqueue(self, job_id: str, payload: str):\n        pass\n    def process_next(self, current_time: float) -> str:\n        pass\n    def fail_job(self, job_id: str, current_time: float):\n        pass",
+    "testAssertions": "jq = JobQueue()\njq.enqueue('j1', 'payload_A')\n\n# Enfileirou, está elegível em tempo=0 (ou qualquer pq acabou de entrar)\nassert jq.process_next(0.0) == 'j1', 'Deveria retornar j1 para processamento'\n\n# Worker 1 falhou\njq.fail_job('j1', 1.0)\n\n# Tenta pegar em tempo 2.0 (o backoff é de 2^1 = 2 segs. Então target next_run = 1.0 + 2.0 = 3.0)\nassert jq.process_next(2.5) is None, 'Job não está pronto ainda (está no backoff)'\nassert jq.process_next(3.1) == 'j1', 'Tempo passou do backoff, job reagendado liberado'\n\n# Worker falha a segunda e a terceira (limite)\njq.fail_job('j1', 4.0)\nassert jq.process_next(8.5) == 'j1' # Backoff 4 (2^2), 4+4=8.0\n\njq.fail_job('j1', 10.0) # Tentou 3 vezes já! (attempts = 3)\nassert len(jq.queue) == 0, 'Fila normal deve ficar vazia'\nassert len(jq.dlq) == 1, 'Job deve ir pro cemitério (DLQ)'\nassert jq.dlq[0]['id'] == 'j1'",
+    "hints": [
+      "No `enqueue`, adicione à `self.queue` com `attempts = 0` e `next_run = 0`.",
+      "No `process_next`, itere a lista achando o primeiro que `next_run <= current_time`. Se achar, mova ele pros `self.processing` e retorne seu ID. Não esqueça de tirá-lo da `queue`.",
+      "No `fail_job`, tire de `processing`. Incremente `attempts`. Se `attempts >= 3`, appende no `dlq`. Senão, recalcule o next run, insira na `queue` de volta."
+    ],
+    "solutionExplanation": "Filas com Exponential Backoff aliviam imediatamente a pressão de serviços downstream degradados. Em caso de sobrecarga (ex: DB da empresa ficou lento), não queremos bater nele mais forte logo em seguida, espaçamos em x2, x4, x8 segundos... A DLQ (Dead Letter) garante que nenhuma mensagem de negócio se perdeu no espaço após as tentativas sistemáticas, permitindo reprocessamento via Script Administrativo na madrugada.",
+    "timeComplexity": "O(N) busca simples na fila por vez. Num sistema real, usaríamos Priority Queue (Min Heap) baseado no Timestamp (O(log N)).",
+    "spaceComplexity": "O(N) de itens na memória"
+  },
+  {
+    "id": "be_10",
+    "number": 10,
+    "title": "Validador e Coercitor de Schema de Payload JSON",
+    "category": "Segurança & Autenticação",
+    "difficulty": "Easy",
+    "xpReward": 25,
+    "description": "Uma API REST robusta nunca confia nos dados enviados pelo cliente no body. Bibliotecas como Pydantic ou Zod no Node validam e 'coercem' (convertem forçadamente) os tipos na entrada.\n\nConstrua um validador: `validate_payload(payload: dict, schema: dict) -> dict`.\nO `schema` dita as regras, ex:\n`{'age': {'type': int, 'required': True}, 'name': {'type': str, 'required': False, 'default': 'Anonymous'}}`.\n\nRegras para iterar o schema:\n1. Se `required: True` e o campo não estiver no `payload`, lance `ValueError(f'Missing field {campo}')`.\n2. Se o campo não estiver no payload, mas tem `default` preenchido no schema, adicione ao output com aquele valor default.\n3. Se o campo existe no payload, deve tentar fazer cast (coerce) do dado cru que chegou usando o tipo especificado em `type` (ex: `int('42') -> 42`). Se falhar com exceção (ex: cast int de 'abc'), lance `TypeError(f'Invalid type for {campo}')`.\n4. Retorne o novo dicionário limpo e validado que só contenha as chaves presentes no schema (filtrando campos excedentes não documentados).",
+    "interviewerGoal": "O que avaliador observa: Familiaridade profunda com os fundamentos que regem middlewares de validação de Request Body, Type Casting dinâmico em Python (First Class Functions) e remoção segura de campos sujos indesejados.",
+    "examples": [
+      {
+        "input": "validate_payload({'age': '20', 'hacker_field': 'sudo'}, schema_de_age_e_name)",
+        "output": "{'age': 20, 'name': 'Anonymous'}",
+        "explanation": "Fez parse de '20' para int. Removeu o lixo do 'hacker_field' extra e injetou o default 'Anonymous' no 'name'."
+      }
+    ],
+    "constraints": [
+      "Use as funções nativas tipadas vindas do dict de schema, ex: o type `int` pode ser executado diretamente em `try: value = field_type(raw_val)`."
+    ],
+    "codeSkeleton": "def validate_payload(payload: dict, schema: dict) -> dict:\n    pass",
+    "testAssertions": "schema_test = {\n    'age': {'type': int, 'required': True},\n    'username': {'type': str, 'required': False, 'default': 'anon'}\n}\n\nres1 = validate_payload({'age': '18', 'extra_trash': 123}, schema_test)\nassert res1 == {'age': 18, 'username': 'anon'}, 'Fez coerção do int, pegou default do username, e dropou o lixo extra'\n\ntry:\n    validate_payload({}, schema_test)\n    assert False, 'Deveria falhar no required'\nexcept ValueError as e:\n    assert str(e) == 'Missing field age'\n\ntry:\n    validate_payload({'age': 'não_sou_int'}, schema_test)\n    assert False, 'Deveria falhar com TypeError por erro de casting'\nexcept TypeError as e:\n    assert str(e) == 'Invalid type for age'",
+    "hints": [
+      "Crie um dict vazio `validated = {}` para ir preenchendo.",
+      "Faça um for loop nas chaves de `.items()` do `schema`.",
+      "Em cada campo de schema, analise as lógicas solicitadas em cascata (tem no payload? se não tem é required? se não tem e não é required, tem default? se tem, tente converter `field_schema['type'](payload[key])` e pegue exceção)."
+    ],
+    "solutionExplanation": "Essa mecânica é o coração do pacote Pydantic no FastAPI. Realizar 'Data Sanitization e Coercion' nos Endpoints impede lixo de chegar aos Services, previne poluição de Banco de Dados, impede Mass Assignment Vulnerabilities (quando o hacker envia 'is_admin = true' num objeto, ignoramos pois não está no schema) e converte strings HTML querystrings (tudo que vem na rede é string) em tipagens reais garantindo estabilidade.",
+    "timeComplexity": "O(S) onde S é o número de campos definidos no schema",
+    "spaceComplexity": "O(S) criação de um novo dict filtrado (Padrão DTO de saída)"
+  }
+]

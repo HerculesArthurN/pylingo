@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, startTransition } from 'react';
 import { Header } from './components/Header';
+import { BottomNavBar } from './components/BottomNavBar';
 import { Sidebar } from './components/Sidebar';
 import { LearningTree } from './components/LearningTree';
 import { SandboxFree } from './components/SandboxFree';
@@ -12,6 +13,10 @@ import { LevelUpModal } from './components/LevelUpModal';
 import { AchievementUnlockedModal } from './components/AchievementUnlockedModal';
 import { ProfileView } from './components/ProfileView';
 import { AuthView } from './components/AuthView';
+import { LandingPage } from './components/LandingPage';
+import { PracticeView } from './components/PracticeView';
+import { InterviewLeetCodeView } from './components/InterviewLeetCodeView';
+import { InterviewBackendView } from './components/InterviewBackendView';
 
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useAudio } from './hooks/useAudio';
@@ -24,7 +29,7 @@ import { addXp, deductCoins } from './core/progression';
 import { calculateLevel } from './core/leveling';
 import { ACHIEVEMENTS_LIST, checkNewAchievements } from './core/achievements';
 import { calculateRewardsV2 } from './core/hintEngine';
-import { loadChapterData, loadExerciseBatteryData } from './core/dataLoader';
+import { loadChapterData, loadExerciseBatteryData, getLeetCodeChallenges, getBackendChallenges } from './core/dataLoader';
 import { migrateStateV1ToV2 } from './core/migration';
 import { supabase, isCloudEnabled } from './core/supabaseClient';
 
@@ -44,6 +49,7 @@ export default function App() {
   const [hintPassRemaining, setHintPassRemaining] = useLocalStorage<number>('pylingo_hint_pass_v2', 0);
 
   const [achievements, setAchievements] = useLocalStorage<string[]>('pylingo_achievements_v1', []);
+  const [completedChallenges, setCompletedChallenges] = useLocalStorage<string[]>('pylingo_completed_challenges_v3', []);
   const [soundEnabled, setSoundEnabled] = useLocalStorage<boolean>('pylingo_sound_v1', true);
   const [onboardingDone, setOnboardingDone] = useLocalStorage<boolean>('pylingo_onboarding_v1', false);
   const [leitnerSchedule, setLeitnerSchedule] = useLocalStorage<Record<string, ILeitnerState>>('pylingo_leitner_v1', {});
@@ -93,8 +99,14 @@ export default function App() {
     };
   }, []);
 
-  // --- ENGINE PYODIDE (WASM em Web Worker) ---
-  const { ready: pyodideReady, error: pyodideError, runCode } = usePyodide();
+  // --- ESTADO DA LANDING PAGE E MENU ---
+  const [isLandingPage, setIsLandingPage] = useState<boolean>(!onboardingDone && xp === 0 && !user);
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+
+  // --- ENGINE PYODIDE (WASM em Web Worker com Lazy Load) ---
+  const { ready: pyodideReady, error: pyodideError, runCode, reloadInterpreter } = usePyodide({
+    autoInit: !isLandingPage,
+  });
 
   // --- ESTADO TEMPORÁRIO (Navegação & UI) ---
   const [activeTab, setActiveTab] = useState<ActiveTab>('tree');
@@ -158,10 +170,12 @@ export default function App() {
       const chapterData = await loadChapterData(chapterId);
       const batteryData = await loadExerciseBatteryData(chapterData.exerciseBatteryId);
 
-      setActiveChapter(chapterData);
-      setActiveBattery(batteryData);
-      setActiveTab('book');
-      setCurrentLesson(null);
+      startTransition(() => {
+        setActiveChapter(chapterData);
+        setActiveBattery(batteryData);
+        setActiveTab('book');
+        setCurrentLesson(null);
+      });
     } catch (err) {
       console.error("Erro ao carregar capítulo:", err);
     }
@@ -402,6 +416,27 @@ export default function App() {
     checkAndTriggerAchievements(xp, coins, completedLessons, { sandboxExecuted: true });
   };
 
+  const handleChallengeSuccess = (challengeId: string, xpReward: number) => {
+    const previousLevel = calculateLevel(xp);
+    const newXp = addXp(xp, xpReward);
+    const coinReward = Math.ceil(xpReward / 5);
+
+    setXp(newXp);
+    setCoins(prev => prev + coinReward);
+    setXpHistory(prev => addXpToHistory(prev, xpReward, getLocalIsoDate(Date.now())));
+
+    if (!completedChallenges.includes(challengeId)) {
+      setCompletedChallenges(prev => [...prev, challengeId]);
+    }
+
+    const nextLevel = calculateLevel(newXp);
+    if (nextLevel > previousLevel) {
+      enqueueModals([{ type: 'level_up', data: { level: nextLevel } }]);
+    }
+
+    checkAndTriggerAchievements(newXp, coins + coinReward, completedLessons);
+  };
+
   return (
     <div className="min-h-screen bg-base-50 text-base-900 flex flex-col font-mono selection:bg-accent selection:text-base-900">
       <a 
@@ -411,172 +446,384 @@ export default function App() {
         Pular para o conteúdo principal
       </a>
       
-      {/* Header Global */}
-      <Header
-        xp={xp}
-        streak={streak}
-        coins={coins}
-        soundEnabled={soundEnabled}
-        onToggleSound={() => {
-          playSound('click');
-          setSoundEnabled(prev => !prev);
-        }}
-        onLogoClick={() => {
-          playSound('click');
-          setCurrentLesson(null);
-          setActiveTab('tree');
-        }}
-        currentChapter={activeChapter ? { number: activeChapter.number, title: activeChapter.title } : undefined}
-      />
+      {/* App Shell Isolado via 'inert' e 'aria-hidden' quando o Drawer estiver aberto */}
+      <div 
+        id="app-shell"
+        {...(isDrawerOpen ? { inert: '' } : {})}
+        aria-hidden={isDrawerOpen}
+        className={`flex-1 flex flex-col transition-opacity duration-200 ${
+          isDrawerOpen ? 'pointer-events-none select-none opacity-90' : ''
+        }`}
+      >
+        {/* Header Unificado com Acessibilidade e Trigger do Drawer */}
+        <Header
+          xp={xp}
+          streak={streak}
+          coins={coins}
+          soundEnabled={soundEnabled}
+          onToggleSound={() => {
+            playSound('click');
+            setSoundEnabled(!soundEnabled);
+          }}
+          onLogoClick={() => {
+            playSound('click');
+            if (isLandingPage) return;
+            // When inside app, go to tree (not landing page)
+            setCurrentLesson(null);
+            setActiveChapter(null);
+            setActiveTab('tree');
+          }}
+          currentChapter={activeChapter ? { number: activeChapter.number, title: activeChapter.title } : undefined}
+          isDrawerOpen={isDrawerOpen}
+          onToggleDrawer={() => {
+            playSound('click');
+            setIsDrawerOpen(prev => !prev);
+          }}
+          isLanding={isLandingPage}
+          onStartLearning={() => {
+            playSound('click');
+            setIsLandingPage(false);
+          }}
+          onOpenAuth={() => setShowAuthModal(true)}
+          isGuest={!user && xp > 0}
+          user={user}
+          activeTab={activeTab}
+          showBackButton={!isLandingPage && (!!currentLesson || activeTab === 'book' || activeTab !== 'tree')}
+          onBack={() => {
+            playSound('click');
+            if (currentLesson) {
+              setCurrentLesson(null);
+            } else if (activeTab === 'book' && activeChapter) {
+              setActiveChapter(null);
+              setActiveTab('tree');
+            } else {
+              setActiveTab('tree');
+            }
+          }}
+          breadcrumb={
+            currentLesson
+              ? ['Trilha', 'Exercício']
+              : activeTab === 'book' && activeChapter
+              ? ['Trilha', 'Livro', `Capítulo ${activeChapter.number}`]
+              : activeTab === 'book'
+              ? ['Trilha', 'Livro']
+              : activeTab === 'practice'
+              ? ['Trilha', 'Prática']
+              : activeTab === 'interview-leetcode'
+              ? ['Entrevistas', 'LeetCode']
+              : activeTab === 'interview-backend'
+              ? ['Entrevistas', 'Backend']
+              : undefined
+          }
+        />
 
-      {/* Onboarding Overlay */}
-      {!onboardingDone && xp === 0 && completedLessons.length === 0 && (
-        <OnboardingOverlay onComplete={() => setOnboardingDone(true)} />
-      )}
-
-      {/* Conteúdo Principal */}
-      <main id="main-content" tabIndex={-1} className="flex-1 flex flex-col max-w-6xl w-full mx-auto p-4 md:py-8 pb-20 lg:pb-4" data-queue-size={modalQueue.length}>
-        
-        {pyodideError && (
-          <div className="bg-error text-white border-2 border-base-900 shadow-brutal px-4 py-3 mb-6 text-xs font-bold font-mono">
-            ⚠️ Ocorreu um erro ao carregar o interpretador Python WASM: {pyodideError}
-          </div>
-        )}
-
-        <div className="animate-fade-in flex-1 flex flex-col">
-          {currentLesson ? (
-            <div key="active-lesson" className="animate-slide-up h-full">
-              <ActiveLessonView
-                exercise={currentLesson}
-                onBack={() => setCurrentLesson(null)}
-                onSuccess={handleLessonSuccess}
-                onFail={() => handleLessonFail(currentLesson.id)}
-                soundEnabled={soundEnabled}
+        {/* Roteamento: Landing Page Pública vs Aplicação Principal */}
+        {isLandingPage ? (
+          <LandingPage
+            onStartOnboarding={() => {
+              playSound('click');
+              setIsLandingPage(false);
+            }}
+            onOpenAuth={() => setShowAuthModal(true)}
+          />
+        ) : (
+          <>
+            {/* Onboarding Overlay (Se usuário não tiver concluído) */}
+            {!onboardingDone && xp === 0 && completedLessons.length === 0 && (
+              <OnboardingOverlay
+                onComplete={(result) => {
+                  setOnboardingDone(true);
+                  if (result?.xpEarned) {
+                    setXp(prev => prev + result.xpEarned);
+                    setXpHistory(prev => addXpToHistory(prev, result.xpEarned, getLocalIsoDate(Date.now())));
+                  }
+                  if (result?.completedLessonId) {
+                    setCompletedLessons(prev => 
+                      prev.includes(result.completedLessonId) ? prev : [...prev, result.completedLessonId]
+                    );
+                  }
+                }}
+                onOpenAuth={() => setShowAuthModal(true)}
                 playSound={playSound}
                 runCode={runCode}
                 pyodideReady={pyodideReady}
-                hintPassActive={hintPassRemaining > 0}
+                reloadInterpreter={reloadInterpreter}
               />
-            </div>
-          ) : activeTab === 'book' && activeChapter ? (
-            <div key="active-book" className="animate-slide-up h-full">
-              <BookReader
-                chapter={activeChapter}
-                onChapterReadComplete={handleChapterReadComplete}
-                onStartExercises={handleStartChapterExercises}
-                onRunCode={runCode}
-                onBack={() => setActiveTab('tree')}
-                playSound={playSound}
-              />
-            </div>
-          ) : (
-            <div key="dashboard" className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start animate-fade-in">
-              <div className="hidden lg:block lg:col-span-4">
-                <Sidebar
-                  activeTab={activeTab}
-                  onTabChange={(tab) => {
-                    playSound('click');
-                    setActiveTab(tab);
-                    if (tab === 'book' && !activeChapter) {
-                      handleSelectChapter('chapter_1');
-                    }
-                  }}
-                  mascotMood={mascotMood}
-                  completedLessonsCount={completedLessons.length + completedExercises.length}
-                  totalLessonsCount={LESSONS_DATABASE.length + 12}
-                  xp={xp}
-                  achievements={achievements}
-                  leitnerSchedule={leitnerSchedule}
+            )}
+
+            {/* Conteúdo Principal da Aplicação */}
+            <main id="main-content" tabIndex={-1} className="flex-1 flex flex-col max-w-7xl w-full mx-auto p-4 sm:px-6 lg:px-8 py-6 pb-20 md:pb-6" data-queue-size={modalQueue.length}>
+              
+              {/* Quick Category Navigation Pill Bar for Students */}
+              {!currentLesson && activeTab !== 'book' && (
+                <div className="flex items-center justify-between gap-2 mb-6 pb-2 border-b border-base-200 dark:border-base-800 overflow-x-auto">
+                  <div className="flex items-center gap-1.5 sm:gap-2">
+                    {[
+                      { id: 'tree' as const, label: 'Trilha de Lições' },
+                      { id: 'book' as const, label: 'Livro & Teoria' },
+                      { id: 'practice' as const, label: 'Prática' },
+                      { id: 'interview-leetcode' as const, label: 'LeetCode' },
+                      { id: 'interview-backend' as const, label: 'Backend' },
+                      { id: 'sandbox' as const, label: 'Playground' },
+                      { id: 'shop' as const, label: 'Loja' },
+                      { id: 'profile' as const, label: 'Meu Perfil' },
+                    ].map(({ id, label }) => (
+                      <button
+                        key={id}
+                        onClick={() => {
+                          playSound('click');
+                          startTransition(() => {
+                            setActiveTab(id);
+                            if (id === 'book' && !activeChapter) {
+                              handleSelectChapter('chapter_1');
+                            }
+                          });
+                        }}
+                        className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                          activeTab === id
+                            ? 'bg-emerald-600 text-white shadow-xs'
+                            : 'text-base-600 dark:text-base-400 hover:bg-base-200 dark:hover:bg-base-800'
+                        }`}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={() => setIsLandingPage(true)}
+                    className="text-xs text-base-500 hover:text-base-800 dark:hover:text-base-200 transition-colors font-medium shrink-0 hidden sm:inline"
+                  >
+                    Ver Apresentação ➔
+                  </button>
+                </div>
+              )}
+
+              {pyodideError && (
+                <div className="bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-200 border border-rose-300 dark:border-rose-800 px-4 py-3 rounded-xl mb-6 text-xs font-mono flex items-center justify-between gap-4">
+                  <span>⚠️ Erro no interpretador Python WASM: {pyodideError}</span>
+                  <button
+                    onClick={() => reloadInterpreter()}
+                    className="px-3 py-1 bg-rose-600 text-white font-semibold rounded-lg hover:bg-rose-500 transition-colors shrink-0"
+                  >
+                    Recarregar Motor
+                  </button>
+                </div>
+              )}
+
+              <div className="animate-fade-in flex-1 flex flex-col">
+                {currentLesson ? (
+                  <div key="active-lesson" className="animate-slide-up h-full">
+                    <ActiveLessonView
+                      exercise={currentLesson}
+                      onBack={() => setCurrentLesson(null)}
+                      onSuccess={handleLessonSuccess}
+                      onFail={() => handleLessonFail(currentLesson.id)}
+                      soundEnabled={soundEnabled}
+                      playSound={playSound}
+                      runCode={runCode}
+                      pyodideReady={pyodideReady}
+                      hintPassActive={hintPassRemaining > 0}
+                    />
+                  </div>
+                ) : activeTab === 'book' && activeChapter ? (
+                  <div key="active-book" className="animate-slide-up h-full">
+                    <BookReader
+                      chapter={activeChapter}
+                      onChapterReadComplete={handleChapterReadComplete}
+                      onStartExercises={handleStartChapterExercises}
+                      onRunCode={runCode}
+                      onBack={() => setActiveTab('tree')}
+                      playSound={playSound}
+                    />
+                  </div>
+                ) : (
+                  <div key="dashboard" className="w-full animate-fade-in">
+                    {activeTab === 'tree' && (
+                      <LearningTree
+                        lessons={LESSONS_DATABASE}
+                        unlockedLessons={unlockedLessons}
+                        completedLessons={completedLessons}
+                        completedExercises={completedExercises}
+                        chaptersRead={chaptersRead}
+                        onSelectLesson={handleSelectLesson}
+                        onSelectChapter={handleSelectChapter}
+                        leitnerSchedule={leitnerSchedule}
+                      />
+                    )}
+
+                    {activeTab === 'sandbox' && (
+                      <SandboxFree
+                        code={sandboxCode}
+                        onChangeCode={setSandboxCode}
+                        output={sandboxOutput}
+                        onExecute={handleExecuteSandbox}
+                        isLoading={sandboxLoading}
+                        pyodideReady={pyodideReady}
+                      />
+                    )}
+
+                    {activeTab === 'shop' && (
+                      <Shop
+                        coins={coins}
+                        mascotMood={mascotMood}
+                        onBuyHintPass={handleBuyHintPass}
+                        onToggleGeekMood={handleToggleGeekMood}
+                        onResetProgress={handleResetProgress}
+                        hintPassRemaining={hintPassRemaining}
+                      />
+                    )}
+
+                    {activeTab === 'profile' && (
+                      <ProfileView
+                        xp={xp}
+                        streak={streak}
+                        completedLessonsCount={completedLessons.length + completedExercises.length}
+                        totalLessonsCount={LESSONS_DATABASE.length + 12}
+                        achievementsCount={achievements.length}
+                        totalAchievementsCount={ACHIEVEMENTS_LIST.length}
+                        coins={coins}
+                        xpHistory={xpHistory}
+                        mascotMood={mascotMood}
+                        user={user}
+                        onOpenAuth={() => setShowAuthModal(true)}
+                        onLogout={async () => {
+                          if (supabase) {
+                            await supabase.auth.signOut();
+                          }
+                          setUser(null);
+                        }}
+                      />
+                    )}
+
+                    {activeTab === 'practice' && (
+                      <PracticeView
+                        completedExercises={completedExercises}
+                        onSelectExercise={(ex) => {
+                          playSound('click');
+                          setCurrentLesson(ex);
+                        }}
+                        playSound={playSound}
+                      />
+                    )}
+
+                    {activeTab === 'interview-leetcode' && (
+                      <InterviewLeetCodeView
+                        challenges={getLeetCodeChallenges()}
+                        completedChallengeIds={completedChallenges}
+                        onChallengeSuccess={handleChallengeSuccess}
+                        runCode={runCode}
+                        pyodideReady={pyodideReady}
+                        playSound={playSound}
+                      />
+                    )}
+
+                    {activeTab === 'interview-backend' && (
+                      <InterviewBackendView
+                        challenges={getBackendChallenges()}
+                        completedChallengeIds={completedChallenges}
+                        onChallengeSuccess={handleChallengeSuccess}
+                        runCode={runCode}
+                        pyodideReady={pyodideReady}
+                        playSound={playSound}
+                      />
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {activeModal?.type === 'complete' && (
+                <LessonCompleteModal
+                  xpEarned={activeModal.data.xp}
+                  coinsEarned={activeModal.data.coins}
+                  totalXp={activeModal.data.totalXp}
+                  onContinue={handleCloseModal}
+                  playSound={playSound}
                 />
+              )}
+              {activeModal?.type === 'level_up' && (
+                <LevelUpModal
+                  newLevel={activeModal.data.level}
+                  onContinue={handleCloseModal}
+                  playSound={playSound}
+                />
+              )}
+              {activeModal?.type === 'achievement' && (
+                <AchievementUnlockedModal
+                  achievement={activeModal.data}
+                  onContinue={handleCloseModal}
+                  playSound={playSound}
+                />
+              )}
+            </main>
+
+            {/* Minimalist App Footer */}
+            <footer role="contentinfo" className="py-6 border-t border-base-200 dark:border-base-800 text-center text-xs text-base-500 dark:text-base-400 select-none">
+              <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2 font-mono">
+                <span>© 2026 PyLingo • Edição Educacional</span>
+                <div className="flex items-center gap-3 text-[11px]">
+                  <span className="text-emerald-600 dark:text-emerald-400 font-semibold">WebAssembly Sandbox</span>
+                  <span>•</span>
+                  <span>Pyodide v0.26</span>
+                </div>
               </div>
-
-              <div className="lg:col-span-8">
-                {activeTab === 'tree' && (
-                  <LearningTree
-                    lessons={LESSONS_DATABASE}
-                    unlockedLessons={unlockedLessons}
-                    completedLessons={completedLessons}
-                    completedExercises={completedExercises}
-                    chaptersRead={chaptersRead}
-                    onSelectLesson={handleSelectLesson}
-                    onSelectChapter={handleSelectChapter}
-                    leitnerSchedule={leitnerSchedule}
-                  />
-                )}
-
-                {activeTab === 'sandbox' && (
-                  <SandboxFree
-                    code={sandboxCode}
-                    onChangeCode={setSandboxCode}
-                    output={sandboxOutput}
-                    onExecute={handleExecuteSandbox}
-                    isLoading={sandboxLoading}
-                    pyodideReady={pyodideReady}
-                  />
-                )}
-
-                {activeTab === 'shop' && (
-                  <Shop
-                    coins={coins}
-                    mascotMood={mascotMood}
-                    onBuyHintPass={handleBuyHintPass}
-                    onToggleGeekMood={handleToggleGeekMood}
-                    onResetProgress={handleResetProgress}
-                    hintPassRemaining={hintPassRemaining}
-                  />
-                )}
-
-                {activeTab === 'profile' && (
-                  <ProfileView
-                    xp={xp}
-                    streak={streak}
-                    completedLessonsCount={completedLessons.length + completedExercises.length}
-                    totalLessonsCount={LESSONS_DATABASE.length + 12}
-                    achievementsCount={achievements.length}
-                    totalAchievementsCount={ACHIEVEMENTS_LIST.length}
-                    coins={coins}
-                    xpHistory={xpHistory}
-                    mascotMood={mascotMood}
-                    user={user}
-                    onOpenAuth={() => setShowAuthModal(true)}
-                    onLogout={async () => {
-                      if (supabase) {
-                        await supabase.auth.signOut();
-                      }
-                      setUser(null);
-                    }}
-                  />
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {activeModal?.type === 'complete' && (
-          <LessonCompleteModal
-            xpEarned={activeModal.data.xp}
-            coinsEarned={activeModal.data.coins}
-            totalXp={activeModal.data.totalXp}
-            onContinue={handleCloseModal}
-            playSound={playSound}
-          />
+            </footer>
+          </>
         )}
-        {activeModal?.type === 'level_up' && (
-          <LevelUpModal
-            newLevel={activeModal.data.level}
-            onContinue={handleCloseModal}
-            playSound={playSound}
-          />
-        )}
-        {activeModal?.type === 'achievement' && (
-          <AchievementUnlockedModal
-            achievement={activeModal.data}
-            onContinue={handleCloseModal}
-            playSound={playSound}
-          />
-        )}
-      </main>
+      </div>
 
+      {/* Slide-Over Drawer Global (Disponível em Desktop & Mobile, z-50) */}
+      <Sidebar
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        activeTab={activeTab}
+        onTabChange={(tab) => {
+          playSound('click');
+          setIsDrawerOpen(false);
+          startTransition(() => {
+            setIsLandingPage(false);
+            setActiveTab(tab);
+            setCurrentLesson(null);
+            if (tab === 'book' && !activeChapter) {
+              handleSelectChapter('chapter_1');
+            }
+          });
+        }}
+        mascotMood={mascotMood}
+        completedLessonsCount={completedLessons.length + completedExercises.length}
+        totalLessonsCount={LESSONS_DATABASE.length + 12}
+        xp={xp}
+        achievements={achievements}
+        leitnerSchedule={leitnerSchedule}
+        user={user}
+        onOpenAuth={() => setShowAuthModal(true)}
+        onLogout={async () => {
+          if (supabase) {
+            await supabase.auth.signOut();
+          }
+          setUser(null);
+        }}
+      />
+
+      {/* Bottom Navigation Bar for Mobile */}
+      {!isLandingPage && (
+        <BottomNavBar
+          activeTab={activeTab}
+          onTabChange={(tab) => {
+            playSound('click');
+            startTransition(() => {
+              setActiveTab(tab);
+              setCurrentLesson(null);
+              if (tab === 'book' && !activeChapter) {
+                handleSelectChapter('chapter_1');
+              }
+            });
+          }}
+          isVisible={!currentLesson && !isLandingPage}
+        />
+      )}
+
+      {/* Modal de Autenticação (z-60) */}
       {showAuthModal && (
         <AuthView
           onAuthSuccess={(u) => {
@@ -587,36 +834,6 @@ export default function App() {
           playSound={playSound}
         />
       )}
-
-      <div className="lg:hidden">
-        <Sidebar
-          activeTab={activeTab}
-          onTabChange={(tab) => {
-            playSound('click');
-            setActiveTab(tab);
-            setCurrentLesson(null);
-            if (tab === 'book' && !activeChapter) {
-              handleSelectChapter('chapter_1');
-            }
-          }}
-          mascotMood={mascotMood}
-          completedLessonsCount={completedLessons.length + completedExercises.length}
-          totalLessonsCount={LESSONS_DATABASE.length + 12}
-          xp={xp}
-          achievements={achievements}
-          leitnerSchedule={leitnerSchedule}
-        />
-      </div>
-
-      <footer role="contentinfo" className="bg-base-100 border-t-4 border-base-900 py-6 mt-12 text-center text-xs text-base-900 select-none mb-16 lg:mb-0">
-        <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4 font-mono font-bold">
-          <span>© 2026 PyLingo V3 • DEVELOPER EDITION</span>
-          <div className="flex items-center space-x-2">
-            <span className="bg-base-200 border-2 border-base-900 px-3 py-1 text-[10px] uppercase shadow-pixel-sm">Vite Web Worker</span>
-            <span className="bg-accent text-base-900 border-2 border-base-900 px-3 py-1 text-[10px] uppercase shadow-pixel-sm">Pyodide WASM Runtime</span>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

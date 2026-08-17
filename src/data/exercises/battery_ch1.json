@@ -6,7 +6,7 @@
       "id": "c1_e01",
       "number": 1,
       "title": "Olá, Mundo!",
-      "description": "A saída padrão é a forma que os programas se communicam com o mundo. Em Python, usamos a função print() para exibir mensagens na tela.",
+      "description": "A saída padrão é a forma que os programas se comunicam com o mundo. Em Python, usamos a função print() para exibir mensagens na tela.",
       "difficulty": "Fácil",
       "xpReward": 10,
       "concept": "Função print()",

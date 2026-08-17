@@ -34,23 +34,23 @@ export const MonacoEditor: React.FC<MonacoEditorProps> = ({
         { token: 'operator', foreground: '34AA70' },
       ],
       colors: {
-        'editor.background': '#07140D',
-        'editor.foreground': '#F5F9F6',
-        'editor.lineHighlightBackground': '#14221A',
-        'editorCursor.foreground': '#34AA70',
-        'editorWhitespace.foreground': '#293830',
-        'editorIndentGuide.background': '#293830',
-        'editorIndentGuide.activeBackground': '#34AA70',
-        'editorLineNumber.foreground': '#64748B',
-        'editorLineNumber.activeForeground': '#34AA70',
-        'editor.selectionBackground': '#34AA7044',
-        'editor.inactiveSelectionBackground': '#34AA7022',
+        'editor.background': '#121214',
+        'editor.foreground': '#F4F4F8',
+        'editor.lineHighlightBackground': '#1A1A22',
+        'editorCursor.foreground': '#4ADE80',
+        'editorWhitespace.foreground': '#2A2A35',
+        'editorIndentGuide.background': '#2A2A35',
+        'editorIndentGuide.activeBackground': '#4ADE80',
+        'editorLineNumber.foreground': '#5C5C70',
+        'editorLineNumber.activeForeground': '#4ADE80',
+        'editor.selectionBackground': '#4ADE8033',
+        'editor.inactiveSelectionBackground': '#4ADE8018',
       },
     });
   };
 
   return (
-    <div className="w-full h-full relative" style={{ height }}>
+    <div className="w-full h-full relative [isolation:isolate] z-10" style={{ height }}>
       <Editor
         language="python"
         theme="bioma-dark"
@@ -58,10 +58,10 @@ export const MonacoEditor: React.FC<MonacoEditorProps> = ({
         value={value}
         onChange={handleEditorChange}
         loading={
-          <div className="absolute inset-0 bg-bioma-moss-dark flex flex-col items-center justify-center text-xs font-mono text-bioma-muted gap-3">
+          <div className="absolute inset-0 bg-base-950 flex flex-col items-center justify-center text-xs font-mono text-base-400 gap-3">
             {/* Esqueleto animado de loading */}
-            <div className="w-8 h-8 rounded-full border-4 border-bioma-moss border-t-bioma-leaf animate-spin"></div>
-            <span>Carregando Monaco Editor (Bioma)...</span>
+            <div className="w-8 h-8 rounded-full border-4 border-base-800 border-t-emerald-500 animate-spin"></div>
+            <span>Carregando Monaco Editor...</span>
           </div>
         }
         options={{
@@ -77,6 +77,7 @@ export const MonacoEditor: React.FC<MonacoEditorProps> = ({
           insertSpaces: true,
           detectIndentation: false,
           wordWrap: 'on',
+          fixedOverflowWidgets: true,
           suggestOnTriggerCharacters: true,
           quickSuggestions: {
             other: true,

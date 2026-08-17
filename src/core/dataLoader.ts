@@ -1,5 +1,7 @@
-import { IBookChapter, IExerciseBattery } from './types';
+import { IBookChapter, IExerciseBattery, IInterviewChallenge } from './types';
 import chaptersIndexData from '../data/chapters_index.json';
+import leetCodeData from '../data/interview_leetcode_challenges.json';
+import backendData from '../data/interview_backend_challenges.json';
 
 export interface IChaptersIndexMeta {
   id: string;
@@ -24,6 +26,20 @@ export interface IChaptersIndex {
  */
 export function getChaptersIndex(): IChaptersIndex {
   return chaptersIndexData as IChaptersIndex;
+}
+
+/**
+ * Retorna os desafios de preparação para entrevista LeetCode.
+ */
+export function getLeetCodeChallenges(): IInterviewChallenge[] {
+  return leetCodeData as IInterviewChallenge[];
+}
+
+/**
+ * Retorna os desafios práticos de backend.
+ */
+export function getBackendChallenges(): IInterviewChallenge[] {
+  return backendData as IInterviewChallenge[];
 }
 
 /**
@@ -83,3 +99,4 @@ export function clearDataLoaderCache() {
     delete batteryCache[key];
   }
 }
+

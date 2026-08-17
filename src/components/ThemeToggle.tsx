@@ -29,8 +29,8 @@ export const ThemeToggle: React.FC = () => {
         transition-colors duration-300 ease-in-out
         focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2
         ${isDark 
-          ? 'bg-stone-900/80 border border-bioma-border/60 text-amber-400' 
-          : 'bg-stone-200 border border-stone-300 text-stone-700'
+          ? 'bg-base-900 border border-base-700 text-amber-400' 
+          : 'bg-base-200 border border-base-300 text-base-700'
         }
         shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]
       `}
@@ -43,7 +43,7 @@ export const ThemeToggle: React.FC = () => {
       <span
         className={`
           pointer-events-none flex h-7 w-7 transform items-center justify-center
-          rounded-full bg-bioma-card 
+          rounded-full bg-base-50 dark:bg-base-800
           shadow-[0_2px_5px_rgba(0,0,0,0.3),0_1px_1px_rgba(255,255,255,0.6)_inset]
           transition-transform duration-300 ease-spring
           ${isDark ? 'translate-x-7 text-amber-400' : 'translate-x-0 text-amber-600'}

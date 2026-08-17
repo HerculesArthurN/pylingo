@@ -63,7 +63,7 @@
           "title": "🗺️ Passo a Passo do Algoritmo",
           "steps": [
             "1. Escreva while contador > 0:",
-            "2. Façao append(contador) na lista",
+            "2. Faça o append(contador) na lista",
             "3. Reduza contador -= 1"
           ],
           "xpPenaltyPercent": 10

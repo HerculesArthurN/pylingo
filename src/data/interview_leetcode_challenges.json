@@ -1,0 +1,925 @@
+[
+  {
+    "id": "lc_01",
+    "number": 1,
+    "title": "Two Sum - Soma de Dois Valores",
+    "category": "Arrays & Hash Maps",
+    "difficulty": "Easy",
+    "xpReward": 20,
+    "description": "Dado um array de inteiros `nums` e um inteiro `target`, retorne os índices dos dois números de modo que eles somem `target`.\n\nVocê pode assumir que cada entrada terá exatamente uma solução, e você não pode usar o mesmo elemento duas vezes.\n\nVocê pode retornar a resposta em qualquer ordem.",
+    "examples": [
+      {
+        "input": "nums = [2,7,11,15], target = 9",
+        "output": "[0,1]",
+        "explanation": "Como nums[0] + nums[1] == 9, retornamos [0, 1]."
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^4",
+      "-10^9 <= nums[i] <= 10^9",
+      "-10^9 <= target <= 10^9",
+      "Existe apenas uma resposta válida."
+    ],
+    "codeSkeleton": "def two_sum(nums, target):\n    \"\"\"\n    :type nums: List[int]\n    :type target: int\n    :rtype: List[int]\n    \"\"\"\n    pass",
+    "testAssertions": "assert two_sum([2,7,11,15], 9) in ([0,1], [1,0])\nassert two_sum([3,2,4], 6) in ([1,2], [2,1])\nassert two_sum([3,3], 6) in ([0,1], [1,0])",
+    "hints": [
+      "Uma abordagem de força bruta verifica todos os pares, mas é muito lenta.",
+      "Podemos usar um mapa hash para armazenar o valor necessário para cada número que visitamos.",
+      "Para cada número, verifique se (target - número) já existe no mapa hash."
+    ],
+    "solutionExplanation": "A solução ideal usa um Hash Map (Dicionário em Python). À medida que iteramos pelo array, verificamos se o complemento (target - valor atual) já está no dicionário. Se estiver, encontramos nossa resposta. Se não, adicionamos o valor atual e seu índice ao dicionário. Isso reduz a complexidade de O(n^2) para O(n).",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(n)"
+  },
+  {
+    "id": "lc_02",
+    "number": 2,
+    "title": "Valid Parentheses - Validação de Parênteses",
+    "category": "Stack",
+    "difficulty": "Easy",
+    "xpReward": 20,
+    "description": "Dada uma string `s` contendo apenas os caracteres '(', ')', '{', '}', '[' e ']', determine se a string de entrada é válida.\n\nUma string de entrada é válida se:\n1. Os suportes abertos devem ser fechados pelo mesmo tipo de suportes.\n2. Os suportes abertos devem ser fechados na ordem correta.\n3. Cada suporte fechado tem um suporte aberto correspondente do mesmo tipo.",
+    "examples": [
+      {
+        "input": "s = \"()\"",
+        "output": "true"
+      },
+      {
+        "input": "s = \"()[]{}\"",
+        "output": "true"
+      },
+      {
+        "input": "s = \"(]\"",
+        "output": "false"
+      }
+    ],
+    "constraints": [
+      "1 <= s.length <= 10^4",
+      "s consiste apenas em parênteses '()[]{}'."
+    ],
+    "codeSkeleton": "def is_valid(s):\n    \"\"\"\n    :type s: str\n    :rtype: bool\n    \"\"\"\n    pass",
+    "testAssertions": "assert is_valid(\"()\") == True\nassert is_valid(\"()[]{}\") == True\nassert is_valid(\"(]\") == False\nassert is_valid(\"([)]\") == False\nassert is_valid(\"{[]}\") == True",
+    "hints": [
+      "Use uma estrutura de dados de pilha (stack).",
+      "Sempre que encontrar um caractere de abertura, empurre-o para a pilha.",
+      "Sempre que encontrar um caractere de fechamento, verifique se ele corresponde ao elemento no topo da pilha."
+    ],
+    "solutionExplanation": "Usamos uma pilha (stack) para rastrear os parênteses abertos. Ao encontrar um caractere de abertura, adicionamos à pilha. Ao encontrar um fechamento, verificamos se a pilha não está vazia e se o topo da pilha é o parêntese de abertura correspondente. Ao final, a pilha deve estar vazia.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(n)"
+  },
+  {
+    "id": "lc_03",
+    "number": 3,
+    "title": "Merge Two Sorted Lists",
+    "category": "Linked Lists",
+    "difficulty": "Easy",
+    "xpReward": 20,
+    "description": "Você recebe as cabeças de duas listas encadeadas ordenadas `list1` e `list2`.\n\nMescle as duas listas em uma única lista ordenada e retorne a cabeça da lista mesclada.\n\n*Nota: para esta versão no PyLingo, as listas são representadas como arrays Python regulares, então mescle dois arrays ordenados.*",
+    "examples": [
+      {
+        "input": "list1 = [1,2,4], list2 = [1,3,4]",
+        "output": "[1,1,2,3,4,4]"
+      }
+    ],
+    "constraints": [
+      "0 <= len(list1), len(list2) <= 50",
+      "-100 <= list1[i], list2[i] <= 100",
+      "Ambas as listas são ordenadas em ordem não-decrescente."
+    ],
+    "codeSkeleton": "def merge_two_lists(list1, list2):\n    \"\"\"\n    :type list1: List[int]\n    :type list2: List[int]\n    :rtype: List[int]\n    \"\"\"\n    pass",
+    "testAssertions": "assert merge_two_lists([1,2,4], [1,3,4]) == [1,1,2,3,4,4]\nassert merge_two_lists([], []) == []\nassert merge_two_lists([], [0]) == [0]",
+    "hints": [
+      "Como as listas já estão ordenadas, você pode comparar os primeiros elementos.",
+      "Use dois ponteiros, um para cada lista, e adicione o menor ao resultado.",
+      "Não se esqueça de adicionar o restante da lista que não foi totalmente percorrida."
+    ],
+    "solutionExplanation": "Usamos dois ponteiros (índices) para percorrer os dois arrays. Em cada passo, comparamos os elementos atuais e adicionamos o menor à lista de resultado, avançando o ponteiro correspondente. Após um dos arrays ser totalmente percorrido, anexamos os elementos restantes do outro array.",
+    "timeComplexity": "O(n + m)",
+    "spaceComplexity": "O(n + m)"
+  },
+  {
+    "id": "lc_04",
+    "number": 4,
+    "title": "Best Time to Buy and Sell Stock",
+    "category": "Sliding Window",
+    "difficulty": "Easy",
+    "xpReward": 20,
+    "description": "Você recebe um array `prices` onde `prices[i]` é o preço de uma determinada ação no i-ésimo dia.\n\nVocê deseja maximizar seu lucro escolhendo um único dia para comprar uma ação e um dia diferente no futuro para vender essa ação.\n\nRetorne o lucro máximo que você pode obter. Se você não puder obter nenhum lucro, retorne 0.",
+    "examples": [
+      {
+        "input": "prices = [7,1,5,3,6,4]",
+        "output": "5",
+        "explanation": "Compre no dia 2 (preço = 1) e venda no dia 5 (preço = 6), lucro = 6-1 = 5."
+      }
+    ],
+    "constraints": [
+      "1 <= prices.length <= 10^5",
+      "0 <= prices[i] <= 10^4"
+    ],
+    "codeSkeleton": "def max_profit(prices):\n    \"\"\"\n    :type prices: List[int]\n    :rtype: int\n    \"\"\"\n    pass",
+    "testAssertions": "assert max_profit([7,1,5,3,6,4]) == 5\nassert max_profit([7,6,4,3,1]) == 0",
+    "hints": [
+      "Precisamos encontrar a maior diferença entre dois preços, onde o preço de compra vem antes do preço de venda.",
+      "Mantenha o registro do menor preço visto até agora.",
+      "A cada passo, calcule o lucro se vendêssemos hoje (preço atual - menor preço) e atualize o lucro máximo."
+    ],
+    "solutionExplanation": "Iteramos pelo array mantendo registro do preço mínimo visto até agora (`min_price`) e do lucro máximo possível (`max_profit`). Para cada preço, atualizamos `min_price` se for menor que o atual, ou calculamos o lucro vendendo pelo preço atual e atualizamos `max_profit` se for maior.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(1)"
+  },
+  {
+    "id": "lc_05",
+    "number": 5,
+    "title": "Valid Palindrome",
+    "category": "Two Pointers",
+    "difficulty": "Easy",
+    "xpReward": 20,
+    "description": "Uma frase é um palíndromo se, após converter todas as letras maiúsculas em letras minúsculas e remover todos os caracteres não alfanuméricos, ela for lida da mesma forma da esquerda para a direita e da direita para a esquerda.\n\nDada uma string `s`, retorne `true` se for um palíndromo, ou `false` caso contrário.",
+    "examples": [
+      {
+        "input": "s = \"A man, a plan, a canal: Panama\"",
+        "output": "true",
+        "explanation": "\"amanaplanacanalpanama\" é um palíndromo."
+      }
+    ],
+    "constraints": [
+      "1 <= s.length <= 2 * 10^5",
+      "s consiste apenas de caracteres ASCII imprimíveis."
+    ],
+    "codeSkeleton": "def is_palindrome(s):\n    \"\"\"\n    :type s: str\n    :rtype: bool\n    \"\"\"\n    pass",
+    "testAssertions": "assert is_palindrome(\"A man, a plan, a canal: Panama\") == True\nassert is_palindrome(\"race a car\") == False\nassert is_palindrome(\" \") == True",
+    "hints": [
+      "Primeiro, filtre a string para manter apenas letras e números, e converta tudo para minúsculas.",
+      "Use dois ponteiros, um no início e um no final da string limpa.",
+      "Compare os caracteres; se forem diferentes, não é palíndromo."
+    ],
+    "solutionExplanation": "A abordagem mais eficiente usa dois ponteiros (esquerda e direita). Avançamos os ponteiros ignorando caracteres não alfanuméricos e os comparamos de forma ignorando maiúsculas/minúsculas. Isso evita a necessidade de criar uma nova string, otimizando o espaço.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(1)"
+  },
+  {
+    "id": "lc_06",
+    "number": 6,
+    "title": "Invert Binary Tree",
+    "category": "Trees",
+    "difficulty": "Easy",
+    "xpReward": 20,
+    "description": "Dada a raiz de uma árvore binária, inverta a árvore e retorne sua raiz.\n\n*Nota: a árvore é representada como uma lista de níveis onde valores ausentes são representados por None. Você receberá uma lista plana e deve retornar uma lista plana invertida representando a árvore simétrica.*",
+    "examples": [
+      {
+        "input": "root = [4,2,7,1,3,6,9]",
+        "output": "[4,7,2,9,6,3,1]"
+      }
+    ],
+    "constraints": [
+      "O número de nós varia de 0 a 100.",
+      "-100 <= Node.val <= 100"
+    ],
+    "codeSkeleton": "def invert_tree(root):\n    \"\"\"\n    :type root: List[int]\n    :rtype: List[int]\n    \"\"\"\n    pass",
+    "testAssertions": "assert invert_tree([4,2,7,1,3,6,9]) == [4,7,2,9,6,3,1]\nassert invert_tree([2,1,3]) == [2,3,1]\nassert invert_tree([]) == []",
+    "hints": [
+      "Inverter uma árvore significa trocar o filho esquerdo pelo filho direito de cada nó.",
+      "Como recebemos a árvore em formato de array de nível (heap-like array), considere as relações de índice: para um nó `i`, seus filhos são `2i+1` e `2i+2`.",
+      "Você pode inverter a estrutura trocando elementos nível por nível."
+    ],
+    "solutionExplanation": "Como recebemos a árvore em um formato de lista (representação de level-order traversal completa), a inversão significa reverter a ordem dos nós em cada nível separadamente. Nível 0 tem 1 nó, nível 1 tem 2, nível 2 tem 4, etc. Fatiamos o array em níveis e invertemos cada sub-lista.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(n)"
+  },
+  {
+    "id": "lc_07",
+    "number": 7,
+    "title": "Maximum Subarray",
+    "category": "Dynamic Programming",
+    "difficulty": "Easy",
+    "xpReward": 20,
+    "description": "Dado um array de inteiros `nums`, encontre o subarray (um subconjunto contíguo não vazio) com a maior soma e retorne a sua soma.",
+    "examples": [
+      {
+        "input": "nums = [-2,1,-3,4,-1,2,1,-5,4]",
+        "output": "6",
+        "explanation": "O subarray [4,-1,2,1] tem a maior soma = 6."
+      }
+    ],
+    "constraints": [
+      "1 <= nums.length <= 10^5",
+      "-10^4 <= nums[i] <= 10^4"
+    ],
+    "codeSkeleton": "def max_subarray(nums):\n    \"\"\"\n    :type nums: List[int]\n    :rtype: int\n    \"\"\"\n    pass",
+    "testAssertions": "assert max_subarray([-2,1,-3,4,-1,2,1,-5,4]) == 6\nassert max_subarray([1]) == 1\nassert max_subarray([5,4,-1,7,8]) == 23",
+    "hints": [
+      "Isso pode ser resolvido com o Algoritmo de Kadane.",
+      "A cada passo, você tem duas opções: adicionar o elemento atual à soma existente ou começar um novo subarray a partir do elemento atual.",
+      "Mantenha um registro da soma atual máxima e da soma global máxima."
+    ],
+    "solutionExplanation": "Usando o Algoritmo de Kadane, mantemos a `current_sum` que representa a soma máxima do subarray terminando na posição atual, e a `max_sum` como o máximo global. `current_sum = max(num, current_sum + num)` e `max_sum = max(max_sum, current_sum)`.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(1)"
+  },
+  {
+    "id": "lc_08",
+    "number": 8,
+    "title": "Single Number",
+    "category": "Bit Manipulation",
+    "difficulty": "Easy",
+    "xpReward": 20,
+    "description": "Dado um array de inteiros `nums` não vazio, cada elemento aparece duas vezes, exceto um. Encontre esse único elemento.\n\nVocê deve implementar uma solução com complexidade de tempo O(n) e que utilize apenas memória extra constante O(1).",
+    "examples": [
+      {
+        "input": "nums = [2,2,1]",
+        "output": "1"
+      },
+      {
+        "input": "nums = [4,1,2,1,2]",
+        "output": "4"
+      }
+    ],
+    "constraints": [
+      "1 <= nums.length <= 3 * 10^4",
+      "-3 * 10^4 <= nums[i] <= 3 * 10^4",
+      "Cada elemento no array aparece duas vezes, exceto por um elemento que aparece apenas uma vez."
+    ],
+    "codeSkeleton": "def single_number(nums):\n    \"\"\"\n    :type nums: List[int]\n    :rtype: int\n    \"\"\"\n    pass",
+    "testAssertions": "assert single_number([2,2,1]) == 1\nassert single_number([4,1,2,1,2]) == 4\nassert single_number([1]) == 1",
+    "hints": [
+      "Se usarmos um hash set, não estaremos usando espaço constante.",
+      "Pense em operações bit a bit (bitwise).",
+      "A operação XOR de um número consigo mesmo é 0, e com 0 é o próprio número (a ^ a = 0, a ^ 0 = a)."
+    ],
+    "solutionExplanation": "Usamos a operação XOR bit a bit. Sabemos que a ^ a = 0 e a ^ 0 = a. Se fizermos XOR de todos os números no array, os números que aparecem duas vezes se cancelarão e se tornarão 0. O único número que sobrar será a resposta.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(1)"
+  },
+  {
+    "id": "lc_09",
+    "number": 9,
+    "title": "Reverse Linked List",
+    "category": "Linked Lists",
+    "difficulty": "Easy",
+    "xpReward": 20,
+    "description": "Dada a cabeça de uma lista encadeada (representada como um array), inverta a lista e retorne a lista invertida.",
+    "examples": [
+      {
+        "input": "head = [1,2,3,4,5]",
+        "output": "[5,4,3,2,1]"
+      }
+    ],
+    "constraints": [
+      "0 <= len(head) <= 5000",
+      "-5000 <= head[i] <= 5000"
+    ],
+    "codeSkeleton": "def reverse_list(head):\n    \"\"\"\n    :type head: List[int]\n    :rtype: List[int]\n    \"\"\"\n    pass",
+    "testAssertions": "assert reverse_list([1,2,3,4,5]) == [5,4,3,2,1]\nassert reverse_list([1,2]) == [2,1]\nassert reverse_list([]) == []",
+    "hints": [
+      "Como é um array em Python, existem métodos integrados ou sintaxe de slice úteis.",
+      "No contexto real de lista encadeada, você iteraria e ajustaria os ponteiros `next`.",
+      "Em Python, você pode usar `head[::-1]`."
+    ],
+    "solutionExplanation": "Apesar de originalmente ser um problema de ponteiros em Linked List, nossa representação em array permite resolver de forma simples usando a técnica de fatiamento reverso do Python `head[::-1]`, o que inverte toda a lista em tempo O(n).",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(n) ou O(1) dependendo da implementação em array."
+  },
+  {
+    "id": "lc_10",
+    "number": 10,
+    "title": "Climbing Stairs",
+    "category": "Dynamic Programming",
+    "difficulty": "Easy",
+    "xpReward": 20,
+    "description": "Você está subindo uma escada. São necessários `n` degraus para chegar ao topo.\n\nDe cada vez, você pode subir 1 ou 2 degraus. De quantas maneiras distintas você pode chegar ao topo?",
+    "examples": [
+      {
+        "input": "n = 2",
+        "output": "2",
+        "explanation": "1. 1 degrau + 1 degrau\n2. 2 degraus"
+      },
+      {
+        "input": "n = 3",
+        "output": "3"
+      }
+    ],
+    "constraints": [
+      "1 <= n <= 45"
+    ],
+    "codeSkeleton": "def climb_stairs(n):\n    \"\"\"\n    :type n: int\n    :rtype: int\n    \"\"\"\n    pass",
+    "testAssertions": "assert climb_stairs(2) == 2\nassert climb_stairs(3) == 3\nassert climb_stairs(5) == 8\nassert climb_stairs(45) == 1836311903",
+    "hints": [
+      "Para chegar ao degrau n, você precisa ter vindo do degrau n-1 ou do degrau n-2.",
+      "Este é basicamente um problema de encontrar o n-ésimo número de Fibonacci.",
+      "Você pode usar duas variáveis para manter os últimos dois resultados, evitando recursão lenta."
+    ],
+    "solutionExplanation": "O número de maneiras de chegar ao degrau `n` é a soma das maneiras de chegar a `n-1` e `n-2` (sequência de Fibonacci). Podemos otimizar o espaço usando apenas duas variáveis para armazenar os valores anteriores, em vez de um array completo.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(1)"
+  },
+  {
+    "id": "lc_11",
+    "number": 11,
+    "title": "3Sum - Três Valores",
+    "category": "Two Pointers",
+    "difficulty": "Medium",
+    "xpReward": 35,
+    "description": "Dado um array de inteiros `nums`, retorne todos os tripletos `[nums[i], nums[j], nums[k]]` tais que `i != j`, `i != k`, e `j != k`, e `nums[i] + nums[j] + nums[k] == 0`.\n\nNote que o conjunto de soluções não deve conter tripletos duplicados. A ordem dos resultados não importa, e a ordem dos elementos nos tripletos também não.",
+    "examples": [
+      {
+        "input": "nums = [-1,0,1,2,-1,-4]",
+        "output": "[[-1,-1,2],[-1,0,1]]"
+      }
+    ],
+    "constraints": [
+      "3 <= nums.length <= 3000",
+      "-10^5 <= nums[i] <= 10^5"
+    ],
+    "codeSkeleton": "def three_sum(nums):\n    \"\"\"\n    :type nums: List[int]\n    :rtype: List[List[int]]\n    \"\"\"\n    pass",
+    "testAssertions": "res = three_sum([-1,0,1,2,-1,-4])\nassert sorted([sorted(x) for x in res]) == [[-1, -1, 2], [-1, 0, 1]]\nassert three_sum([0,1,1]) == []\nassert three_sum([0,0,0]) == [[0,0,0]]",
+    "hints": [
+      "Considere ordenar o array primeiro.",
+      "Uma vez ordenado, você pode fixar um número e usar a técnica de dois ponteiros (Two Pointers) para encontrar os outros dois.",
+      "Pule elementos adjacentes idênticos para evitar resultados duplicados."
+    ],
+    "solutionExplanation": "Ordenamos o array O(n log n). Em seguida, iteramos por cada elemento fixando-o como alvo negativo. Para os elementos restantes à direita, usamos dois ponteiros (esquerda e direita) para encontrar pares que somam o alvo. Ignoramos duplicatas avançando os ponteiros de forma inteligente.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(1) ou O(n) dependendo do algoritmo de ordenação."
+  },
+  {
+    "id": "lc_12",
+    "number": 12,
+    "title": "Longest Substring Without Repeating Characters",
+    "category": "Sliding Window",
+    "difficulty": "Medium",
+    "xpReward": 35,
+    "description": "Dada uma string `s`, encontre o comprimento da maior substring (sequência contígua de caracteres) sem caracteres repetidos.",
+    "examples": [
+      {
+        "input": "s = \"abcabcbb\"",
+        "output": "3",
+        "explanation": "A resposta é \"abc\", com comprimento 3."
+      }
+    ],
+    "constraints": [
+      "0 <= s.length <= 5 * 10^4",
+      "s consiste em letras do alfabeto inglês, dígitos, símbolos e espaços."
+    ],
+    "codeSkeleton": "def length_of_longest_substring(s):\n    \"\"\"\n    :type s: str\n    :rtype: int\n    \"\"\"\n    pass",
+    "testAssertions": "assert length_of_longest_substring(\"abcabcbb\") == 3\nassert length_of_longest_substring(\"bbbbb\") == 1\nassert length_of_longest_substring(\"pwwkew\") == 3\nassert length_of_longest_substring(\"\") == 0",
+    "hints": [
+      "Use a técnica da janela deslizante (sliding window).",
+      "Mantenha um mapa (ou conjunto) que registre os caracteres da janela atual e suas posições.",
+      "Quando encontrar um caractere repetido, mova o ponteiro esquerdo da janela até remover a duplicata."
+    ],
+    "solutionExplanation": "Usamos uma janela deslizante controlada por dois ponteiros, `left` e `right`, e um dicionário para rastrear a última posição vista de cada caractere. Quando encontramos um caractere repetido no índice `right`, movemos `left` para o índice após a última ocorrência desse caractere, caso esteja dentro da janela atual.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(min(n, m)) onde m é o tamanho do alfabeto."
+  },
+  {
+    "id": "lc_13",
+    "number": 13,
+    "title": "Container With Most Water",
+    "category": "Two Pointers",
+    "difficulty": "Medium",
+    "xpReward": 35,
+    "description": "Você recebe um array de inteiros `height` de comprimento `n`. Existem `n` linhas verticais desenhadas, de modo que os dois pontos da linha `i` sejam `(i, 0)` e `(i, height[i])`.\n\nEncontre duas linhas que, juntamente com o eixo x, formem um contêiner, de modo que o contêiner contenha o máximo de água.\n\nRetorne a quantidade máxima de água que um contêiner pode armazenar.",
+    "examples": [
+      {
+        "input": "height = [1,8,6,2,5,4,8,3,7]",
+        "output": "49"
+      }
+    ],
+    "constraints": [
+      "n == height.length",
+      "2 <= n <= 10^5",
+      "0 <= height[i] <= 10^4"
+    ],
+    "codeSkeleton": "def max_area(height):\n    \"\"\"\n    :type height: List[int]\n    :rtype: int\n    \"\"\"\n    pass",
+    "testAssertions": "assert max_area([1,8,6,2,5,4,8,3,7]) == 49\nassert max_area([1,1]) == 1",
+    "hints": [
+      "A área é definida pelo menor lado multiplicado pela distância entre as linhas.",
+      "Comece com os ponteiros nas duas extremidades do array.",
+      "Mova sempre o ponteiro que aponta para a linha mais curta, esperando encontrar uma linha mais alta que compense a largura reduzida."
+    ],
+    "solutionExplanation": "Usamos a abordagem Two Pointers com um ponteiro no início e outro no final. A área sempre será limitada pela linha mais curta. Mantemos registro da área máxima e sempre avançamos o ponteiro que corresponde à linha menor, para tentar maximizar a próxima área.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(1)"
+  },
+  {
+    "id": "lc_14",
+    "number": 14,
+    "title": "Group Anagrams",
+    "category": "Arrays & Hash Maps",
+    "difficulty": "Medium",
+    "xpReward": 35,
+    "description": "Dado um array de strings `strs`, agrupe os anagramas. Você pode retornar a resposta em qualquer ordem.\n\nUm anagrama é uma palavra ou frase formada pela reorganização das letras de uma palavra ou frase diferente, normalmente usando todas as letras originais exatamente uma vez.",
+    "examples": [
+      {
+        "input": "strs = [\"eat\",\"tea\",\"tan\",\"ate\",\"nat\",\"bat\"]",
+        "output": "[[\"bat\"],[\"nat\",\"tan\"],[\"ate\",\"eat\",\"tea\"]]"
+      }
+    ],
+    "constraints": [
+      "1 <= strs.length <= 10^4",
+      "0 <= strs[i].length <= 100",
+      "strs[i] consiste em letras minúsculas do inglês."
+    ],
+    "codeSkeleton": "def group_anagrams(strs):\n    \"\"\"\n    :type strs: List[str]\n    :rtype: List[List[str]]\n    \"\"\"\n    pass",
+    "testAssertions": "res = group_anagrams([\"eat\",\"tea\",\"tan\",\"ate\",\"nat\",\"bat\"])\nassert sorted([sorted(x) for x in res]) == [[\"ate\", \"eat\", \"tea\"], [\"bat\"], [\"nat\", \"tan\"]]\nassert group_anagrams([\"\"]) == [[\"\"]]\nassert group_anagrams([\"a\"]) == [[\"a\"]]",
+    "hints": [
+      "Duas strings são anagramas se, ao serem ordenadas, forem exatamente iguais.",
+      "Use um mapa hash onde a chave é a string ordenada e o valor é a lista de strings originais que formam aquele anagrama.",
+      "Uma chave alternativa é contar a frequência de cada letra."
+    ],
+    "solutionExplanation": "O jeito mais simples é iterar pelas palavras, ordená-las em ordem alfabética (como tupla ou string) e usar isso como chave de um dicionário. Adicionamos a palavra original na lista associada a essa chave. Uma chave mais eficiente evita ordenar, usando uma tupla de 26 contagens (uma para cada letra).",
+    "timeComplexity": "O(m * n * log n) com ordenação, onde m é len(strs) e n o max length das strings.",
+    "spaceComplexity": "O(m * n)"
+  },
+  {
+    "id": "lc_15",
+    "number": 15,
+    "title": "Top K Frequent Elements",
+    "category": "Heap / Priority Queue",
+    "difficulty": "Medium",
+    "xpReward": 35,
+    "description": "Dado um array de inteiros `nums` e um inteiro `k`, retorne os `k` elementos mais frequentes. Você pode retornar a resposta em qualquer ordem.",
+    "examples": [
+      {
+        "input": "nums = [1,1,1,2,2,3], k = 2",
+        "output": "[1,2]"
+      }
+    ],
+    "constraints": [
+      "1 <= nums.length <= 10^5",
+      "k está no intervalo [1, número de elementos únicos no array].",
+      "É garantido que a resposta é única."
+    ],
+    "codeSkeleton": "def top_k_frequent(nums, k):\n    \"\"\"\n    :type nums: List[int]\n    :type k: int\n    :rtype: List[int]\n    \"\"\"\n    pass",
+    "testAssertions": "res = top_k_frequent([1,1,1,2,2,3], 2)\nassert sorted(res) == [1,2]\nres2 = top_k_frequent([1], 1)\nassert res2 == [1]",
+    "hints": [
+      "Comece contando a frequência de cada elemento (use Counter em Python).",
+      "Você pode usar um Heap de Minímo de tamanho k para manter os k elementos mais frequentes.",
+      "Ou você pode usar 'Bucket Sort' criando um array de listas, onde o índice do array é a frequência."
+    ],
+    "solutionExplanation": "O algoritmo Bucket Sort é muito eficiente aqui: conta a frequência num dicionário, depois crie um array de buckets (onde bucket[i] tem elementos que aparecem i vezes). Percorra os buckets de trás para frente para pegar os k elementos. Isso roda em O(n).",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(n)"
+  },
+  {
+    "id": "lc_16",
+    "number": 16,
+    "title": "Product of Array Except Self",
+    "category": "Arrays & Hash Maps",
+    "difficulty": "Medium",
+    "xpReward": 35,
+    "description": "Dado um array de inteiros `nums`, retorne um array `answer` onde `answer[i]` seja igual ao produto de todos os elementos de `nums`, exceto `nums[i]`.\n\nVocê deve escrever um algoritmo que seja executado no tempo O(n) e sem usar a operação de divisão.",
+    "examples": [
+      {
+        "input": "nums = [1,2,3,4]",
+        "output": "[24,12,8,6]"
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10^5",
+      "-30 <= nums[i] <= 30"
+    ],
+    "codeSkeleton": "def product_except_self(nums):\n    \"\"\"\n    :type nums: List[int]\n    :rtype: List[int]\n    \"\"\"\n    pass",
+    "testAssertions": "assert product_except_self([1,2,3,4]) == [24,12,8,6]\nassert product_except_self([-1,1,0,-3,3]) == [0,0,9,0,0]",
+    "hints": [
+      "Se você pudesse usar a divisão, bastaria multiplicar todos e dividir pelo atual (mas com 0 seria complicado).",
+      "Calcule o produto de todos os elementos à esquerda de `i`.",
+      "Depois, calcule o produto de todos os elementos à direita e multiplique os dois."
+    ],
+    "solutionExplanation": "A ideia é fazer duas passagens no array. Na primeira, criamos um array que em cada índice contém o produto de todos os números à esquerda dele. Na segunda passagem, feita de trás pra frente, calculamos o produto à direita no ar, e já o multiplicamos pela resposta esquerda para formar a resposta final.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(1) (ignorando o array de saída)"
+  },
+  {
+    "id": "lc_17",
+    "number": 17,
+    "title": "Longest Consecutive Sequence",
+    "category": "Arrays & Hash Maps",
+    "difficulty": "Medium",
+    "xpReward": 35,
+    "description": "Dado um array de inteiros não classificado `nums`, retorne o comprimento da sequência de elementos consecutivos mais longa.\n\nVocê deve escrever um algoritmo que seja executado em tempo O(n).",
+    "examples": [
+      {
+        "input": "nums = [100,4,200,1,3,2]",
+        "output": "4",
+        "explanation": "A sequência consecutiva mais longa é [1, 2, 3, 4]. Portanto, seu comprimento é 4."
+      }
+    ],
+    "constraints": [
+      "0 <= nums.length <= 10^5",
+      "-10^9 <= nums[i] <= 10^9"
+    ],
+    "codeSkeleton": "def longest_consecutive(nums):\n    \"\"\"\n    :type nums: List[int]\n    :rtype: int\n    \"\"\"\n    pass",
+    "testAssertions": "assert longest_consecutive([100,4,200,1,3,2]) == 4\nassert longest_consecutive([0,3,7,2,5,8,4,6,0,1]) == 9\nassert longest_consecutive([]) == 0",
+    "hints": [
+      "Coloque todos os números num HashSet para buscas O(1).",
+      "Um número inicia uma sequência se (num - 1) não estiver no set.",
+      "Se ele iniciar uma sequência, continue verificando (num + 1, num + 2, etc.) dentro do set para ver até onde vai."
+    ],
+    "solutionExplanation": "A inserção de um HashSet resolve o problema O(n). Percorremos o array original e, para cada número, checamos se `num - 1` não existe no conjunto; se não existir, ele é o início de uma sequência. Contamos a partir dele usando uma malha while para encontrar o comprimento da sequência, maximizando em uma variável de resultado.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(n)"
+  },
+  {
+    "id": "lc_18",
+    "number": 18,
+    "title": "Binary Tree Level Order Traversal",
+    "category": "Trees",
+    "difficulty": "Medium",
+    "xpReward": 35,
+    "description": "Dada a raiz de uma árvore binária (representada como array linear), retorne a travessia de ordem de nível (level order) de seus nós.\n\n*O retorno deve ser uma lista de listas, onde cada sublista contém os valores daquele nível.*",
+    "examples": [
+      {
+        "input": "root = [3,9,20,None,None,15,7]",
+        "output": "[[3],[9,20],[15,7]]"
+      }
+    ],
+    "constraints": [
+      "O número de nós varia de 0 a 2000.",
+      "-1000 <= Node.val <= 1000"
+    ],
+    "codeSkeleton": "def level_order(root):\n    \"\"\"\n    :type root: List[int]\n    :rtype: List[List[int]]\n    \"\"\"\n    pass",
+    "testAssertions": "assert level_order([3,9,20,None,None,15,7]) == [[3],[9,20],[15,7]]\nassert level_order([1]) == [[1]]\nassert level_order([]) == []",
+    "hints": [
+      "Em uma árvore normal, você usaria uma Fila (Queue) (BFS).",
+      "Sendo a entrada um array em formato de heap (níveis de tamanho 1, 2, 4, 8...), você pode simplesmente quebrar a lista nos tamanhos apropriados.",
+      "Remova os valores 'None' das sublistas resultantes."
+    ],
+    "solutionExplanation": "Com a entrada já sendo uma estrutura de array achatado baseado em BFS, basta separar o array nível por nível. O nível `d` tem no máximo `2^d` elementos. Fatiamos o array, omitindo 'None', gerando a lista de listas. (Ou reconstruímos uma árvore real em Python primeiro, o que também é válido).",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(n)"
+  },
+  {
+    "id": "lc_19",
+    "number": 19,
+    "title": "Number of Islands",
+    "category": "Graphs",
+    "difficulty": "Medium",
+    "xpReward": 35,
+    "description": "Dada uma grade 2D `grid` de '1's (terra) e '0's (água), retorne o número de ilhas.\n\nUma ilha é cercada por água e é formada ligando terras adjacentes horizontalmente ou verticalmente. Você pode assumir que todas as quatro bordas da grade estão cercadas por água.",
+    "examples": [
+      {
+        "input": "grid = [\n  [\"1\",\"1\",\"0\",\"0\",\"0\"],\n  [\"1\",\"1\",\"0\",\"0\",\"0\"],\n  [\"0\",\"0\",\"1\",\"0\",\"0\"],\n  [\"0\",\"0\",\"0\",\"1\",\"1\"]\n]",
+        "output": "3"
+      }
+    ],
+    "constraints": [
+      "m == grid.length",
+      "n == grid[i].length",
+      "1 <= m, n <= 300",
+      "grid[i][j] é '0' ou '1'."
+    ],
+    "codeSkeleton": "def num_islands(grid):\n    \"\"\"\n    :type grid: List[List[str]]\n    :rtype: int\n    \"\"\"\n    pass",
+    "testAssertions": "grid1 = [[\"1\",\"1\",\"0\",\"0\",\"0\"],[\"1\",\"1\",\"0\",\"0\",\"0\"],[\"0\",\"0\",\"1\",\"0\",\"0\"],[\"0\",\"0\",\"0\",\"1\",\"1\"]]\nassert num_islands(grid1) == 3\ngrid2 = [[\"1\",\"1\",\"1\",\"1\",\"0\"],[\"1\",\"1\",\"0\",\"1\",\"0\"],[\"1\",\"1\",\"0\",\"0\",\"0\"],[\"0\",\"0\",\"0\",\"0\",\"0\"]]\nassert num_islands(grid2) == 1",
+    "hints": [
+      "Percorra a grade. Sempre que encontrar um '1', você encontrou uma ilha.",
+      "Ao encontrar uma ilha, use DFS ou BFS para explorar e marcar todos os '1's conectados como visitados.",
+      "Marcá-los (por exemplo, transformando-os em '0') impede que você os conte novamente."
+    ],
+    "solutionExplanation": "Tratamos a grade como um grafo. Percorremos a matriz com dois loops for. Quando um '1' é achado, incrementamos a contagem de ilhas, e iniciamos uma busca DFS em suas conexões horizontais e verticais, convertendo todos os '1's conectados em '0' (ou visitados) para evitar contagem duplicada.",
+    "timeComplexity": "O(m * n)",
+    "spaceComplexity": "O(m * n) no pior caso para a pilha de recursão."
+  },
+  {
+    "id": "lc_20",
+    "number": 20,
+    "title": "Coin Change - Troco Mínimo",
+    "category": "Dynamic Programming",
+    "difficulty": "Medium",
+    "xpReward": 35,
+    "description": "Você recebe um array de inteiros `coins` representando moedas de diferentes denominações e um inteiro `amount` representando uma quantidade total de dinheiro.\n\nRetorne o menor número de moedas que você precisa para perfazer aquele valor. Se essa quantidade de dinheiro não puder ser obtida por nenhuma combinação das moedas, retorne -1.\n\nVocê pode assumir que tem uma quantidade infinita de cada tipo de moeda.",
+    "examples": [
+      {
+        "input": "coins = [1,2,5], amount = 11",
+        "output": "3",
+        "explanation": "11 = 5 + 5 + 1"
+      }
+    ],
+    "constraints": [
+      "1 <= coins.length <= 12",
+      "1 <= coins[i] <= 2^31 - 1",
+      "0 <= amount <= 10^4"
+    ],
+    "codeSkeleton": "def coin_change(coins, amount):\n    \"\"\"\n    :type coins: List[int]\n    :type amount: int\n    :rtype: int\n    \"\"\"\n    pass",
+    "testAssertions": "assert coin_change([1,2,5], 11) == 3\nassert coin_change([2], 3) == -1\nassert coin_change([1], 0) == 0",
+    "hints": [
+      "Este é o problema clássico da mochila (Knapsack), usaremos DP bottom-up.",
+      "Crie um array `dp` onde `dp[i]` é o menor número de moedas para fazer o valor `i`.",
+      "Para cada moeda e cada valor de 1 até `amount`: `dp[i] = min(dp[i], 1 + dp[i - moeda])`."
+    ],
+    "solutionExplanation": "Usamos programação dinâmica. Criamos um array `dp` de tamanho `amount + 1`, inicializado com infinito, exceto `dp[0] = 0`. Para cada valor `i` de 1 até `amount`, checamos cada moeda `c`. Se `i - c >= 0`, atualizamos `dp[i]` para o menor entre `dp[i]` e `dp[i-c] + 1`. No final, se `dp[amount]` ainda é infinito, retornamos -1.",
+    "timeComplexity": "O(amount * len(coins))",
+    "spaceComplexity": "O(amount)"
+  },
+  {
+    "id": "lc_21",
+    "number": 21,
+    "title": "Trapping Rain Water",
+    "category": "Two Pointers",
+    "difficulty": "Hard",
+    "xpReward": 50,
+    "description": "Dados `n` inteiros não negativos representando um mapa de elevação onde a largura de cada barra é 1, calcule quanta água ele pode reter após chover.",
+    "examples": [
+      {
+        "input": "height = [0,1,0,2,1,0,1,3,2,1,2,1]",
+        "output": "6"
+      }
+    ],
+    "constraints": [
+      "n == height.length",
+      "1 <= n <= 2 * 10^4",
+      "0 <= height[i] <= 10^5"
+    ],
+    "codeSkeleton": "def trap(height):\n    \"\"\"\n    :type height: List[int]\n    :rtype: int\n    \"\"\"\n    pass",
+    "testAssertions": "assert trap([0,1,0,2,1,0,1,3,2,1,2,1]) == 6\nassert trap([4,2,0,3,2,5]) == 9",
+    "hints": [
+      "Para qualquer elemento, a água armazenada acima dele é igual a min(max_esquerda, max_direita) - height[i].",
+      "Você pode pré-calcular os arrays de max_esquerda e max_direita.",
+      "Ou ainda melhor, use Two Pointers para gerenciar esquerda e direita simultaneamente e poupar memória O(n)."
+    ],
+    "solutionExplanation": "A abordagem Two Pointers é a mais otimizada O(1) de espaço. Mantemos `left` no início e `right` no final, junto com `max_left` e `max_right`. Atualizamos qual for menor. Se `max_left < max_right`, calculamos a água para `left` e avançamos. Senão, para `right` e recuamos.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(1)"
+  },
+  {
+    "id": "lc_22",
+    "number": 22,
+    "title": "Median of Two Sorted Arrays",
+    "category": "Binary Search",
+    "difficulty": "Hard",
+    "xpReward": 50,
+    "description": "Dados dois arrays classificados `nums1` e `nums2` de tamanho `m` e `n` respectivamente, retorne a mediana dos dois arrays classificados.\n\nA complexidade geral do tempo de execução deve ser O(log (m+n)).",
+    "examples": [
+      {
+        "input": "nums1 = [1,3], nums2 = [2]",
+        "output": "2.00000"
+      },
+      {
+        "input": "nums1 = [1,2], nums2 = [3,4]",
+        "output": "2.50000"
+      }
+    ],
+    "constraints": [
+      "nums1.length == m",
+      "nums2.length == n",
+      "0 <= m, n <= 1000",
+      "1 <= m + n <= 2000"
+    ],
+    "codeSkeleton": "def find_median_sorted_arrays(nums1, nums2):\n    \"\"\"\n    :type nums1: List[int]\n    :type nums2: List[int]\n    :rtype: float\n    \"\"\"\n    pass",
+    "testAssertions": "assert find_median_sorted_arrays([1,3], [2]) == 2.0\nassert find_median_sorted_arrays([1,2], [3,4]) == 2.5",
+    "hints": [
+      "Em vez de mesclar os dois arrays (o que daria O(m+n)), pense em dividir ambos os arrays em duas metades (Esquerda e Direita).",
+      "Use Busca Binária no array menor.",
+      "Você está procurando a partição onde o maior elemento da metade esquerda é menor ou igual ao menor da metade direita."
+    ],
+    "solutionExplanation": "Fazemos busca binária O(log(min(m, n))) no array menor. Tentamos parti-lo em i, e o outro array em j = (m+n+1)/2 - i. Se max(left1) <= min(right2) e max(left2) <= min(right1), achamos a mediana baseada nos maiores à esquerda e menores à direita. Se não, ajustamos a busca.",
+    "timeComplexity": "O(log(min(m, n)))",
+    "spaceComplexity": "O(1)"
+  },
+  {
+    "id": "lc_23",
+    "number": 23,
+    "title": "Merge k Sorted Lists",
+    "category": "Heap / Priority Queue",
+    "difficulty": "Hard",
+    "xpReward": 50,
+    "description": "Você recebe um array de `k` listas vinculadas, cada lista vinculada está classificada em ordem crescente.\n\nMescle todas as listas em uma lista classificada e a retorne. *Nesta versão as listas são representadas como matrizes regulares do Python.*",
+    "examples": [
+      {
+        "input": "lists = [[1,4,5],[1,3,4],[2,6]]",
+        "output": "[1,1,2,3,4,4,5,6]"
+      }
+    ],
+    "constraints": [
+      "k == lists.length",
+      "0 <= k <= 10^4",
+      "0 <= lists[i].length <= 500",
+      "As listas estão classificadas."
+    ],
+    "codeSkeleton": "def merge_k_lists(lists):\n    \"\"\"\n    :type lists: List[List[int]]\n    :rtype: List[int]\n    \"\"\"\n    pass",
+    "testAssertions": "assert merge_k_lists([[1,4,5],[1,3,4],[2,6]]) == [1,1,2,3,4,4,5,6]\nassert merge_k_lists([]) == []\nassert merge_k_lists([[]]) == []",
+    "hints": [
+      "Juntar dois a dois (Merge Sort style) funciona.",
+      "Outra opção otimizada é usar uma Fila de Prioridade (Min-Heap).",
+      "Insira o primeiro elemento de cada lista no heap e, em seguida, pegue o mínimo repetidamente e insira o próximo elemento daquela lista."
+    ],
+    "solutionExplanation": "Podemos usar a técnica Divide and Conquer (dividir para conquistar), mesclando as listas duas a duas até que sobre apenas uma. Outra ótima forma é usando a estrutura heapq (Min-Heap) em Python: guardamos tuplas (valor, índice_lista, índice_elemento). A extração sequencial garante O(N log K).",
+    "timeComplexity": "O(N log k), onde N é o número total de elementos.",
+    "spaceComplexity": "O(k)"
+  },
+  {
+    "id": "lc_24",
+    "number": 24,
+    "title": "Word Ladder",
+    "category": "Graphs",
+    "difficulty": "Hard",
+    "xpReward": 50,
+    "description": "Uma sequência de transformação da palavra `beginWord` para `endWord` usando um dicionário `wordList` é uma sequência de palavras de modo que toda palavra adjacente difere em apenas uma letra. Retorne o número de palavras no caminho mais curto de transformação, ou 0 se não houver sequência válida.",
+    "examples": [
+      {
+        "input": "beginWord = \"hit\", endWord = \"cog\", wordList = [\"hot\",\"dot\",\"dog\",\"lot\",\"log\",\"cog\"]",
+        "output": "5"
+      }
+    ],
+    "constraints": [
+      "1 <= beginWord.length <= 10",
+      "1 <= wordList.length <= 5000"
+    ],
+    "codeSkeleton": "def ladder_length(beginWord, endWord, wordList):\n    \"\"\"\n    :type beginWord: str\n    :type endWord: str\n    :type wordList: List[str]\n    :rtype: int\n    \"\"\"\n    pass",
+    "testAssertions": "assert ladder_length(\"hit\", \"cog\", [\"hot\",\"dot\",\"dog\",\"lot\",\"log\",\"cog\"]) == 5\nassert ladder_length(\"hit\", \"cog\", [\"hot\",\"dot\",\"dog\",\"lot\",\"log\"]) == 0",
+    "hints": [
+      "Isto é um problema de caminho mais curto em um grafo sem pesos. Use BFS (Busca em Largura).",
+      "Cada palavra é um nó, e as arestas conectam palavras que diferem por uma letra.",
+      "Pré-processar as palavras usando um padrão como '*ot' -> 'hot', 'dot', 'lot' otimiza muito a construção das arestas."
+    ],
+    "solutionExplanation": "BFS é o ideal para caminho mais curto sem peso. Colocamos o wordList num HashSet. Da `beginWord`, em cada nível da fila, tentamos alterar cada caractere de 'a' a 'z'. Se a palavra resultante está no set, marcamos como visitada (removendo do set) e a colocamos na fila do próximo nível. Retornamos ao encontrar `endWord`.",
+    "timeComplexity": "O(M^2 * N), onde M é o tamanho da palavra e N o total de palavras.",
+    "spaceComplexity": "O(M * N)"
+  },
+  {
+    "id": "lc_25",
+    "number": 25,
+    "title": "Binary Tree Maximum Path Sum",
+    "category": "Trees",
+    "difficulty": "Hard",
+    "xpReward": 50,
+    "description": "Um caminho em uma árvore binária é uma sequência de nós onde cada par de nós adjacentes tem uma aresta conectando-os. O caminho não precisa passar pela raiz. Retorne a soma máxima de qualquer caminho não vazio.\n\n*A árvore de entrada é dada como array de nível, para esse problema na plataforma, implemente a lógica adaptada ou recrie a árvore.*",
+    "examples": [
+      {
+        "input": "root = [-10,9,20,None,None,15,7]",
+        "output": "42"
+      }
+    ],
+    "constraints": [
+      "O número de nós está entre 1 e 3 * 10^4.",
+      "-1000 <= Node.val <= 1000"
+    ],
+    "codeSkeleton": "def max_path_sum(root_array):\n    \"\"\"\n    :type root_array: List[int]\n    :rtype: int\n    \"\"\"\n    pass",
+    "testAssertions": "assert max_path_sum([-10,9,20,None,None,15,7]) == 42\nassert max_path_sum([1,2,3]) == 6",
+    "hints": [
+      "Recrie a estrutura da árvore com referências de objetos para ajudar na recursão (opcional).",
+      "Para um nó atual, o caminho máximo que ele pode formar através de si mesmo é seu valor + soma máxima esquerda + soma máxima direita.",
+      "Mas a função recursiva deve retornar apenas o ganho máximo de UMA de suas sub-árvores para permitir que o pai continue o caminho."
+    ],
+    "solutionExplanation": "A recursão retorna a maior contribuição de um braço para o pai (max(0, valor + max(esq, dir))). Mas localmente, calculamos a soma se a curva do caminho for naquele nó (valor + esq + dir) e atualizamos uma variável global de max global. Ignoramos sub-árões negativas (max com 0).",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(h) sendo h a altura da árvore."
+  },
+  {
+    "id": "lc_26",
+    "number": 26,
+    "title": "Edit Distance",
+    "category": "Dynamic Programming",
+    "difficulty": "Hard",
+    "xpReward": 50,
+    "description": "Dadas duas strings `word1` e `word2`, retorne o número mínimo de operações necessárias para converter `word1` em `word2`.\n\nVocê tem as 3 operações permitidas: Inserir caractere, Excluir caractere, Substituir caractere.",
+    "examples": [
+      {
+        "input": "word1 = \"horse\", word2 = \"ros\"",
+        "output": "3",
+        "explanation": "horse -> rorse (substituir h por r)\nrorse -> rose (remover r)\nrose -> ros (remover e)"
+      }
+    ],
+    "constraints": [
+      "0 <= word1.length, word2.length <= 500"
+    ],
+    "codeSkeleton": "def min_distance(word1, word2):\n    \"\"\"\n    :type word1: str\n    :type word2: str\n    :rtype: int\n    \"\"\"\n    pass",
+    "testAssertions": "assert min_distance(\"horse\", \"ros\") == 3\nassert min_distance(\"intention\", \"execution\") == 5\nassert min_distance(\"\", \"a\") == 1",
+    "hints": [
+      "Isso é pura DP bidimensional.",
+      "Crie uma matriz `dp[i][j]` que armazena o custo para converter os `i` primeiros caracteres de word1 nos `j` primeiros de word2.",
+      "As opções são: 1+dp[i-1][j] (Deletar), 1+dp[i][j-1] (Inserir) e dp[i-1][j-1] (+1 se substituiu, +0 se era igual)."
+    ],
+    "solutionExplanation": "Matriz DP de tamanho (M+1) x (N+1). A base dp[i][0]=i e dp[0][j]=j. Para dp[i][j], se os caracteres casam, herdamos dp[i-1][j-1]. Caso contrário, pegamos o mínimo entre Inserir, Deletar e Substituir e adicionamos 1 de custo.",
+    "timeComplexity": "O(m * n)",
+    "spaceComplexity": "O(m * n)"
+  },
+  {
+    "id": "lc_27",
+    "number": 27,
+    "title": "Regular Expression Matching",
+    "category": "Dynamic Programming",
+    "difficulty": "Hard",
+    "xpReward": 50,
+    "description": "Dada uma string de entrada `s` e um padrão `p`, implemente a correspondência de expressão regular com suporte a '.' (corresponde a um único caractere qualquer) e '*' (corresponde a zero ou mais do elemento anterior).",
+    "examples": [
+      {
+        "input": "s = \"aa\", p = \"a*\"",
+        "output": "true",
+        "explanation": "'*' significa zero ou mais do anterior 'a'."
+      },
+      {
+        "input": "s = \"ab\", p = \".*\"",
+        "output": "true"
+      }
+    ],
+    "constraints": [
+      "1 <= s.length <= 20",
+      "1 <= p.length <= 20"
+    ],
+    "codeSkeleton": "def is_match(s, p):\n    \"\"\"\n    :type s: str\n    :type p: str\n    :rtype: bool\n    \"\"\"\n    pass",
+    "testAssertions": "assert is_match(\"aa\", \"a\") == False\nassert is_match(\"aa\", \"a*\") == True\nassert is_match(\"ab\", \".*\") == True",
+    "hints": [
+      "Programação Dinâmica Top-Down (com memoization) é geralmente mais intuitiva.",
+      "Pense nas transições recursivas, lidando se o próximo caractere no padrão for um '*'.",
+      "Se houver um '*', ele pode ignorar a letra atual do padrão OU engolir uma letra da string de entrada."
+    ],
+    "solutionExplanation": "DP. Se o próximo na padrão é '*', temos dois caminhos válidos: não usamos o '*' (pulamos a letra padrão e o asterisco), ou nós usamos, que só é possível se o padrão bater com a letra de string (se sim, consumimos 1 letra de `s` mas mantemos o `p`).",
+    "timeComplexity": "O(S * P)",
+    "spaceComplexity": "O(S * P)"
+  },
+  {
+    "id": "lc_28",
+    "number": 28,
+    "title": "First Missing Positive",
+    "category": "Arrays & Hash Maps",
+    "difficulty": "Hard",
+    "xpReward": 50,
+    "description": "Dado um array de inteiros não classificados `nums`. Retorne o menor número inteiro positivo não presente no array.\n\nVocê deve implementar um algoritmo executado em tempo `O(n)` e usando memória auxiliar `O(1)`.",
+    "examples": [
+      {
+        "input": "nums = [3,4,-1,1]",
+        "output": "2"
+      },
+      {
+        "input": "nums = [7,8,9,11,12]",
+        "output": "1"
+      }
+    ],
+    "constraints": [
+      "1 <= nums.length <= 10^5",
+      "-2^31 <= nums[i] <= 2^31 - 1"
+    ],
+    "codeSkeleton": "def first_missing_positive(nums):\n    \"\"\"\n    :type nums: List[int]\n    :rtype: int\n    \"\"\"\n    pass",
+    "testAssertions": "assert first_missing_positive([1,2,0]) == 3\nassert first_missing_positive([3,4,-1,1]) == 2\nassert first_missing_positive([7,8,9,11,12]) == 1",
+    "hints": [
+      "A restrição de O(1) de espaço significa que você não pode usar um HashSet separado.",
+      "O truque é usar o próprio array de entrada como se fosse um HashSet/Marcador.",
+      "Tente fazer trocas (swaps) para colocar o número x no índice x-1, caso ele seja positivo e <= N."
+    ],
+    "solutionExplanation": "A lógica é que a resposta tem que ser um número de 1 a N+1. Modificamos o array original: para qualquer `nums[i]` no intervalo `[1, N]`, nós o colocamos no seu devido lugar: índice `nums[i]-1`, trocando-o repetidamente. No final, procuramos o primeiro índice `i` onde `nums[i] != i + 1`.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(1)"
+  },
+  {
+    "id": "lc_29",
+    "number": 29,
+    "title": "Sliding Window Maximum",
+    "category": "Sliding Window",
+    "difficulty": "Hard",
+    "xpReward": 50,
+    "description": "Você recebe um array de inteiros `nums`, e há uma janela deslizante de tamanho `k` se movendo do início até o final.\n\nVocê só consegue ver os `k` números na janela a cada passo. Retorne o array dos maiores valores na janela deslizante a cada momento.",
+    "examples": [
+      {
+        "input": "nums = [1,3,-1,-3,5,3,6,7], k = 3",
+        "output": "[3,3,5,5,6,7]"
+      }
+    ],
+    "constraints": [
+      "1 <= nums.length <= 10^5",
+      "-10^4 <= nums[i] <= 10^4",
+      "1 <= k <= nums.length"
+    ],
+    "codeSkeleton": "def max_sliding_window(nums, k):\n    \"\"\"\n    :type nums: List[int]\n    :type k: int\n    :rtype: List[int]\n    \"\"\"\n    pass",
+    "testAssertions": "assert max_sliding_window([1,3,-1,-3,5,3,6,7], 3) == [3,3,5,5,6,7]\nassert max_sliding_window([1], 1) == [1]",
+    "hints": [
+      "Usar a força bruta vai causar Time Limit Exceeded O(n*k).",
+      "A melhor estrutura é uma Fila Duplamente Encadeada (Deque) para armazenar índices.",
+      "Mantenha o deque ordenado por valores de forma decrescente: remova os menores da direita antes de adicionar, remova os da esquerda que saíram da janela."
+    ],
+    "solutionExplanation": "Um Deque armazena índices (para controlar a janela de k) e garante que o elemento da frente (esquerda) é sempre o máximo da janela atual. Ao adicionar novo elemento, removemos da cauda qualquer um que seja menor (nunca serão os máximos). Depois de cheia a janela inicial, o máximo a cada momento fica na ponta esquerda do deque.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(k)"
+  },
+  {
+    "id": "lc_30",
+    "number": 30,
+    "title": "Longest Valid Parentheses",
+    "category": "Stack",
+    "difficulty": "Hard",
+    "xpReward": 50,
+    "description": "Dada uma string contendo apenas os caracteres '(' e ')', retorne o comprimento da maior substring de parênteses bem formados válidos.",
+    "examples": [
+      {
+        "input": "s = \")()())\"",
+        "output": "4",
+        "explanation": "A maior substring é \"()()\"."
+      }
+    ],
+    "constraints": [
+      "0 <= s.length <= 3 * 10^4",
+      "s[i] é '(' ou ')'."
+    ],
+    "codeSkeleton": "def longest_valid_parentheses(s):\n    \"\"\"\n    :type s: str\n    :rtype: int\n    \"\"\"\n    pass",
+    "testAssertions": "assert longest_valid_parentheses(\"(()\") == 2\nassert longest_valid_parentheses(\")()())\") == 4\nassert longest_valid_parentheses(\"\") == 0",
+    "hints": [
+      "A solução O(n) com Pilha guarda índices em vez de caracteres.",
+      "Inicie a pilha com -1 para servir como base de uma sequência válida.",
+      "Alternativamente, DP em O(n): `dp[i]` guarda o tamanho na posição `i`, combinando com sequências anteriores."
+    ],
+    "solutionExplanation": "Com a abordagem de Stack, inicializamos ela com `-1`. Ao ler '(', empilhamos o índice. Ao ler ')', desempilhamos. Se a pilha ficar vazia, empilhamos esse índice da fechadura atual (serve de nova base). Se não, o tamanho atual é `índice - pilha[-1]`. Ao atualizar um máximo, resolve-se tudo em O(n).",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(n)"
+  }
+]

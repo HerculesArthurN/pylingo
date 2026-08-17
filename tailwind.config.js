@@ -32,9 +32,9 @@ export default {
         info: 'var(--color-info)',
       },
       fontFamily: {
-        sans: ['JetBrains Mono', 'Fira Code', 'monospace'],
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
-        pixel: ['"Press Start 2P"', 'cursive'], // Optional for mascot or specific titles
+        pixel: ['"Press Start 2P"', 'cursive'], // Optional for mascot or specific badges
       },
       borderRadius: {
         'none': '0px',
@@ -44,10 +44,18 @@ export default {
         'lg': '8px',
       },
       boxShadow: {
+        'xs': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
         'pixel': '4px 4px 0px 0px rgba(0,0,0,1)',
         'pixel-sm': '2px 2px 0px 0px rgba(0,0,0,1)',
         'brutal': '4px 4px 0px 0px var(--color-base-900)',
         'brutal-active': '0px 0px 0px 0px var(--color-base-900)',
+      },
+      zIndex: {
+        '60': '60',
+        '70': '70',
+        '80': '80',
+        '90': '90',
+        '100': '100',
       }
     },
   },

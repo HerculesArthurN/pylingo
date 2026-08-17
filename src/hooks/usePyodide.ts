@@ -19,7 +19,12 @@ export interface RunResult {
   firstFailedMessage?: string;
 }
 
-export function usePyodide() {
+export interface UsePyodideOptions {
+  autoInit?: boolean;
+}
+
+export function usePyodide(options: UsePyodideOptions = {}) {
+  const { autoInit = true } = options;
   const [ready, setReady] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -106,9 +111,11 @@ export function usePyodide() {
     }, 15000);
   }, []);
 
-  // Inicializa o Worker no mount do componente
+  // Inicializa o Worker no mount do componente se autoInit estiver ativado
   useEffect(() => {
-    initWorker();
+    if (autoInit) {
+      initWorker();
+    }
     return () => {
       if (workerRef.current) {
         workerRef.current.terminate();
@@ -118,7 +125,7 @@ export function usePyodide() {
         initTimeoutRef.current = null;
       }
     };
-  }, [initWorker]);
+  }, [initWorker, autoInit]);
 
   // Executa o código Python de forma assíncrona com mecanismo de timeout de 5s
   const runCode = useCallback((code: string, testAssertions?: string): Promise<RunResult> => {

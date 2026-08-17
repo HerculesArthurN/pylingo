@@ -6,7 +6,7 @@ export type MascotMood = 'happy' | 'thinking' | 'sad' | 'geek';
 /**
  * Separadores de ecrãs/abas principais do painel de controlo.
  */
-export type ActiveTab = 'tree' | 'sandbox' | 'shop' | 'profile' | 'book';
+export type ActiveTab = 'tree' | 'sandbox' | 'shop' | 'profile' | 'book' | 'practice' | 'interview-leetcode' | 'interview-backend';
 
 /**
  * Níveis de dificuldade suportados pelas lições.
@@ -176,4 +176,35 @@ export interface IAchievement {
   targetType: AchievementTargetType;
   targetValue: number; // Para phase_complete/chapter_read, representa o número da fase/capítulo
   coinReward: number;
+}
+
+// =============================================
+// DESAFIOS DE ENTREVISTA TÉCNICA (LEETCODE & BACKEND)
+// =============================================
+
+export type InterviewDifficulty = 'Easy' | 'Medium' | 'Hard';
+
+export interface IInterviewExample {
+  input: string;
+  output: string;
+  explanation?: string;
+}
+
+export interface IInterviewChallenge {
+  id: string;
+  number: number;
+  title: string;
+  category: string;
+  difficulty: InterviewDifficulty;
+  xpReward: number;
+  description: string;
+  interviewerGoal?: string; // O que o entrevistador técnico espera avaliar
+  examples: IInterviewExample[];
+  constraints?: string[];
+  codeSkeleton: string;
+  testAssertions: string;
+  hints: string[];
+  solutionExplanation?: string;
+  timeComplexity?: string;
+  spaceComplexity?: string;
 }

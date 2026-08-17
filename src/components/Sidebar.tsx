@@ -1,12 +1,29 @@
-import React from 'react';
-import { BookOpen, Code2, Award, Sparkles, RotateCcw, Zap, User } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { 
+  BookOpen, 
+  Code2, 
+  Award, 
+  RotateCcw, 
+  User, 
+  X, 
+  Lock, 
+  LogOut, 
+  LogIn,
+  Layers,
+  Dumbbell,
+  Target,
+  Briefcase
+} from 'lucide-react';
 import { ActiveTab, MascotMood, ILeitnerState } from '../core/types';
 import { Mascot } from './Mascot';
 import { calculateLevel } from '../core/leveling';
 import { ACHIEVEMENTS_LIST } from '../core/achievements';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 import * as LucideIcons from 'lucide-react';
 
 interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
   activeTab: ActiveTab;
   onTabChange: (tab: ActiveTab) => void;
   mascotMood: MascotMood;
@@ -15,17 +32,25 @@ interface SidebarProps {
   xp: number;
   achievements: string[];
   leitnerSchedule: Record<string, ILeitnerState>;
+  user?: any;
+  onOpenAuth?: () => void;
+  onLogout?: () => void;
 }
 
-const TABS: ReadonlyArray<{ id: ActiveTab; label: string; Icon: typeof BookOpen }> = [
-  { id: 'tree',    label: 'Árvore',  Icon: BookOpen },
-  { id: 'book',    label: 'Livro',   Icon: BookOpen },
-  { id: 'sandbox', label: 'Sandbox', Icon: Code2 },
-  { id: 'shop',    label: 'Loja',    Icon: Award },
-  { id: 'profile', label: 'Perfil',  Icon: User },
-] as const;
+const TABS: { id: ActiveTab; label: string; description: string; Icon: typeof BookOpen }[] = [
+  { id: 'tree',    label: 'Trilha de Lições',  description: 'Roadmap passo a passo', Icon: Layers },
+  { id: 'book',    label: 'Livro & Teoria',    description: 'Capítulos e documentação', Icon: BookOpen },
+  { id: 'practice' as ActiveTab, label: 'Prática & Desafios', description: 'Exercícios por capítulo', Icon: Dumbbell },
+  { id: 'interview-leetcode' as ActiveTab, label: 'Entrevistas: LeetCode', description: 'Algoritmos e estruturas', Icon: Target },
+  { id: 'interview-backend' as ActiveTab, label: 'Entrevistas: Backend', description: 'APIs, SQL e System Design', Icon: Briefcase },
+  { id: 'sandbox', label: 'Playground Sandbox', description: 'Editor livre em Python', Icon: Code2 },
+  { id: 'shop',    label: 'Loja & Conquistas', description: 'LingoCoins e itens', Icon: Award },
+  { id: 'profile', label: 'Meu Perfil',        description: 'Estatísticas e ofensiva', Icon: User },
+];
 
 export const Sidebar: React.FC<SidebarProps> = ({
+  isOpen,
+  onClose,
   activeTab,
   onTabChange,
   mascotMood,
@@ -34,7 +59,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
   xp,
   achievements,
   leitnerSchedule,
+  user,
+  onOpenAuth,
+  onLogout,
 }) => {
+  // Focus Trap for strict W3C dialog accessibility
+  const focusTrapRef = useFocusTrap({
+    isActive: isOpen,
+    onEscape: onClose,
+  });
+
+  // Lock body scroll when drawer is open
+  useEffect(() => {
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
   const progressPercentage = totalLessonsCount > 0 
     ? Math.round((completedLessonsCount / totalLessonsCount) * 100) 
     : 0;
@@ -44,173 +91,209 @@ export const Sidebar: React.FC<SidebarProps> = ({
     (record) => now >= record.nextReviewTimestamp
   ).length;
 
+  const level = calculateLevel(xp);
+
   return (
-    <>
-      {/* DESKTOP — Sidebar lateral (visível apenas em lg+) */}
-      <div className="hidden lg:block space-y-6 select-none font-mono">
-        
-        {/* Container do Mascote */}
-        <div className="bg-base-100 border-2 border-base-900 p-6 flex flex-col items-center text-center shadow-brutal">
-          <div className="bg-base-200 p-6 w-full flex flex-col items-center border-2 border-base-900 relative">
-            <div className="absolute top-2 right-2 bg-accent text-base-900 text-[10px] font-bold font-pixel px-2 py-1 uppercase border-2 border-base-900 shadow-pixel-sm">
-              Lvl {calculateLevel(xp)}
+    <div 
+      className="fixed inset-0 z-50 flex justify-end animate-fade-in"
+      aria-labelledby="drawer-title"
+    >
+      {/* Backdrop */}
+      <div 
+        className="fixed inset-0 bg-zinc-950/60 backdrop-blur-sm transition-opacity"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+
+      {/* Slide-over Drawer Panel */}
+      <aside
+        id="main-sidebar-drawer"
+        ref={focusTrapRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu Principal de Navegação"
+        className="relative w-full max-w-md bg-base-50 dark:bg-base-950 border-l border-base-200 dark:border-base-800 shadow-2xl flex flex-col h-full z-10 animate-slide-in-right overflow-hidden select-none font-sans"
+      >
+        {/* Drawer Header */}
+        <div className="p-4 sm:p-5 border-b border-base-200 dark:border-base-800 flex items-center justify-between bg-base-100/50 dark:bg-base-900/50">
+          <div className="flex items-center gap-3">
+            <Mascot mood={mascotMood} size="h-10 w-10" />
+            <div>
+              <h2 id="drawer-title" className="text-sm font-bold text-base-900 dark:text-base-50 flex items-center gap-2">
+                Menu PyLingo
+                <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800">
+                  Nível {level}
+                </span>
+              </h2>
+              <p className="text-xs text-base-500 dark:text-base-400">
+                {user ? user.email : 'Modo Convidado'}
+              </p>
             </div>
-            <Mascot mood={mascotMood} size="h-32 w-32" />
-            <h3 className="text-sm font-bold font-pixel uppercase text-base-900 mt-4">
-              Lingo (Tutor)
-            </h3>
-            <p className="text-[10px] text-base-600 font-bold max-w-xs mt-2 leading-relaxed uppercase bg-base-100 p-2 border-2 border-base-900 shadow-pixel-sm">
-              "Pratique Python todo dia para manter o streak ativo."
-            </p>
           </div>
 
-          {/* Abas de Navegação — Desktop */}
-          <nav 
-            aria-label="Navegação Principal" 
-            className="w-full mt-6 flex flex-col gap-3"
+          <button
+            onClick={onClose}
+            aria-label="Fechar menu de navegação"
+            className="p-2 text-base-500 hover:text-base-900 dark:text-base-400 dark:hover:text-base-100 hover:bg-base-200 dark:hover:bg-base-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
-            {TABS.map(({ id, label, Icon }) => (
-              <button 
-                key={id}
-                onClick={() => onTabChange(id)}
-                aria-current={activeTab === id ? 'page' : undefined}
-                className={`w-full p-3 font-bold font-pixel uppercase text-xs flex items-center gap-3 transition-colors border-2 border-base-900 focus-visible:outline focus-visible:outline-2 ${
-                  activeTab === id 
-                    ? 'bg-base-900 text-accent shadow-brutal' 
-                    : 'bg-base-50 text-base-900 hover:bg-base-200'
-                }`}
-              >
-                <Icon className={`w-5 h-5 ${activeTab === id ? 'text-accent' : 'text-base-900'}`} />
-                <span>
-                  {label}
-                </span>
-              </button>
-            ))}
-          </nav>
+            <X className="w-5 h-5" aria-hidden="true" />
+          </button>
         </div>
 
-        {/* Caixa de Progresso — Desktop */}
-        <div className="bg-base-100 border-2 border-base-900 p-6 shadow-brutal space-y-4">
-          <h4 className="text-[10px] font-bold font-pixel text-base-500 uppercase">Status</h4>
-          <div className="space-y-4">
-            <div>
-              <div className="flex justify-between text-xs font-bold text-base-900 mb-1.5 uppercase">
-                <span>Progresso</span>
-                <span>{completedLessonsCount} / {totalLessonsCount} ({progressPercentage}%)</span>
-              </div>
-              <div className="w-full bg-base-200 h-4 border-2 border-base-900">
-                <div 
-                  className="bg-accent h-full transition-all duration-500" 
-                  style={{ width: `${progressPercentage}%` }}
-                ></div>
-              </div>
-            </div>
+        {/* Drawer Content (Scrollable) */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-6">
+          
+          {/* Navigation Links */}
+          <div>
+            <span className="text-[11px] font-semibold text-base-400 dark:text-base-500 uppercase tracking-wider block mb-2 px-1">
+              Navegação
+            </span>
+            <nav aria-label="Abas da Plataforma" className="space-y-1">
+              {TABS.map(({ id, label, description, Icon }) => {
+                const isActive = activeTab === id;
+                return (
+                  <button
+                    key={id}
+                    onClick={() => {
+                      onTabChange(id);
+                      onClose();
+                    }}
+                    aria-current={isActive ? 'page' : undefined}
+                    className={`w-full p-3 rounded-xl flex items-center justify-between text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                      isActive
+                        ? 'bg-emerald-600 text-white shadow-sm font-semibold'
+                        : 'text-base-800 dark:text-base-200 hover:bg-base-100 dark:hover:bg-base-900 font-medium'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`p-2 rounded-lg ${isActive ? 'bg-emerald-700 text-white' : 'bg-base-200 dark:bg-base-800 text-base-600 dark:text-base-300'}`}>
+                        <Icon className="w-4 h-4" aria-hidden="true" />
+                      </div>
+                      <div>
+                        <div className="text-sm">{label}</div>
+                        <div className={`text-[11px] ${isActive ? 'text-emerald-100' : 'text-base-500 dark:text-base-400'}`}>
+                          {description}
+                        </div>
+                      </div>
+                    </div>
+                    {isActive && (
+                      <span className="text-xs px-2 py-0.5 rounded bg-emerald-500/50 text-white font-mono">
+                        Ativo
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </nav>
+          </div>
 
-            <div className="flex items-center justify-between p-2 bg-base-200 border-2 border-base-900 text-xs">
-              <span className="font-bold font-pixel text-base-600 uppercase flex items-center gap-2 text-[10px]">
-                <Sparkles className="w-4 h-4 text-warning" /> Total XP
+          {/* Quick Progress Summary */}
+          <div className="bg-base-100 dark:bg-base-900 rounded-xl p-4 border border-base-200 dark:border-base-800 space-y-3">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-semibold text-base-700 dark:text-base-300">Progresso Geral</span>
+              <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                {completedLessonsCount}/{totalLessonsCount} ({progressPercentage}%)
               </span>
-              <span className="font-bold text-warning text-sm">{xp}</span>
             </div>
 
-            {/* Card de Revisões Pendentes */}
-            <div className={`flex justify-between items-center p-2 text-xs border-2 transition-all ${
-              dueReviewsCount > 0
-                ? 'bg-warning border-base-900 text-base-900'
-                : 'bg-base-50 border-base-900 text-base-900'
-            }`}>
-              <div className="flex items-center gap-2 font-bold uppercase text-[10px] font-pixel">
-                {dueReviewsCount > 0 ? (
-                  <RotateCcw className="w-4 h-4 text-base-900 animate-spin" />
-                ) : (
-                  <Zap className="w-4 h-4 text-accent" />
-                )}
-                <span>
-                  {dueReviewsCount > 0 ? 'Revisar' : 'Em Dia!'}
-                </span>
-              </div>
-              {dueReviewsCount > 0 && (
-                <span className="bg-base-900 text-warning text-[10px] font-bold px-2 py-0.5 border border-base-900 font-pixel">
+            {/* Progress Bar */}
+            <div className="w-full bg-base-200 dark:bg-base-800 h-2 rounded-full overflow-hidden">
+              <div 
+                className="bg-emerald-500 h-full rounded-full transition-all duration-500"
+                style={{ width: `${progressPercentage}%` }}
+              />
+            </div>
+
+            {/* Leitner Card */}
+            {dueReviewsCount > 0 && (
+              <button 
+                onClick={() => { onTabChange('tree'); onClose(); }}
+                className="flex items-center justify-between p-2.5 bg-amber-500/10 border border-amber-500/20 rounded-lg text-xs cursor-pointer hover:bg-amber-500/20 transition-colors w-full"
+              >
+                <div className="flex items-center gap-2 text-amber-900 dark:text-amber-200 font-medium">
+                  <RotateCcw className="w-3.5 h-3.5 text-amber-500 animate-spin" aria-hidden="true" />
+                  <span>Revisões pendentes</span>
+                </div>
+                <span className="font-mono font-bold px-2 py-0.5 bg-amber-500 text-white text-[10px] rounded-full">
                   {dueReviewsCount}
                 </span>
-              )}
-            </div>
+              </button>
+            )}
           </div>
-        </div>
 
-        {/* Seção de Conquistas — Desktop */}
-        <div className="bg-base-100 border-2 border-base-900 p-6 shadow-brutal space-y-4">
-          <h4 className="text-[10px] font-bold font-pixel text-base-500 uppercase">Conquistas</h4>
-          <div className="grid grid-cols-3 gap-3">
-            {ACHIEVEMENTS_LIST.map((ach) => {
-              const isUnlocked = achievements.includes(ach.id);
-              const IconComponent = (LucideIcons as any)[ach.icon] || LucideIcons.Award;
-              
-              return (
-                <div 
-                  key={ach.id} 
-                  className="relative group flex flex-col items-center"
-                  aria-label={`${ach.title} - ${isUnlocked ? 'Desbloqueada' : 'Bloqueada'}`}
-                  tabIndex={0}
-                  role="img"
-                >
-                  <div className={`w-12 h-12 flex items-center justify-center border-2 border-base-900 transition-colors ${
-                    isUnlocked 
-                      ? 'bg-warning text-base-900 shadow-pixel-sm' 
-                      : 'bg-base-200 text-base-500'
-                  }`}>
-                    <IconComponent className="w-6 h-6" />
+          {/* Achievements Strip */}
+          <div>
+            <div className="flex items-center justify-between mb-2.5 px-1">
+              <span className="text-[11px] font-semibold text-base-400 dark:text-base-500 uppercase tracking-wider">
+                Conquistas ({achievements.length}/{ACHIEVEMENTS_LIST.length})
+              </span>
+              <button 
+                onClick={() => { onTabChange('shop'); onClose(); }}
+                className="text-[11px] text-accent font-medium hover:underline transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded cursor-pointer"
+              >
+                Ver todas na Loja ➔
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-4 gap-2">
+              {ACHIEVEMENTS_LIST.slice(0, 8).map((ach) => {
+                const isUnlocked = achievements.includes(ach.id);
+                const IconComponent = (LucideIcons as any)[ach.icon] || LucideIcons.Award;
+
+                return (
+                  <div
+                    key={ach.id}
+                    tabIndex={0}
+                    role="img"
+                    aria-label={`${ach.title}: ${isUnlocked ? 'Desbloqueada' : 'Bloqueada'}`}
+                    className={`relative p-3 rounded-lg border flex flex-col items-center justify-center transition-all ${
+                      isUnlocked
+                        ? 'bg-amber-50 dark:bg-amber-950/30 border-amber-300 dark:border-amber-800 text-amber-700 dark:text-amber-300'
+                        : 'bg-base-100 dark:bg-base-900/60 border-base-200 dark:border-base-800 text-base-400 opacity-60'
+                    }`}
+                  >
+                    <IconComponent className="w-5 h-5" aria-hidden="true" />
                     {!isUnlocked && (
-                      <div className="absolute -bottom-1 -right-1 bg-base-900 p-0.5 border-2 border-base-100">
-                        <LucideIcons.Lock className="w-3 h-3 text-base-500" />
+                      <div className="absolute top-1 right-1">
+                        <Lock className="w-2.5 h-2.5 text-base-400" />
                       </div>
                     )}
                   </div>
-                  
-                  {/* Tooltip */}
-                  <div className="absolute bottom-full mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none flex flex-col items-center z-50 w-52">
-                    <div className="bg-base-900 text-base-50 text-[10px] font-bold font-mono rounded-none p-3 text-center shadow-brutal border-2 border-base-900 leading-relaxed uppercase">
-                      <p className="font-pixel text-warning mb-1 text-[8px]">{ach.title}</p>
-                      <p className="text-base-400 text-[10px]">{ach.description}</p>
-                      <p className="text-warning font-bold mt-1.5 text-[10px] flex items-center justify-center gap-1">
-                        <LucideIcons.Coins className="w-3.5 h-3.5" /> +{ach.coinReward} LC
-                      </p>
-                    </div>
-                    <div className="w-2.5 h-2.5 bg-base-900 rotate-45 -mt-1.5 border-r border-b border-base-900" />
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
+
         </div>
 
-      </div>
-
-      {/* MOBILE — Tab bar fixa no bottom (visível apenas < lg) */}
-      <nav aria-label="Navegação Inferior" className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-base-100 border-t-4 border-base-900 select-none">
-        <div className="flex justify-around items-center px-1 py-1 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
-          {TABS.map(({ id, label, Icon }) => {
-            const isActive = activeTab === id;
-            return (
-              <button
-                key={id}
-                onClick={() => onTabChange(id)}
-                aria-current={isActive ? 'page' : undefined}
-                className={`flex-1 flex flex-col items-center justify-center gap-1 py-2 transition-colors focus-visible:outline focus-visible:outline-2 ${
-                  isActive
-                    ? 'bg-base-900 text-accent'
-                    : 'text-base-500 active:bg-base-200'
-                }`}
-              >
-                <Icon className={`w-5 h-5 ${isActive ? 'text-accent' : 'text-base-500'}`} aria-hidden="true" />
-                <span className={`text-[10px] font-bold font-pixel uppercase ${isActive ? 'text-accent' : 'text-base-500'}`}>
-                  {label}
-                </span>
-              </button>
-            );
-          })}
+        {/* Drawer Footer: User / Authentication Actions */}
+        <div className="p-4 border-t border-base-200 dark:border-base-800 bg-base-100/50 dark:bg-base-900/50">
+          {user ? (
+            <button
+              onClick={() => {
+                onLogout?.();
+                onClose();
+              }}
+              className="w-full py-2.5 px-4 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-lg transition-colors flex items-center justify-center gap-2 border border-rose-200 dark:border-rose-900/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+            >
+              <LogOut className="w-4 h-4" aria-hidden="true" />
+              <span>Sair da Conta ({user.email})</span>
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                onOpenAuth?.();
+                onClose();
+              }}
+              className="w-full py-2.5 px-4 text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition-all flex items-center justify-center gap-2 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+            >
+              <LogIn className="w-4 h-4" aria-hidden="true" />
+              <span>Entrar / Criar Conta Grátis</span>
+            </button>
+          )}
         </div>
-      </nav>
-    </>
+
+      </aside>
+    </div>
   );
 };

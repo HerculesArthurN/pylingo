@@ -186,38 +186,38 @@ export const ActiveLessonView: React.FC<ActiveLessonViewProps> = ({
   const availableHintLevel = getAvailableHintLevel(attempts);
 
   return (
-    <div className="flex-1 flex flex-col bg-base-100 border-2 border-base-900 overflow-hidden shadow-brutal select-none font-mono animate-fade-in min-h-[70vh]">
+    <div className="flex-1 flex flex-col bg-base-100 dark:bg-base-900 border-2 border-base-900 dark:border-base-700 overflow-hidden shadow-brutal select-none font-mono animate-fade-in min-h-[70vh]">
       {/* Header de Foco */}
-      <div className="bg-base-900 text-base-50 px-4 md:px-6 py-4 flex items-center justify-between border-b-2 border-base-900">
-        <div className="flex items-center space-x-4">
+      <div className="bg-base-900 dark:bg-base-800 text-base-50 px-3 sm:px-6 py-3 flex items-center justify-between border-b-2 border-base-900 dark:border-base-700 gap-2">
+        <div className="flex items-center space-x-2 sm:space-x-4 min-w-0">
           <button
             onClick={() => { playSound('click'); onBack(); }}
             aria-label="Voltar para a árvore de lições"
-            className="p-2 border-2 border-base-50 hover:bg-base-50 hover:text-base-900 transition-colors cursor-pointer focus-visible:outline focus-visible:outline-2"
+            className="p-1.5 sm:p-2 border-2 border-base-50 dark:border-base-700 hover:bg-base-50 hover:text-base-900 transition-colors cursor-pointer shrink-0 focus-visible:outline focus-visible:outline-2 rounded-lg"
           >
-            <ArrowLeft className="w-5 h-5" aria-hidden="true" />
+            <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" />
           </button>
-          <div>
-            <p className="text-[10px] font-bold font-pixel text-accent uppercase tracking-widest">
+          <div className="min-w-0">
+            <p className="text-[9px] sm:text-[10px] font-bold font-pixel text-accent uppercase tracking-widest truncate">
               {'concept' in exercise ? exercise.concept : 'Exercício PyLingo'}
             </p>
-            <h2 className="text-sm md:text-base font-bold flex items-center gap-2 uppercase font-pixel tracking-tighter">
-              {exercise.title}
-              <span className={`text-[8px] px-2 py-0.5 border-2 hidden sm:inline-block ${
-                exercise.difficulty === 'Fácil' ? 'bg-success text-base-900 border-success' :
+            <h2 className="text-xs sm:text-sm md:text-base font-bold flex items-center gap-1.5 uppercase font-pixel tracking-tighter truncate">
+              <span className="truncate">{exercise.title}</span>
+              <span className={`text-[8px] px-1.5 py-0.2 border-2 hidden sm:inline-block shrink-0 ${
+                exercise.difficulty === 'Fácil' ? 'bg-success text-white dark:text-base-950 border-success' :
                 exercise.difficulty === 'Médio' ? 'bg-warning text-base-900 border-warning' : 'bg-error text-base-50 border-error'
               }`}>{exercise.difficulty}</span>
             </h2>
           </div>
         </div>
 
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2 shrink-0">
           {/* Botão de Dicas */}
           {isV2Exercise && (
             <button
               onClick={() => { playSound('click'); setIsHintDrawerOpen(true); }}
               aria-label={`Abrir central de dicas (${availableHintLevel} de 3 disponíveis)`}
-              className={`px-3 py-2 border-2 text-[10px] font-bold font-pixel uppercase flex items-center gap-2 transition-colors cursor-pointer focus-visible:outline focus-visible:outline-2 hidden sm:flex ${
+              className={`px-2.5 sm:px-3 py-1.5 sm:py-2 border-2 text-[9px] sm:text-[10px] font-bold font-pixel uppercase flex items-center gap-1.5 transition-colors cursor-pointer focus-visible:outline focus-visible:outline-2 ${
                 availableHintLevel > currentHintLevel
                   ? 'bg-warning text-base-900 border-warning shadow-pixel-sm animate-pulse'
                   : currentHintLevel > 0
@@ -225,21 +225,21 @@ export const ActiveLessonView: React.FC<ActiveLessonViewProps> = ({
                   : 'bg-base-900 text-base-50 border-base-50 hover:bg-base-50 hover:text-base-900'
               }`}
             >
-              <Lightbulb className="w-4 h-4" />
+              <Lightbulb className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               <span>DICAS {attempts > 0 ? `(${availableHintLevel}/3)` : ''}</span>
             </button>
           )}
 
           {/* Status Python WASM */}
-          <div className="flex items-center space-x-2 bg-base-900 px-3 py-2 border-2 border-base-50 text-[10px] font-pixel uppercase">
-            <div className={`w-2.5 h-2.5 ${pyodideReady ? 'bg-accent animate-pulse' : 'bg-warning animate-spin'}`}></div>
+          <div className="flex items-center space-x-1.5 bg-base-900 px-2 sm:px-3 py-1.5 sm:py-2 border-2 border-base-50 text-[9px] sm:text-[10px] font-pixel uppercase">
+            <div className={`w-2 h-2 sm:w-2.5 sm:h-2.5 ${pyodideReady ? 'bg-accent animate-pulse' : 'bg-warning animate-spin'}`}></div>
             <span className="text-base-50 font-bold hidden md:inline">{pyodideReady ? 'SYS.READY' : 'BOOTING...'}</span>
           </div>
         </div>
       </div>
 
       {/* Painel Central */}
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 overflow-hidden bg-base-100">
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 overflow-hidden bg-base-100 dark:bg-base-900">
         
         {/* Esquerda: Teoria / Missão */}
         <div className="lg:col-span-5 border-b-2 lg:border-b-0 lg:border-r-2 border-base-900 p-4 md:p-6 overflow-y-auto flex flex-col space-y-6">

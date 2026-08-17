@@ -61,7 +61,7 @@
           "title": "🗺️ Passo a Passo do Algoritmo",
           "steps": [
             "1. Escreva dobro =",
-            "2. Façao casting int(texto) e multiplique por 2"
+            "2. Faça o casting int(texto) e multiplique por 2"
           ],
           "xpPenaltyPercent": 10
         }
